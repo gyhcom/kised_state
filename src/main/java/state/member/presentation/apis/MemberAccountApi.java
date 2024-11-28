@@ -15,7 +15,7 @@ import state.member.domain.exception.MemberNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@RequestMapping("/user")
+@RequestMapping("/member")
 @Controller
 public final class MemberAccountApi {
     private final MemberManager memberManager;
@@ -26,7 +26,7 @@ public final class MemberAccountApi {
     }
 
     @ResponseBody
-    @GetMapping("/userInfo")
+    @GetMapping("/memberInfo")
     public ResponseEntity<MemberResponseCommand> findUserInfo(@RequestBody MemberRegisterRequest memberRegisterRequest) {
         Optional<Member> user = memberManager.findById(memberRegisterRequest.getSeq());
 
@@ -45,6 +45,7 @@ public final class MemberAccountApi {
         );
     }
 
+    //물리적으로 삭제할 지, 논리적으로 삭제할 지 검토할 필요가 있음
     @PostMapping("/delete")
     public ResponseEntity<ResponseCommand> userDelete(@RequestBody MemberRegisterRequest memberRegisterRequest) {
         memberManager.delete(memberRegisterRequest.getSeq());
@@ -68,4 +69,7 @@ public final class MemberAccountApi {
                         .build(), HttpStatus.OK
         );
     }
+
+    //활동 로그 기록
+    
 }
