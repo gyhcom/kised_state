@@ -8,14 +8,14 @@ import lombok.ToString;
 import state.member.presentation.response.MemberResponseCommand;
 
 @Builder
-@Table(name = "USER")
+@Table(name = "MEMBER")
 @ToString
 @Setter
 @Getter
 @Entity
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ", nullable = false)
     int seq;
 
