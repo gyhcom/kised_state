@@ -9,13 +9,19 @@ import state.member.application.command.MemberUpdateCommand;
 public class MemberUpdateRequest {
     int seq;
     String password;
+    String email;
     String userRole;
+    String departmentCode;
+    String positionCode;
 
     public MemberUpdateCommand toCommand(MemberUpdateRequest memberUpdateRequest) {
         return MemberUpdateCommand.builder()
                 .seq(memberUpdateRequest.getSeq())
                 .password(memberUpdateRequest.getPassword())
+                .email(memberUpdateRequest.getEmail())
                 .userRole(memberUpdateRequest.getUserRole())
+                .departmentCode(memberUpdateRequest.getDepartmentCode())
+                .positionCode(memberUpdateRequest.getPositionCode())
                 .build();
     }
 }

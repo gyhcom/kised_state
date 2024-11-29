@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RequestMapping("/member")
 @Controller
-public final class MemberAccountApi {
+public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
     private final MemberManager memberManager;
 
 
@@ -33,6 +33,9 @@ public final class MemberAccountApi {
         return new ResponseEntity<>(user.orElseThrow(MemberNotFoundException::new).toCommand(), HttpStatus.OK);
     }
 
+    /* TODO
+        이메일 인증으로 구현(본인 이메일로 인증)
+    */
     @PostMapping("/register")
     public ResponseEntity<ResponseCommand> userRegister(@RequestBody MemberRegisterRequest memberRegisterRequest) {
         memberManager.save(memberRegisterRequest.toCommand(memberRegisterRequest));
@@ -45,7 +48,7 @@ public final class MemberAccountApi {
         );
     }
 
-    //물리적으로 삭제할 지, 논리적으로 삭제할 지 검토할 필요가 있음
+    //TODO 논리적으로 삭제
     @PostMapping("/delete")
     public ResponseEntity<ResponseCommand> userDelete(@RequestBody MemberRegisterRequest memberRegisterRequest) {
         memberManager.delete(memberRegisterRequest.getSeq());
