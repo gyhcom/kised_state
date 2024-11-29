@@ -42,18 +42,18 @@ public class StateSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(MemberManager memberManager){
-        return username -> memberManager
-                .findByUsername(username)
-                .map(member -> MemberAuth.builder()
-                        .username(member.getUsername())
-                        .password(member.getPassword())
-                        // 이 부분 알고 쓰기
-                        .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getUserRole())))
-                        .build()
-                )
-                // Exception 직접 구현하기
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - username : " + username));
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(MemberManager memberManager){
+//        return username -> memberManager
+//                .findByUsername(username)
+//                .map(member -> MemberAuth.builder()
+//                        .username(member.getUsername())
+//                        .password(member.getPassword())
+//                        // 이 부분 알고 쓰기
+//                        .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getUserRole())))
+//                        .build()
+//                )
+//                // Exception 직접 구현하기
+//                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - username : " + username));
+//    }
 }
