@@ -1,19 +1,23 @@
 package state.admin.userManage.presentation;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import state.admin.userManage.application.command.UserResponseCommand;
 import state.admin.userManage.application.fasade.UserManage;
+import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.presentation.request.UserInfoRegisterRequest;
 import state.admin.userManage.presentation.request.UserInfoRequest;
 import state.admin.userManage.presentation.request.UserInfoUpdRequest;
+import state.admin.userManage.presentation.request.UserListRequest;
+import state.admin.userManage.presentation.response.UserListResponse;
 import state.common.command.ResponseCommand;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequestMapping("/admin")
 @Controller
@@ -26,11 +30,19 @@ public class AdminManageApi {
     }
 
     // TODO 사용자 조회
+/*    @GetMapping(value = "/userList", name = "사용자 조회")
+    public List<UserResponseCommand> userList(@RequestBody UserListRequest userListRequest) {
+        List<UserResponseCommand> userList = userManage.findList(userListRequest.getUserNm());
+        return userList;
+    }*/
 
     // TODO 사용자 상세조회
-    @PostMapping(value = "/userInfo",name = "사용자정보")
-    public ResponseEntity<ResponseCommand> findUserInfo(@RequestBody UserInfoRequest userInfoRequest) {
-        return null;
+    @ResponseBody
+    @GetMapping(value = "/userInfo",name = "사용자 상세조회")
+    public ResponseEntity<UserResponseCommand> findUserInfo(@RequestBody UserInfoRequest userInfoRequest) {
+        Optional<User> user = userManage.findById(userInfoRequest.getSeq());
+
+        return new ResponseEntity<>(user.orElseThrow(NullPointerException::new).toCommand(), HttpStatus.OK);
     }
 
     // TODO 사용자 등록

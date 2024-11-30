@@ -5,4 +5,6 @@ import lombok.*;
 @Setter
 @Getter
 public class UserInfoRequest {
+
+    int seq;
 }

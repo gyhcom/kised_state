@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import state.admin.userManage.application.command.UserResponseCommand;
 import state.admin.userManage.domain.auth.AuthRole;
+import state.member.presentation.response.MemberResponseCommand;
 
 @Getter
 @Setter
@@ -54,5 +56,16 @@ public class User {
         this.email = email;
         this.deptCd = deptCd;
         this.manageCd = manageCd;
+    }
+
+    public UserResponseCommand toCommand() {
+        return UserResponseCommand.builder()
+                .userId(this.userId)
+                .userNm(this.userNm)
+                .userRole(this.userRole)
+                .email(this.email)
+                .deptCd(this.deptCd)
+                .manageCd(this.manageCd)
+                .build();
     }
 }
