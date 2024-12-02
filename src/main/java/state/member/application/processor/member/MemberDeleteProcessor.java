@@ -1,4 +1,4 @@
-package state.member.application.processor;
+package state.member.application.processor.member;
 
 import org.springframework.stereotype.Component;
 import state.member.domain.exception.MemberNotFoundException;
