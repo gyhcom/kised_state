@@ -6,7 +6,7 @@ import state.admin.userManage.application.command.UserRegisterCommand;
 import state.admin.userManage.application.processor.UserFindByIdProcessor;
 import state.admin.userManage.application.processor.UserFindListProcessor;
 import state.admin.userManage.application.processor.UserRegisterProcessor;
-import state.admin.userManage.domain.entity.User;
+import state.admin.userManage.domain.entity.Member;
 import state.admin.userManage.presentation.request.UserListRequest;
 
 import java.util.List;
@@ -30,10 +30,10 @@ public class UserManage {
         userRegisterProcessor.execute(userRegisterCommand);
     }
 
-    public List<User> findList(UserListRequest userListRequest) {
+    public List<Member> findList(UserListRequest userListRequest) {
         return userFindListProcessor.execute(userListRequest);
     }
-    public Optional<User> findById(int seq) {
+    public Optional<Member> findById(int seq) {
         return userFindByIdProcessor.execute(seq);
     }
 
