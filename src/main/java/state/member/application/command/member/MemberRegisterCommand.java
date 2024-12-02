@@ -1,4 +1,4 @@
-package state.member.application.command;
+package state.member.application.command.member;
 
 import lombok.Builder;
 import lombok.Getter;

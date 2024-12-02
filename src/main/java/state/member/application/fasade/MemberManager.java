@@ -2,9 +2,9 @@ package state.member.application.fasade;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import state.member.application.command.MemberRegisterCommand;
-import state.member.application.command.MemberUpdateCommand;
-import state.member.application.processor.*;
+import state.member.application.command.member.MemberRegisterCommand;
+import state.member.application.command.member.MemberUpdateCommand;
+import state.member.application.processor.member.*;
 import state.member.domain.entity.Member;
 
 import java.util.Optional;

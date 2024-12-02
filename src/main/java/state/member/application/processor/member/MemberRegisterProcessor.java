@@ -1,8 +1,8 @@
-package state.member.application.processor;
+package state.member.application.processor.member;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import state.member.application.command.MemberRegisterCommand;
+import state.member.application.command.member.MemberRegisterCommand;
 import state.member.domain.repository.MemberRepository;
 
 @Component

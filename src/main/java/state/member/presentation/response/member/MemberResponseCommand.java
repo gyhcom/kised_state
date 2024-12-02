@@ -1,4 +1,4 @@
-package state.member.presentation.response;
+package state.member.presentation.response.member;
 
 import lombok.Builder;
 import lombok.Getter;
