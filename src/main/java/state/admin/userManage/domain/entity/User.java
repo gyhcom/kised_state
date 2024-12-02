@@ -14,7 +14,7 @@ import state.admin.userManage.domain.auth.AuthRole;
 @Table(name = "user")
 @ToString
 @Builder
-public class Member {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +43,10 @@ public class Member {
     @Column(name = "MANAGE_CD", nullable = false, length = 100)
     private String manageCd;
 
-    public Member() {
+    public User() {
     }
 
-    public Member(int seq, String userId, String userNm, String password, AuthRole userRole, String email, String deptCd, String manageCd) {
+    public User(int seq, String userId, String userNm, String password, AuthRole userRole, String email, String deptCd, String manageCd) {
         this.seq = seq;
         this.userId = userId;
         this.userNm = userNm;
