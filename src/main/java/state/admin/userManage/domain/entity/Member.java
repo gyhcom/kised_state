@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import state.admin.userManage.application.command.UserResponseCommand;
 import state.admin.userManage.domain.auth.AuthRole;
-import state.member.presentation.response.MemberResponseCommand;
 
 @Getter
 @Setter
@@ -15,39 +14,39 @@ import state.member.presentation.response.MemberResponseCommand;
 @Table(name = "user")
 @ToString
 @Builder
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SEQ", nullable = false)
+    @Column(name = "SEQ")
     private int seq;
 
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID", nullable = false, length = 100)
     private String userId;
 
-    @Column(name = "USER_NM")
+    @Column(name = "USER_NM", nullable = false, length = 100)
     private String userNm;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "USER_ROLE")
+    @Column(name = "USER_ROLE", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private AuthRole userRole;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "DEPT_CD")
+    @Column(name = "DEPT_CD", nullable = false, length = 100)
     private String deptCd;
 
-    @Column(name = "MANAGE_CD")
+    @Column(name = "MANAGE_CD", nullable = false, length = 100)
     private String manageCd;
 
-    public User() {
+    public Member() {
     }
 
-    public User(int seq, String userId, String userNm, String password, AuthRole userRole, String email, String deptCd, String manageCd) {
+    public Member(int seq, String userId, String userNm, String password, AuthRole userRole, String email, String deptCd, String manageCd) {
         this.seq = seq;
         this.userId = userId;
         this.userNm = userNm;
