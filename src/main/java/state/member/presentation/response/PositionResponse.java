@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Builder
-public class DepartmentResponse {
-    String departmentCode;
-    String departmentName;
+public class PositionResponse {
+    String positionCode;
+    String positionName;
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import state.member.application.fasade.DepartmentManager;
 import state.member.domain.entity.Department;
-import state.member.presentation.request.department.DepartmentInfoRequest;
 import state.member.presentation.response.DepartmentResponse;
 
 import java.util.List;
