@@ -19,4 +19,9 @@ public class DepartmentRepositoryAdapter implements DepartmentRepository {
     public List<Department> findAll() {
         return jpaDepartmentRepository.findAll();
     }
+
+    @Override
+    public Boolean existsById(String id) {
+        return jpaDepartmentRepository.existsById(id);
+    }
 }

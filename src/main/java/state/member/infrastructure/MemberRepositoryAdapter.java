@@ -1,6 +1,7 @@
 package state.member.infrastructure;
 
 import org.springframework.stereotype.Repository;
+import state.member.application.command.member.MemberRegisterCommand;
 import state.member.domain.entity.Member;
 import state.member.domain.repository.MemberRepository;
 import state.member.infrastructure.JPA.JpaMemberRepository;
@@ -43,5 +44,20 @@ public class MemberRepositoryAdapter implements MemberRepository {
     @Override
     public Boolean existsById(int seq) {
         return jpaMemberRepository.existsById(seq);
+    }
+
+    @Override
+    public Boolean existsByUsername(String username) {
+        return jpaMemberRepository.existsByUsername(username);
+    }
+
+    @Override
+    public Boolean existsByUserId(String userId) {
+        return jpaMemberRepository.existsByUserId(userId);
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return jpaMemberRepository.existsByEmail(email);
     }
 }

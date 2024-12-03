@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface DepartmentRepository {
     List<Department> findAll();
+    Boolean existsById(String id);
 }
