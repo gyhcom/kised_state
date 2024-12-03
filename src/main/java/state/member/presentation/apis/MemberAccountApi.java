@@ -10,7 +10,7 @@ import state.member.application.fasade.MemberManager;
 import state.member.domain.entity.Member;
 import state.member.presentation.request.member.MemberRegisterRequest;
 import state.member.presentation.request.member.MemberUpdateRequest;
-import state.member.presentation.response.member.MemberResponseCommand;
+import state.member.presentation.response.MemberResponse;
 import state.member.domain.exception.MemberNotFoundException;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
     //TODO registerRequest와 성격이 맞지 않음. 수정 필요
     @ResponseBody
     @GetMapping("/memberInfo")
-    public ResponseEntity<MemberResponseCommand> findUserInfo(@RequestBody MemberRegisterRequest memberRegisterRequest) {
+    public ResponseEntity<MemberResponse> findUserInfo(@RequestBody MemberRegisterRequest memberRegisterRequest) {
         Optional<Member> user = memberManager.findById(memberRegisterRequest.getSeq());
 
         return new ResponseEntity<>(user.orElseThrow(MemberNotFoundException::new).toCommand(), HttpStatus.OK);

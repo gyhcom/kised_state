@@ -12,10 +12,14 @@ import state.member.application.command.member.MemberUpdateCommand;
 public class MemberUpdateRequest {
     int seq;
 
+    @NotBlank(message = "사용자 이름을 입력해주세요.")
+    String username;
+
     @NotBlank(message = "비밀번호를 입력해주세요.")
     String password;
 
     @Email(message = "이메일 형식을 확인해주세요.")
+    @NotBlank(message = "이메일 정보를 입력해주세요.")
     String email;
 
     //TODO 최초 등록 시 "USER"로 등록되도록 수정
@@ -31,6 +35,7 @@ public class MemberUpdateRequest {
     public MemberUpdateCommand toCommand(MemberUpdateRequest memberUpdateRequest) {
         return MemberUpdateCommand.builder()
                 .seq(memberUpdateRequest.getSeq())
+                .username(memberUpdateRequest.getUsername())
                 .password(memberUpdateRequest.getPassword())
                 .email(memberUpdateRequest.getEmail())
                 .userRole(memberUpdateRequest.getUserRole())
