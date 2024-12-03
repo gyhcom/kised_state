@@ -16,13 +16,13 @@
 
 ## 기술 스택
 
-- **Java 17**: 최신 Java 언어 기능 활용.
-- **Spring Boot 3.1.4**: 애플리케이션 개발의 생산성 향상.
-- **Spring Security 6.x**: 사용자 인증 및 권한 관리.
-- **Spring Data JPA**: 데이터베이스와의 상호작용.
-- **MariaDB**: 관계형 데이터베이스.
-- **Lombok**: 보일러플레이트 코드 제거.
-- **Gradle**: 프로젝트 빌드 및 의존성 관리.
+- **Java 17**
+- **Spring Boot 3.1.4**
+- **Spring Security 6.x**
+- **Spring Data JPA**
+- **MariaDB**
+- **Lombok**
+- **Gradle**
 
 ---
 ```plaintext
