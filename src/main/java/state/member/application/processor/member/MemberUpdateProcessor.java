@@ -26,8 +26,11 @@ public class MemberUpdateProcessor {
         Member member = memberRepository.getReferenceById(memberUpdateCommand.getSeq());
         //비밀번호 암호화
         memberUpdateCommand.setPassword(passwordEncoder.encode(memberUpdateCommand.getPassword()));
-        //권한 수정
+
         member.setPassword(memberUpdateCommand.getPassword());
-        member.setUserRole(memberUpdateCommand.getUserRole());
+        member.setDepartmentCode(memberUpdateCommand.getDepartmentCode());
+        member.setEmail(memberUpdateCommand.getEmail());
+        member.setPositionCode(memberUpdateCommand.getPositionCode());
+        member.setUsername(memberUpdateCommand);
     }
 }
