@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class MemberUpdateCommand {
     int seq;
+    String username;
     String password;
     String email;
     String departmentCode;

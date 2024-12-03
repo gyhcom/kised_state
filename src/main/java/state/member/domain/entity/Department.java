@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import state.member.presentation.response.DepartmentResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Builder
@@ -28,5 +32,19 @@ public class Department {
     public Department(String departmentCode, String departmentName) {
         this.departmentCode = departmentCode;
         this.departmentName = departmentName;
+    }
+
+    public List<DepartmentResponse> toCommand(List<Department> department) {
+        List<DepartmentResponse> departmentCommand = new ArrayList<>();
+        for (Department value : department) {
+            departmentCommand.add(
+                    DepartmentResponse.builder()
+                    .departmentCode(value.getDepartmentCode())
+                    .departmentName(value.getDepartmentName())
+                    .build()
+            );
+        }
+
+        return departmentCommand;
     }
 }

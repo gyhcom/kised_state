@@ -1,13 +1,11 @@
 package state.member.domain.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import state.member.presentation.response.member.MemberResponseCommand;
+import state.member.presentation.response.MemberResponse;
 
 @Builder
 @Table(name = "MEMBER")
@@ -63,8 +61,8 @@ public class Member {
         this.positionCode = positionCode;
     }
 
-    public MemberResponseCommand toCommand() {
-        return MemberResponseCommand.builder()
+    public MemberResponse toCommand() {
+        return MemberResponse.builder()
                 .seq(this.seq)
                 .userId(this.userId)
                 .username(this.username)
