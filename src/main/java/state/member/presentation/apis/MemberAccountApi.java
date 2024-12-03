@@ -30,9 +30,8 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
     @ResponseBody
     @GetMapping("/memberInfo")
     public ResponseEntity<MemberResponse> findUserInfo(@RequestBody MemberRegisterRequest memberRegisterRequest) {
-        Optional<Member> user = memberManager.findById(memberRegisterRequest.getSeq());
-
-        return new ResponseEntity<>(user.orElseThrow(MemberNotFoundException::new).toCommand(), HttpStatus.OK);
+        Optional<Member> member = memberManager.findById(memberRegisterRequest.getSeq());
+        return new ResponseEntity<>(member.get().toCommand(), HttpStatus.OK);
     }
 
     /* TODO
