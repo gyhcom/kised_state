@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import state.admin.userManage.domain.auth.AuthRole;
-import state.admin.userManage.domain.entity.Member;
+import state.admin.userManage.domain.entity.User;
 
 @Setter
 @Getter
@@ -19,8 +19,8 @@ public class UserRegisterCommand {
     private String deptCd;
     private String manageCd;
 
-    public Member toEntity(UserRegisterCommand userRegisterCommand) {
-        return Member.builder()
+    public User toEntity(UserRegisterCommand userRegisterCommand) {
+        return User.builder()
                 .userId(userRegisterCommand.userId)
                 .userNm(userRegisterCommand.userNm)
                 .password(userRegisterCommand.password)

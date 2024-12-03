@@ -1,7 +1,7 @@
 package state.admin.userManage.infrastructure;
 
 import org.springframework.stereotype.Repository;
-import state.admin.userManage.domain.entity.Member;
+import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
 import state.admin.userManage.infrastructure.jpa.AdminJpaRepository;
 
@@ -18,17 +18,29 @@ public class AdminRepositoryAdaptor implements UserRepository {
     }
 
     @Override
-    public void save(Member user) {
+    public void save(User user) {
         adminJpaRepository.save(user);
     }
 
     @Override
-    public List<Member> findUserList(String userNm) {
+    public List<User> findUserList(String userNm) {
         return adminJpaRepository.findByUserNmOrderBySeqDesc(userNm);
     }
 
     @Override
-    public Optional<Member> findById(int id) {
-        return adminJpaRepository.findById(id);
+    public Optional<User> findById(int seq) {
+        return adminJpaRepository.findById(seq);
     }
+
+    @Override
+    public boolean existsById(int seq) {
+        return adminJpaRepository.existsById(seq);
+    }
+
+    @Override
+    public User getReferenceById(int seq) {
+        return adminJpaRepository.getReferenceById(seq);
+    }
+
+
 }
