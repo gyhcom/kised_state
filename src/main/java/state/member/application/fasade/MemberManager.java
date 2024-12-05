@@ -44,8 +44,8 @@ public class MemberManager {
         return memberFindByUsernameProcessor.execute(userId);
     }
 
-    public void delete(int seq) {
-        memberDeleteProcessor.execute(seq);
+    public void delete(int seq, String userId, String username) {
+        memberDeleteProcessor.execute(seq, userId, username);
     }
 
     //getReferenceById 와 findById의 차이점 알기

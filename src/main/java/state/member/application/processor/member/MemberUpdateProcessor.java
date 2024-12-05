@@ -35,25 +35,13 @@ public class MemberUpdateProcessor {
             throw new MemberNotFoundException();
         }
 
-        // 부서 존재 여부 확인
-        if(!departmentRepository.existsById(memberUpdateCommand.getDepartmentCode())) {
-            throw new DepartmentNotFoundException();
-        }
-
-        // 직위 존재 여부 확인
-        if(!positionRepository.existsById(memberUpdateCommand.getPositionCode())) {
-            throw new PositionNotExistException();
-        }
-
         Member member = memberRepository.getReferenceById(memberUpdateCommand.getSeq());
 
         //비밀번호 암호화
         memberUpdateCommand.setPassword(passwordEncoder.encode(memberUpdateCommand.getPassword()));
 
         member.setPassword(memberUpdateCommand.getPassword());
-        member.setDepartmentCode(memberUpdateCommand.getDepartmentCode());
         member.setEmail(memberUpdateCommand.getEmail());
-        member.setPositionCode(memberUpdateCommand.getPositionCode());
         member.setUsername(memberUpdateCommand.getUsername());
     }
 }

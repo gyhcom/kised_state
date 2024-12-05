@@ -15,4 +15,5 @@ public interface MemberRepository {
     Boolean existsByUsername(String username);
     Boolean existsByUserId(String userId);
     Boolean existsByEmail(String email);
+    Boolean existsBySeqAndUserIdAndUsername(int seq, String userId, String username);
 }
