@@ -8,14 +8,14 @@ import state.member.domain.entity.Department;
 @Getter
 @Setter
 @Builder
-public class DepartmentInfoRequestCommand {
+public class DepartmentInfoCommand {
     String departmentCode;
     String departmentName;
 
-    public Department toEntity(DepartmentInfoRequestCommand departmentInfoRequestCommand) {
+    public Department toEntity(DepartmentInfoCommand departmentInfoCommand) {
         return Department.builder()
-                .departmentCode(departmentInfoRequestCommand.getDepartmentCode())
-                .departmentName(departmentInfoRequestCommand.getDepartmentName())
+                .departmentCode(departmentInfoCommand.getDepartmentCode())
+                .departmentName(departmentInfoCommand.getDepartmentName())
                 .build();
     }
 }
