@@ -28,8 +28,8 @@ public class AdminRepositoryAdaptor implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(int seq) {
-        return adminJpaRepository.findById(seq);
+    public User findById(int seq) {
+        return adminJpaRepository.findBySeq(seq);
     }
 
     @Override
@@ -40,6 +40,11 @@ public class AdminRepositoryAdaptor implements UserRepository {
     @Override
     public User getReferenceById(int seq) {
         return adminJpaRepository.getReferenceById(seq);
+    }
+
+    @Override
+    public Optional<User> findByUserId(String userId) {
+        return adminJpaRepository.findByUserId(userId);
     }
 
 

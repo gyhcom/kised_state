@@ -1,14 +1,16 @@
-package state.admin.userManage.application.command;
+package state.admin.userManage.presentation.response;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import state.admin.userManage.domain.auth.AuthRole;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @Builder
-public class UserResponseCommand {
+public class UserResponse {
 
     private String userId;
     private String userNm;
@@ -17,7 +19,7 @@ public class UserResponseCommand {
     private String deptCd;
     private String manageCd;
 
-    public UserResponseCommand(String userId, String userNm, AuthRole userRole, String email, String deptCd, String manageCd) {
+    public UserResponse(String userId, String userNm, AuthRole userRole, String email, String deptCd, String manageCd) {
         this.userId = userId;
         this.userNm = userNm;
         this.userRole = userRole;
