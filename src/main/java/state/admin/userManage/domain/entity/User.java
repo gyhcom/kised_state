@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import state.admin.userManage.application.command.UserResponseCommand;
+import state.admin.userManage.presentation.response.UserResponse;
 import state.admin.userManage.domain.auth.AuthRole;
 
 @Getter
@@ -21,26 +21,26 @@ public class User {
     @Column(name = "SEQ")
     private int seq;
 
-    @Column(name = "USER_ID", nullable = false, length = 100)
+    @Column(name = "USER_ID", length = 30)
     private String userId;
 
-    @Column(name = "USER_NM", nullable = false, length = 100)
+    @Column(name = "USER_NM", length = 15)
     private String userNm;
 
-    @Column(name = "PASSWORD", nullable = false, length = 100)
+    @Column(name = "PASSWORD", length = 12)
     private String password;
 
-    @Column(name = "USER_ROLE", nullable = false, length = 50)
+    @Column(name = "USER_ROLE", length = 10)
     @Enumerated(EnumType.STRING)
     private AuthRole userRole;
 
-    @Column(name = "EMAIL", nullable = false, length = 100)
+    @Column(name = "EMAIL", length = 30)
     private String email;
 
-    @Column(name = "DEPT_CD", nullable = false, length = 100)
+    @Column(name = "DEPT_CD", length = 3)
     private String deptCd;
 
-    @Column(name = "MANAGE_CD", nullable = false, length = 100)
+    @Column(name = "MANAGE_CD", length = 3)
     private String manageCd;
 
     public User() {
@@ -57,8 +57,8 @@ public class User {
         this.manageCd = manageCd;
     }
 
-    public UserResponseCommand toCommand() {
-        return UserResponseCommand.builder()
+    public UserResponse toCommand() {
+        return UserResponse.builder()
                 .userId(this.userId)
                 .userNm(this.userNm)
                 .userRole(this.userRole)

@@ -12,7 +12,7 @@ import state.admin.userManage.presentation.request.UserListRequest;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class UserManage {
 
@@ -43,10 +43,10 @@ public class UserManage {
         userInfoDeleteProcessor.execute(userInfoDeleteCommand);
     }
 
-    public List<User> findList(UserListRequest userListRequest) {
-        return userFindListProcessor.execute(userListRequest);
+    public List<User> findList(String userNm) {
+        return userFindListProcessor.execute(userNm);
     }
-    public Optional<User> findById(int seq) {
+    public User findById(int seq) {
         return userFindByIdProcessor.execute(seq);
     }
 

@@ -3,7 +3,6 @@ package state.admin.userManage.application.processor;
 import org.springframework.stereotype.Component;
 import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
-import state.admin.userManage.presentation.request.UserListRequest;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class UserFindListProcessor {
         this.userRepository = userRepository;
     }
 
-    public List<User> execute(UserListRequest userListRequest) {
-        return userRepository.findUserList(userListRequest.getUserNm());
+    public List<User> execute(String userNm) {
+        return userRepository.findUserList(userNm);
     }
 }

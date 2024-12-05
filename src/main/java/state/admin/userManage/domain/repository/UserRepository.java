@@ -11,9 +11,11 @@ public interface UserRepository {
 
     List<User> findUserList(String userNm);
 
-    Optional<User> findById(int seq);
+    User findById(int seq);
 
     boolean existsById(int seq);
 
     User getReferenceById(int seq);
+
+    Optional<User> findByUserId(String userId);
 }

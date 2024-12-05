@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
 
-import java.util.Optional;
-
 @Component
 public class UserFindByIdProcessor {
 
@@ -15,7 +13,7 @@ public class UserFindByIdProcessor {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> execute(int id) {
+    public User execute(int id) {
         return userRepository.findById(id);
     }
 }
