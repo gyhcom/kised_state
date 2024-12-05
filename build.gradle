@@ -40,6 +40,9 @@ dependencies {
     // Testing (Spring Boot Test + Security Test)
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.4'
     testImplementation 'org.springframework.security:spring-security-test:6.1.4'
+
+    // thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 test {

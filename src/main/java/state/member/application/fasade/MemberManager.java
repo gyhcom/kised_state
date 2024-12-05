@@ -6,8 +6,6 @@ import state.member.application.command.member.MemberRegisterCommand;
 import state.member.application.command.member.MemberUpdateCommand;
 import state.member.application.processor.member.*;
 import state.member.domain.entity.Member;
-import state.member.domain.exception.MemberNotFoundException;
-import state.member.presentation.request.member.MemberDeleteRequest;
 
 import java.util.Optional;
 

@@ -12,7 +12,6 @@ import state.member.presentation.request.member.MemberDeleteRequest;
 import state.member.presentation.request.member.MemberRegisterRequest;
 import state.member.presentation.request.member.MemberUpdateRequest;
 import state.member.presentation.response.MemberResponse;
-import state.member.domain.exception.MemberNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
