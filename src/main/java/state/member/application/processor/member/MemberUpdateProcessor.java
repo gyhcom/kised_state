@@ -1,8 +1,8 @@
-package state.member.application.processor;
+package state.member.application.processor.member;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import state.member.application.command.MemberUpdateCommand;
+import state.member.application.command.member.MemberUpdateCommand;
 import state.member.domain.entity.Member;
 import state.member.domain.exception.MemberNotFoundException;
 import state.member.domain.repository.MemberRepository;

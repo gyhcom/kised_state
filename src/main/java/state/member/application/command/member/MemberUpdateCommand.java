@@ -1,4 +1,4 @@
-package state.member.application.command;
+package state.member.application.command.member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,5 +10,8 @@ import lombok.Setter;
 public class MemberUpdateCommand {
     int seq;
     String password;
+    String email;
+    String departmentCode;
+    String positionCode;
     String userRole;
 }
