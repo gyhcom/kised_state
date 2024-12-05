@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import state.common.command.ResponseCommand;
 import state.member.application.fasade.MemberManager;
 import state.member.domain.entity.Member;
+import state.member.presentation.request.member.MemberDeleteRequest;
 import state.member.presentation.request.member.MemberRegisterRequest;
 import state.member.presentation.request.member.MemberUpdateRequest;
 import state.member.presentation.response.MemberResponse;
@@ -51,8 +52,12 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
 
     //TODO 논리적으로 삭제
     @PostMapping("/delete")
-    public ResponseEntity<ResponseCommand> userDelete(@RequestBody MemberRegisterRequest memberRegisterRequest) {
-        memberManager.delete(memberRegisterRequest.getSeq());
+    public ResponseEntity<ResponseCommand> userDelete(@RequestBody MemberDeleteRequest memberDeleteRequest) {
+        memberManager.delete(
+                memberDeleteRequest.getSeq(),
+                memberDeleteRequest.getUserId(),
+                memberDeleteRequest.getUsername()
+        );
         return new ResponseEntity<>(
                 ResponseCommand.builder()
                         .code(200)

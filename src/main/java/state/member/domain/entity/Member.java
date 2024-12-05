@@ -40,6 +40,9 @@ public class Member {
     @Column(name = "PSIT_CD")
     String positionCode;
 
+    @Column(name = "DEL_YN")
+    String deleteYn;
+
     public Member() {}
 
     public Member(
@@ -50,7 +53,8 @@ public class Member {
             String userRole,
             String email,
             String departmentCode,
-            String positionCode) {
+            String positionCode,
+            String deleteYn) {
         this.seq = seq;
         this.userId = userId;
         this.username = username;
@@ -59,6 +63,7 @@ public class Member {
         this.email = email;
         this.departmentCode = departmentCode;
         this.positionCode = positionCode;
+        this.deleteYn = deleteYn;
     }
 
     public MemberResponse toCommand() {

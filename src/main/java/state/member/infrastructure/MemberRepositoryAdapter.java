@@ -60,4 +60,9 @@ public class MemberRepositoryAdapter implements MemberRepository {
     public Boolean existsByEmail(String email) {
         return jpaMemberRepository.existsByEmail(email);
     }
+
+    @Override
+    public Boolean existsBySeqAndUserIdAndUsername(int seq, String userId, String username) {
+        return jpaMemberRepository.existsBySeqAndUserIdAndUsername(seq, userId, username);
+    }
 }

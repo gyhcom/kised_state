@@ -7,6 +7,7 @@ import state.member.application.command.member.MemberUpdateCommand;
 import state.member.application.processor.member.*;
 import state.member.domain.entity.Member;
 import state.member.domain.exception.MemberNotFoundException;
+import state.member.presentation.request.member.MemberDeleteRequest;
 
 import java.util.Optional;
 
@@ -44,8 +45,8 @@ public class MemberManager {
         return memberFindByUsernameProcessor.execute(userId);
     }
 
-    public void delete(int seq) {
-        memberDeleteProcessor.execute(seq);
+    public void delete(int seq, String userId, String username) {
+        memberDeleteProcessor.execute(seq, userId, username);
     }
 
     //getReferenceById 와 findById의 차이점 알기
