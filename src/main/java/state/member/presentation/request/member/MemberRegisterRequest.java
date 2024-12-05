@@ -26,6 +26,7 @@ public class MemberRegisterRequest {
     final String userRole = "ROLE_USER";
 
     @Email(message = "이메일 형식을 확인해주세요.")
+    @NotBlank(message = "이메일 정보를 입력해주세요.")
     String email;
 
     @NotBlank(message = "소속된 부서를 선택해주세요.")

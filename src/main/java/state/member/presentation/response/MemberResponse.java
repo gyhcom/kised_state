@@ -1,11 +1,11 @@
-package state.member.presentation.response.member;
+package state.member.presentation.response;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberResponseCommand {
+public class MemberResponse {
     int seq;
     String userId;
     String username;
@@ -14,7 +14,7 @@ public class MemberResponseCommand {
     String departmentCode;
     String positionCode;
 
-    public MemberResponseCommand(
+    public MemberResponse(
             int seq,
             String userId,
             String username,
