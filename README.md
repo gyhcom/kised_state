@@ -5,24 +5,20 @@
 
 ## 주요 기능
 
-1. **회원 생성**  
-   - 새로운 사용자를 등록합니다.
-   - 사용자 비밀번호는 암호화(BCrypt)하여 저장됩니다.
-2. **회원 조회**  
-   - 사용자 이름으로 회원 정보를 조회합니다.
+
 
  #### 추가 작성 필요
 ---
 
 ## 기술 스택
 
-- **Java 17**: 최신 Java 언어 기능 활용.
-- **Spring Boot 3.1.4**: 애플리케이션 개발의 생산성 향상.
-- **Spring Security 6.x**: 사용자 인증 및 권한 관리.
-- **Spring Data JPA**: 데이터베이스와의 상호작용.
-- **MariaDB**: 관계형 데이터베이스.
-- **Lombok**: 보일러플레이트 코드 제거.
-- **Gradle**: 프로젝트 빌드 및 의존성 관리.
+- **Java 17**
+- **Spring Boot 3.1.4**
+- **Spring Security 6.x**
+- **Spring Data JPA**
+- **MariaDB**
+- **Lombok**
+- **Gradle**
 
 ---
 ```plaintext
