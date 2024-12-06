@@ -2,7 +2,7 @@ package state.admin.userManage.application.processor;
 
 import org.springframework.stereotype.Component;
 import state.admin.userManage.application.command.UserInfoDeleteCommand;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 import state.admin.userManage.application.common.exception.ApiException;
 import state.admin.userManage.domain.auth.AuthRole;
 import state.admin.userManage.domain.entity.User;

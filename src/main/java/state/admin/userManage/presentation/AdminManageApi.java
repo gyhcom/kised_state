@@ -1,14 +1,13 @@
 package state.admin.userManage.presentation;
 
 import jakarta.validation.Valid;
-import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import state.admin.userManage.application.common.api.Api;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 import state.admin.userManage.presentation.response.UserResponse;
 import state.admin.userManage.application.fasade.UserManage;
 import state.admin.userManage.domain.entity.User;

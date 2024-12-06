@@ -1,9 +1,9 @@
 package state.member.domain.exception;
 
-import state.common.exception.ErrorCode;
+import state.admin.userManage.application.common.error.AdminErrorCode;
 
 public class DepartmentNotExistException extends RuntimeException {
     public DepartmentNotExistException() {
-        super(ErrorCode.DEPARTMENT_NOT_EXIST.getMessage());
+        super(AdminErrorCode.DEPARTMENT_NOT_EXIST.getDescription());
     }
 }

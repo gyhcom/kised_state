@@ -4,9 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import state.member.application.command.member.MemberUpdateCommand;
 import state.member.domain.entity.Member;
-import state.member.domain.exception.DepartmentNotFoundException;
 import state.member.domain.exception.MemberNotFoundException;
-import state.member.domain.exception.PositionNotExistException;
 import state.member.domain.repository.DepartmentRepository;
 import state.member.domain.repository.MemberRepository;
 import state.member.domain.repository.PositionRepository;
@@ -14,19 +12,13 @@ import state.member.domain.repository.PositionRepository;
 @Component
 public class MemberUpdateProcessor {
     private final MemberRepository memberRepository;
-    private final DepartmentRepository departmentRepository;
-    private final PositionRepository positionRepository;
     private final PasswordEncoder passwordEncoder;
 
     public MemberUpdateProcessor(
             MemberRepository memberRepository,
-            PasswordEncoder passwordEncoder,
-            DepartmentRepository departmentRepository,
-            PositionRepository positionRepository) {
+            PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
-        this.departmentRepository = departmentRepository;
-        this.positionRepository = positionRepository;
     }
 
     public void execute(MemberUpdateCommand memberUpdateCommand) {

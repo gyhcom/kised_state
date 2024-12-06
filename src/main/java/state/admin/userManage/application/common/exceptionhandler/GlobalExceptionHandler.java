@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import state.admin.userManage.application.common.api.Api;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 
 /**
  * 예상치 못한 예외가 일어나거나 캐치하지 못한 에러가 일어났을때 처리해줌

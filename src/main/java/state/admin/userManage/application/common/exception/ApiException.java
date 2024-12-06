@@ -1,7 +1,7 @@
 package state.admin.userManage.application.common.exception;
 
 import lombok.Getter;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 @Getter
 public class ApiException extends RuntimeException {
 
