@@ -47,8 +47,9 @@ main
         │           └── response             #
         ├── common                           # 공통 설정 및 유틸리티
         │   └── config                       # 설정 파일
-        │       └── StateSecurityConfig      # Spring Security 설정
-        ├── edu                              # 교육 도메인
+        │   │   └── StateSecurityConfig      # Spring Security 설정
+        │   ├── command                      # 응답 command
+        │   └── exception                    # 에러 공통
         └── member                           # 회원(Member) 도메인
             ├── application                  # 애플리케이션 계층
             │   ├── command                  # Command 객체 정의
