@@ -3,7 +3,7 @@ package state.admin.userManage.application.processor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import state.admin.userManage.application.command.UserRegisterCommand;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 import state.admin.userManage.application.common.exception.ApiException;
 import state.admin.userManage.domain.repository.UserRepository;
 @Component

@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import state.admin.userManage.application.common.error.ErrorCode;
+import state.common.exception.ErrorCode;
 
 @Data
 @NoArgsConstructor
