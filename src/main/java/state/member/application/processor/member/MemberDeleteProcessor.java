@@ -1,8 +1,9 @@
 package state.member.application.processor.member;
 
 import org.springframework.stereotype.Component;
+import state.admin.userManage.application.common.exception.ApiException;
+import state.common.exception.ErrorCode;
 import state.member.domain.entity.Member;
-import state.member.domain.exception.MemberNotFoundException;
 import state.member.domain.repository.MemberRepository;
 
 @Component
@@ -16,7 +17,7 @@ public class MemberDeleteProcessor {
     public void execute(int seq, String userId, String username) {
         // 사용자 존재여부 확인
         if (!memberRepository.existsBySeqAndUserIdAndUsername(seq, userId, username)) {
-            throw new MemberNotFoundException();
+            throw new ApiException(ErrorCode.USER_NOT_FOUND);
         }
 
         Member member = memberRepository.getReferenceById(seq);

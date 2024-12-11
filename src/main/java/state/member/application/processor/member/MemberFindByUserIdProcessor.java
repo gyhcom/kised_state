@@ -9,17 +9,18 @@ import state.member.domain.repository.MemberRepository;
 import java.util.Optional;
 
 @Component
-public class MemberFindByIdProcessor {
+public class MemberFindByUserIdProcessor {
     private final MemberRepository memberRepository;
-
-    public MemberFindByIdProcessor(MemberRepository memberRepository) {
+    public MemberFindByUserIdProcessor(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
-    public Optional<Member> execute(int seq) {
-        if (!memberRepository.existsById(seq)) {
-            throw new ApiException(ErrorCode.USER_NOT_FOUND);
+    public Optional<Member> execute(String userId) {
+        // ID 체크
+        if(!memberRepository.existsByUserId(userId)) {
+            throw new ApiException(ErrorCode.ID_CHECK, "존재하지 않는 ID입니다.");
         }
-        return memberRepository.findById(seq);
+
+        return memberRepository.findByUserId(userId);
     }
 }
