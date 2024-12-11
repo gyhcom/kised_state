@@ -2,7 +2,7 @@ package state.member.application.processor.department;
 
 import org.springframework.stereotype.Component;
 import state.member.domain.entity.Department;
-import state.member.domain.exception.DepartmentNotExistException;
+import state.member.domain.exception.custom.DepartmentNotExistException;
 import state.member.domain.repository.DepartmentRepository;
 
 import java.util.List;
