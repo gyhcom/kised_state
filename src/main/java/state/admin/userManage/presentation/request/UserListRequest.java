@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class UserListRequest {
 
-    private String userNm;
+    private String username;
 }

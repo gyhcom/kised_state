@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import state.admin.userManage.domain.auth.AuthRole;
-import state.admin.userManage.domain.entity.User;
+import state.member.domain.entity.Member;
 
 @Setter
 @Getter
@@ -12,22 +12,23 @@ import state.admin.userManage.domain.entity.User;
 public class UserRegisterCommand {
 
     private String userId;
-    private String userNm;
+    private String username;
     private String password;
-    private AuthRole userRole;
+    private String userRole;
     private String email;
-    private String deptCd;
-    private String manageCd;
+    private String departmentCode;
+    private String positionCode;
 
-    public User toEntity(UserRegisterCommand userRegisterCommand) {
-        return User.builder()
+    public Member toEntity(UserRegisterCommand userRegisterCommand) {
+        return Member.builder()
                 .userId(userRegisterCommand.userId)
-                .userNm(userRegisterCommand.userNm)
+                .username(userRegisterCommand.username)
                 .password(userRegisterCommand.password)
                 .userRole(userRegisterCommand.userRole)
+                .departmentCode(userRegisterCommand.departmentCode)
+                .positionCode(userRegisterCommand.positionCode)
                 .email(userRegisterCommand.email)
-                .deptCd(userRegisterCommand.deptCd)
-                .manageCd(userRegisterCommand.manageCd)
+                .deleteYn("N")
                 .build();
     }
 }
