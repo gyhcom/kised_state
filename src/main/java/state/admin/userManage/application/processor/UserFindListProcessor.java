@@ -16,6 +16,12 @@ public class UserFindListProcessor {
     }
 
     public List<Member> execute(String username) {
-        return userRepository.findUserList(username);
+        List<Member> userList;
+        if(username != null) {
+            userList = userRepository.findUserList(username);
+        } else {
+            userList = userRepository.findAll();
+        }
+        return userList;
     }
 }
