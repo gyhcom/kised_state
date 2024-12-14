@@ -1,8 +1,8 @@
 package state.admin.userManage.application.processor;
 
 import org.springframework.stereotype.Component;
-import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
+import state.member.domain.entity.Member;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class UserFindListProcessor {
         this.userRepository = userRepository;
     }
 
-    public List<User> execute(String userNm) {
-        return userRepository.findUserList(userNm);
+    public List<Member> execute(String username) {
+        return userRepository.findUserList(username);
     }
 }

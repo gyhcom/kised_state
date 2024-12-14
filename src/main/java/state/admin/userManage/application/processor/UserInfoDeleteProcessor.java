@@ -5,8 +5,8 @@ import state.admin.userManage.application.command.UserInfoDeleteCommand;
 import state.common.exception.ErrorCode;
 import state.admin.userManage.application.common.exception.ApiException;
 import state.admin.userManage.domain.auth.AuthRole;
-import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
+import state.member.domain.entity.Member;
 
 @Component
 public class UserInfoDeleteProcessor {
@@ -22,9 +22,9 @@ public class UserInfoDeleteProcessor {
         if (!userRepository.existsById(userInfoDeleteCommand.getSeq())) {
             throw new ApiException(ErrorCode.NULL_POINT, "잘못된 사용자입니다.");
         } else {
-            User user = userRepository.getReferenceById(userInfoDeleteCommand.getSeq());
+            Member user = userRepository.getReferenceById(userInfoDeleteCommand.getSeq());
 
-            user.setUserRole(AuthRole.USER);
+            user.setUserRole("USER");
         }
 
     }
