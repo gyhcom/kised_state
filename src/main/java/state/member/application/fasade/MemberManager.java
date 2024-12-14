@@ -6,7 +6,6 @@ import state.member.application.command.member.MemberRegisterCommand;
 import state.member.application.command.member.MemberUpdateCommand;
 import state.member.application.processor.member.*;
 import state.member.domain.entity.Member;
-import state.member.domain.exception.MemberNotFoundException;
 
 import java.util.Optional;
 
@@ -15,21 +14,21 @@ import java.util.Optional;
 public class MemberManager {
     private final MemberRegisterProcessor memberRegisterProcessor;
     private final MemberFindByIdProcessor memberFindByIdProcessor;
-    private final MemberFindByUsernameProcessor memberFindByUsernameProcessor;
     private final MemberDeleteProcessor memberDeleteProcessor;
     private final MemberUpdateProcessor memberUpdateProcessor;
+    private final MemberFindByUserIdProcessor memberFindByUserIdProcessor;
 
     public MemberManager(
             MemberRegisterProcessor memberRegisterProcessor,
             MemberFindByIdProcessor memberFindByIdProcessor,
-            MemberFindByUsernameProcessor memberFindByUsernameProcessor,
             MemberDeleteProcessor memberDeleteProcessor,
-            MemberUpdateProcessor memberUpdateProcessor) {
+            MemberUpdateProcessor memberUpdateProcessor,
+            MemberFindByUserIdProcessor memberFindByUserIdProcessor) {
         this.memberRegisterProcessor = memberRegisterProcessor;
         this.memberFindByIdProcessor = memberFindByIdProcessor;
-        this.memberFindByUsernameProcessor = memberFindByUsernameProcessor;
         this.memberDeleteProcessor = memberDeleteProcessor;
         this.memberUpdateProcessor = memberUpdateProcessor;
+        this.memberFindByUserIdProcessor = memberFindByUserIdProcessor;
     }
 
     public void save(MemberRegisterCommand memberRegisterCommand) {
@@ -40,10 +39,6 @@ public class MemberManager {
         return memberFindByIdProcessor.execute(seq);
     }
 
-    public Optional<Member> findByUsername(String userId) {
-        return memberFindByUsernameProcessor.execute(userId);
-    }
-
     public void delete(int seq, String userId, String username) {
         memberDeleteProcessor.execute(seq, userId, username);
     }
@@ -52,4 +47,6 @@ public class MemberManager {
     public void update(MemberUpdateCommand memberUpdateCommand) {
         memberUpdateProcessor.execute(memberUpdateCommand);
     }
+
+    public Optional<Member> findByUserId(String userId) {return memberFindByUserIdProcessor.execute(userId);}
 }

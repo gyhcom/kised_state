@@ -1,4 +1,4 @@
-package state.member.domain.exception;
+package state.member.domain.exception.custom;
 
 import state.common.exception.ErrorCode;
 

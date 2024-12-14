@@ -27,16 +27,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findByUsername(String userId) {
-        return jpaMemberRepository.findByUsername(userId);
-    }
-
-    @Override
-    public void deleteById(int seq) {
-        jpaMemberRepository.deleteById(seq);
-    }
-
-    @Override
     public Member getReferenceById(int seq) {
         return jpaMemberRepository.getReferenceById(seq);
     }
@@ -44,11 +34,6 @@ public class MemberRepositoryAdapter implements MemberRepository {
     @Override
     public Boolean existsById(int seq) {
         return jpaMemberRepository.existsById(seq);
-    }
-
-    @Override
-    public Boolean existsByUsername(String username) {
-        return jpaMemberRepository.existsByUsername(username);
     }
 
     @Override
@@ -64,5 +49,10 @@ public class MemberRepositoryAdapter implements MemberRepository {
     @Override
     public Boolean existsBySeqAndUserIdAndUsername(int seq, String userId, String username) {
         return jpaMemberRepository.existsBySeqAndUserIdAndUsername(seq, userId, username);
+    }
+
+    @Override
+    public Optional<Member> findByUserId(String userId) {
+        return jpaMemberRepository.findByUserId(userId);
     }
 }
