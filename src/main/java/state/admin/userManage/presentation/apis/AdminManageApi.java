@@ -17,7 +17,7 @@ import state.member.presentation.response.MemberResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RequestMapping("/kised_state/admin")
+@RequestMapping("/dashboard/admin")
 @Controller
 public class AdminManageApi {
 
@@ -26,16 +26,12 @@ public class AdminManageApi {
     public AdminManageApi(UserManage userManage) {
         this.userManage = userManage;
     }
-    @GetMapping("/registerTest")
-    public String register(Model model){
-        model.addAttribute("user",new Member());
-        return "index";
-    }
 
     @GetMapping(value = "/userList", name = "사용자 조회")
-    public ResponseEntity<List<Member>> userList(@RequestBody UserListRequest userListRequest) {
+    public String userList(@ModelAttribute UserListRequest userListRequest, Model model) {
         List<Member> userList = userManage.findList(userListRequest.getUsername());
-        return ResponseEntity.ok(userList);
+        model.addAttribute("members",userList);
+        return "userInfoList";
     }
 
     @ResponseBody
