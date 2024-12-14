@@ -28,6 +28,11 @@ public class AdminRepositoryAdaptor implements UserRepository {
     }
 
     @Override
+    public List<Member> findAll() {
+        return adminJpaRepository.findAll();
+    }
+
+    @Override
     public Member findById(int seq) {
         return adminJpaRepository.findBySeq(seq);
     }
