@@ -1,21 +1,23 @@
 package state.admin.userManage.domain.repository;
 
-import state.admin.userManage.domain.entity.User;
+import state.member.domain.entity.Member;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
 
-    void save(User user);
+    void save(Member user);
 
-    List<User> findUserList(String userNm);
+    List<Member> findUserList(String username);
 
-    User findById(int seq);
+    List<Member> findAll();
+
+    Member findById(int seq);
 
     boolean existsById(int seq);
 
-    User getReferenceById(int seq);
+    Member getReferenceById(int seq);
 
-    Optional<User> findByUserId(String userId);
+    Optional<Member> findByUserId(String userId);
 }
