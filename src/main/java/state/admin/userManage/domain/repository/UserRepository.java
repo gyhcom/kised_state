@@ -11,7 +11,9 @@ public interface UserRepository {
 
     List<Member> findUserList(String username);
 
-    Member findById(int seq);
+    List<Member> findAll();
+
+    Member findByUserIdOrderBySeqDesc(String userId);
 
     boolean existsById(int seq);
 

@@ -1,13 +1,14 @@
 package state.member.presentation.apis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Deprecated //미리 구현한 컨트롤러. 화면이 구현되면 사용할 예정
+@Slf4j
 @Controller
 public class LoginApi {
-    @GetMapping("/login")
-    public String login() {
+    @GetMapping("/loginForm")
+    public String loginForm() {
         return "login";
     }
 }
