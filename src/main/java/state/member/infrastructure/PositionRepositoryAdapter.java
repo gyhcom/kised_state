@@ -6,6 +6,7 @@ import state.member.domain.repository.PositionRepository;
 import state.member.infrastructure.JPA.JpaPositionRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PositionRepositoryAdapter implements PositionRepository {
@@ -24,4 +25,11 @@ public class PositionRepositoryAdapter implements PositionRepository {
     public Boolean existsById(String id) {
         return jpaPositionRepository.existsById(id);
     }
+
+    @Override
+    public Position getReferenceById(String id) {
+        return jpaPositionRepository.getReferenceById(id);
+    }
+
+
 }
