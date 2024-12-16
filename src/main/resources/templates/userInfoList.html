@@ -1,33 +1,130 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        /* 팝업창 스타일 */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        #popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1>사용자 리스트</h1>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${members}" onclick="fetchUserDetails([[${user.id}]])">
-            <td th:text="${user.userId}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.userRole}"></td>
-        </tr>
-        </tbody>
-    </table>
+
+<!-- Sidebar + Content -->
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-2 bg-primary text-white vh-100 p-3">
+        <h4 class="text-center">Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Components</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Utilities</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/dashboard/admin/userList">사용자리스트</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container mt-5">
+        <h1>사용자 리스트</h1>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${members}"
+                th:onclick="pageMove([[${user.userId}]]);">
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.userRole}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- 팝업창 -->
+    <div id="popup-overlay" onclick="closePopup()"></div>
+    <div id="popup">
+        <h2>사용자 정보</h2>
+        <p><strong>이름:</strong> <span id="user-name"></span></p>
+        <p><strong>이메일:</strong> <span id="user-email"></span></p>
+        <button onclick="closePopup()">닫기</button>
+    </div>
 </div>
+
+<script>
+    // 팝업창 열기
+    function pageMove(userId) {
+    console.log(userId);
+        fetch("/dashboard/admin/userInfo/" + userId)
+        .then(response => {
+        console.log(response);
+        })
+        .then(data => {
+            console.log(data);
+        });
+<!--        fetch("/dashboard/admin/userInfo/" + userId, {-->
+<!--        headers: {-->
+<!--            "Content-Type": "application/x-www-form-urlencoded",-->
+<!--        }-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--            if (response.ok) {-->
+<!--                    return response.json();-->
+<!--                } else {-->
+<!--                    throw new Error("사용자가 없습니다.");-->
+<!--                }-->
+<!--            })-->
+<!--            .then(data => {-->
+<!--            console.dir(data);-->
+<!--                const popup = document.getElementById('popup');-->
+<!--                document.getElementById('user-name').innerText = data.username;-->
+<!--                document.getElementById('user-email').innerText = data.email;-->
+<!--                popup.style.display = 'block';-->
+<!--            })-->
+<!--            .catch(error => console.error('Error:', error));-->
+    }
+
+    // 팝업창 닫기
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+</script>
 </body>
 </html>
