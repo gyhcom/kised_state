@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원정보 수정</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <style>
+        .card-header {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .card-body p {
+            font-size: 1rem;
+            color: #333;
+            padding-left: 10px;
+        }
+        .card-footer button {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .card-footer button:hover {
+            background-color: #0056b3; /* 더 진한 색상 */
+            transform: scale(1.05); /* 약간 확대 */
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid bg-light vh-100">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">
+                <img alt="창업진흥원" src="/img/mainLogo.png">
+            </a>
+            <div class="d-flex align-items-center ms-auto">
+                <a class="nav-link me-3 text-primary fw-bold" href="/user-profile">회원정보</a>
+                <button class="btn btn-primary" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="userInfoForm" novalidate>
+                    <input type="hidden" id="seq" name="seq" th:value="${member.getSeq()}" >
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">회원정보 수정</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- 사용자명 -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-bold">사용자명</label>
+                                <input type="text" class="form-control" id="username" name="username" th:value="${member.getUsername()}" required>
+                                <small id="usernameError" class="text-danger d-none">사용자명을 입력해주세요.</small>
+                            </div>
+                            <!-- 이메일 -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold">이메일</label>
+                                <input type="email" class="form-control" id="email" name="email" th:value="${member.getEmail()}" required>
+                                <small id="emailError" class="text-danger d-none">올바른 이메일 형식을 입력해주세요.</small>
+                            </div>
+                            <!-- 부서명 -->
+                            <div class="mb-3">
+                                <label for="departmentName" class="form-label fw-bold">부서명</label>
+                                <input type="text" class="form-control" id="departmentName" name="departmentName" th:value="${dept.getDepartmentName()}" disabled>
+                            </div>
+                            <!-- 직위명 -->
+                            <div class="mb-3">
+                                <label for="positionName" class="form-label fw-bold">직위명</label>
+                                <input type="text" class="form-control" id="positionName" name="positionName" th:value="${psit.getPositionName()}" disabled>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button type="button" class="btn btn-primary" onclick="validateForm()">저장</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function cancelEdit() {
+        if(confirm("작성 중인 정보는 모두 사라집니다. 수정을 취소하시겠습니까?")) return;
+        window.location.href = '/dashboard'; // 취소 시 대시보드로 이동
+    }
+
+    function validateForm() {
+        // 요소 가져오기
+        const username = document.getElementById('username');
+        const email = document.getElementById('email');
+        const usernameError = document.getElementById('usernameError');
+        const emailError = document.getElementById('emailError');
+
+        let isValid = true;
+
+        // 사용자명 유효성 검사
+        if (username.value.trim() === '') {
+            usernameError.classList.remove('d-none');
+            isValid = false;
+        } else {
+            usernameError.classList.add('d-none');
+        }
+
+        // 이메일 유효성 검사
+        const emailPattern = /^[^\s@]+@[^\s@]+$/;
+        if (email.value.trim() === '' || !emailPattern.test(email.value.trim())) {
+            emailError.classList.remove('d-none');
+            isValid = false;
+        } else {
+            emailError.classList.add('d-none');
+        }
+
+        // 최종 유효성 검사 결과
+        if (isValid) {
+            // 실제 저장 로직 호출 (예: Ajax 요청)
+            update();
+        }
+    }
+
+    function update() {
+        // 폼 요소 가져오기
+        const form = document.getElementById('userInfoForm');
+
+        // FormData 객체 생성
+        const formData = new FormData(form);
+
+        // FormData를 JSON 객체로 변환
+        const jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        fetch("/member/update", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonObject),
+            credentials: "same-origin"
+        })
+            .then(response => {
+                console.dir(response);
+                if (response.ok) {
+                    return response;
+                } else {
+                    throw new Error("회원 정보 수정 실패");
+                }
+            })
+            .then(data => {
+                if (data.status === 200) {
+                    alert("회원정보 수정이 완료되었습니다.");
+                    window.location.href = "/dashboard";
+                } else {
+                    loginError.textContent = data.message || "회원 정보 수정 중 오류가 발생했습니다.";
+                }
+            })
+            .catch(error => {
+                loginError.textContent = "회원 정보 수정 중 오류가 발생했습니다.";
+                console.error(error);
+            });
+    }
+
+    function logout() {
+        if(!confirm("로그아웃 하시겠습니까?")) return;
+        //csrf 토큰이 있어야 로그아웃 처리할 수 있음. -> 추후 만들기
+        fetch('/logout', {
+            method: 'POST',
+            credentials: 'same-origin' // CSRF 보호 활성화 시 필요
+        })
+            .then(response => {
+                console.dir(response);
+                if (response.ok) {
+                    return response;
+                } else {
+                    throw new Error('Logout failed');
+                }
+            })
+            .then(data => {
+                //console.log(data.message); // 로그아웃 성공 메시지
+                window.location.href = '/loginForm'; // 로그인 페이지로 리다이렉트
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>
