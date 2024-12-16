@@ -33,8 +33,8 @@ public class AdminRepositoryAdaptor implements UserRepository {
     }
 
     @Override
-    public Member findById(int seq) {
-        return adminJpaRepository.findBySeq(seq);
+    public Member findByUserIdOrderBySeqDesc(String userId) {
+        return adminJpaRepository.findByUserIdOrderBySeqDesc(userId);
     }
 
     @Override

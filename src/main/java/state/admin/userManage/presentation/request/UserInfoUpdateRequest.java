@@ -24,7 +24,6 @@ public class UserInfoUpdateRequest {
     private String username;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(max = 12, message = "대/소문자, 특수문자 포함 최대 12차리 입력해주세요.")
     private String password;
 
     @Enumerated(EnumType.STRING)

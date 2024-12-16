@@ -14,4 +14,6 @@ public interface AdminJpaRepository extends JpaRepository<Member, Integer> {
     Optional<Member> findByUserId(String userId);
 
     Member findBySeq(int seq);
+
+    Member findByUserIdOrderBySeqDesc(String userId);
 }
