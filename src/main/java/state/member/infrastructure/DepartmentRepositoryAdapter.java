@@ -24,4 +24,10 @@ public class DepartmentRepositoryAdapter implements DepartmentRepository {
     public Boolean existsById(String id) {
         return jpaDepartmentRepository.existsById(id);
     }
+
+    @Override
+    public Department getReferenceById(String id) {
+        return jpaDepartmentRepository.getReferenceById(id);
+    }
+
 }

@@ -22,17 +22,12 @@ public class MemberUpdateProcessor {
     }
 
     public void execute(MemberUpdateCommand memberUpdateCommand) {
-        // 사용자 존재 여부 확인
-        if(!memberRepository.existsById(memberUpdateCommand.getSeq())) {
-            throw new ApiException(ErrorCode.USER_NOT_FOUND);
-        }
-
         Member member = memberRepository.getReferenceById(memberUpdateCommand.getSeq());
 
         //비밀번호 암호화
-        memberUpdateCommand.setPassword(passwordEncoder.encode(memberUpdateCommand.getPassword()));
+        //memberUpdateCommand.setPassword(passwordEncoder.encode(memberUpdateCommand.getPassword()));
 
-        member.setPassword(memberUpdateCommand.getPassword());
+        //member.setPassword(memberUpdateCommand.getPassword());
         member.setEmail(memberUpdateCommand.getEmail());
         member.setUsername(memberUpdateCommand.getUsername());
     }

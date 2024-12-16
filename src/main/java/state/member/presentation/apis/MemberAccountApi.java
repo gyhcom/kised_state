@@ -1,12 +1,20 @@
 package state.member.presentation.apis;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import state.admin.userManage.application.common.exception.ApiException;
 import state.common.command.ResponseCommand;
+import state.common.exception.ErrorCode;
+import state.member.application.fasade.DepartmentManager;
 import state.member.application.fasade.MemberManager;
+import state.member.application.fasade.PositionManager;
 import state.member.domain.entity.Member;
 import state.member.presentation.request.member.MemberDeleteRequest;
 import state.member.presentation.request.member.MemberRegisterRequest;
@@ -20,10 +28,17 @@ import java.util.Optional;
 @Controller
 public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
     private final MemberManager memberManager;
+    private final DepartmentManager departmentManager;
+    private final PositionManager positionManager;
 
 
-    public MemberAccountApi(MemberManager memberManager) {
+    public MemberAccountApi(
+            MemberManager memberManager,
+            DepartmentManager departmentManager,
+            PositionManager positionManager) {
         this.memberManager = memberManager;
+        this.departmentManager = departmentManager;
+        this.positionManager = positionManager;
     }
 
     //TODO registerRequest와 성격이 맞지 않음. 수정 필요
@@ -78,6 +93,19 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
         );
     }
 
-    //활동 로그 기록
-    
+    @GetMapping("/member-profile")
+    public ModelAndView userProfileForm(ModelAndView mv, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        if( session.getAttribute("seq") == null ) throw new ApiException(ErrorCode.SERVER_ERROR);
+
+        mv.addObject("member", memberManager.findById((int)session.getAttribute("seq")).get());
+
+        // 부서, 직위 세팅
+        mv.addObject("dept", departmentManager.getReferenceById(String.valueOf(session.getAttribute("deptCd"))));
+        mv.addObject("psit", positionManager.findById(String.valueOf(session.getAttribute("psitCd"))));
+
+        mv.setViewName("member-profile");
+        return mv;
+    }
 }
