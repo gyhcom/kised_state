@@ -13,7 +13,7 @@ public class UserFindByIdProcessor {
         this.userRepository = userRepository;
     }
 
-    public Member execute(int id) {
-        return userRepository.findById(id);
+    public Member execute(String userId) {
+        return userRepository.findByUserIdOrderBySeqDesc(userId);
     }
 }

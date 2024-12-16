@@ -13,7 +13,7 @@ public interface UserRepository {
 
     List<Member> findAll();
 
-    Member findById(int seq);
+    Member findByUserIdOrderBySeqDesc(String userId);
 
     boolean existsById(int seq);
 
