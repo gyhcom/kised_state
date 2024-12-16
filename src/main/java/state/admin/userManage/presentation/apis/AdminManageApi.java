@@ -39,7 +39,7 @@ public class AdminManageApi {
         return "userInfoDetail";
     }
     @PostMapping(value = "/register" , name = "회원가입")
-    public ResponseEntity<ResponseCommand> register(@RequestBody @Valid UserInfoRegisterRequest userInfoRegisterRequest, Model model) {
+    public ResponseEntity<ResponseCommand> register(@RequestBody @Valid UserInfoRegisterRequest userInfoRegisterRequest) {
         userManage.save(userInfoRegisterRequest.toCommand(userInfoRegisterRequest));
         return new ResponseEntity<>(
                 ResponseCommand.builder()
@@ -51,9 +51,8 @@ public class AdminManageApi {
     }
     @ResponseBody
     @PostMapping(value = "/update" , name = "회원정보수정")
-    public ResponseEntity<ResponseCommand> update(@RequestBody @Valid UserInfoUpdateRequest userInfoUpdateRequest, Model model) {
+    public ResponseEntity<ResponseCommand> update(@RequestBody @Valid UserInfoUpdateRequest userInfoUpdateRequest) {
         userManage.update(userInfoUpdateRequest.toCommand(userInfoUpdateRequest));
-        model.addAttribute("message", "수정이 완료되었습니다");
         return new ResponseEntity<>(
                 ResponseCommand.builder()
                         .code(ErrorCode.OK.getErrorCode())
@@ -64,7 +63,7 @@ public class AdminManageApi {
     }
     @ResponseBody
     @PostMapping(value = "/delete", name = "회원탈퇴")
-    public ResponseEntity<ResponseCommand> delete(@ModelAttribute UserInfoDeleteRequest userInfoDeleteRequest) {
+    public ResponseEntity<ResponseCommand> delete(@RequestBody UserInfoDeleteRequest userInfoDeleteRequest) {
         userManage.delete(userInfoDeleteRequest.toCommand(userInfoDeleteRequest));
         return new ResponseEntity<>(
                 ResponseCommand.builder()
