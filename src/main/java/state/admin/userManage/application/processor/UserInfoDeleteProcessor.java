@@ -22,9 +22,11 @@ public class UserInfoDeleteProcessor {
         if (!userRepository.existsById(userInfoDeleteCommand.getSeq())) {
             throw new ApiException(ErrorCode.NULL_POINT, "잘못된 사용자입니다.");
         } else {
-            Member user = userRepository.getReferenceById(userInfoDeleteCommand.getSeq());
+            Member member = userRepository.getReferenceById(userInfoDeleteCommand.getSeq());
 
-            user.setUserRole("USER");
+            member.setUserRole("USER");
+            member.setDeleteYn("Y");
+
         }
 
     }

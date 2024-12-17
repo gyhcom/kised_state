@@ -44,8 +44,8 @@ public class UserManage {
     public List<Member> findList(String username) {
         return userFindListProcessor.execute(username);
     }
-    public Member findById(int seq) {
-        return userFindByIdProcessor.execute(seq);
+    public Member findById(String userId) {
+        return userFindByIdProcessor.execute(userId);
     }
 
 }
