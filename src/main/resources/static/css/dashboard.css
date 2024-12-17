@@ -1,0 +1,65 @@
+.navbar-brand img {
+    transition: transform 0.3s ease;
+}
+.navbar-brand img:hover {
+    transform: scale(1.1); /* 약간 확대 */
+}
+
+button.btn-primary {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3; /* 더 진한 색상 */
+    transform: scale(1.05); /* 약간 확대 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+.nav-link {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 10px;
+    border-radius: 5px;
+}
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* 살짝 밝은 색 */
+    color: #f8f9fa; /* 더 밝은 흰색 */
+    font-weight: bold; /* 텍스트 강조 */
+}
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2); /* 선택된 메뉴 */
+    font-weight: bold;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-10px); /* 살짝 위로 이동 */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
+.card-body {
+    transition: background-color 0.3s ease;
+}
+.card-body:hover {
+    background-color: #f8f9fa; /* 부드러운 회색 */
+}
+
+footer a {
+    text-decoration: none;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+footer a:hover {
+    color: #0056b3; /* 강조 색 */
+    border-bottom: 2px solid #0056b3;
+}
+
+/* 로그아웃 버튼 간격 조정 */
+.navbar .btn-primary {
+    margin-left: 10px; /* 회원정보 링크와 버튼 간격 */
+}
+
+/* 정렬을 유지하기 위한 Flex 스타일 */
+.d-flex {
+    gap: 10px; /* 회원정보와 버튼 사이의 간격 */
+}

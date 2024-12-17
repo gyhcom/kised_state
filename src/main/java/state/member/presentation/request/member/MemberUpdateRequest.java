@@ -15,8 +15,8 @@ public class MemberUpdateRequest {
     @NotBlank(message = "사용자 이름을 입력해주세요.")
     String username;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    String password;
+//    @NotBlank(message = "비밀번호를 입력해주세요.")
+//    String password;
 
     @Email(message = "이메일 형식을 확인해주세요.")
     @NotBlank(message = "이메일 정보를 입력해주세요.")
@@ -26,7 +26,7 @@ public class MemberUpdateRequest {
         return MemberUpdateCommand.builder()
                 .seq(memberUpdateRequest.getSeq())
                 .username(memberUpdateRequest.getUsername())
-                .password(memberUpdateRequest.getPassword())
+                //.password(memberUpdateRequest.getPassword())
                 .email(memberUpdateRequest.getEmail())
                 .build();
     }

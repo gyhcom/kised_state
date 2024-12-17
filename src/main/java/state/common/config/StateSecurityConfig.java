@@ -1,5 +1,6 @@
 package state.common.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import state.common.handler.LoginFailureHandler;
+import state.common.handler.LoginSuccessHandler;
 import state.member.application.fasade.MemberManager;
 import state.member.presentation.MemberAuth;
 
@@ -40,7 +43,9 @@ public class StateSecurityConfig {
                         .loginPage("/loginForm")
                         .loginProcessingUrl("/loginPost")
                         .defaultSuccessUrl("/dashboard", true) // 로그인 성공 후 이동할 URL
-                        .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
+                        //.failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
+                        .successHandler((getSuccessHandler()))
+                        .failureHandler(getFailureHandler())
                         .usernameParameter("userId") // userId 사용
                         .passwordParameter("password") // password 유지
                         .permitAll()
@@ -48,7 +53,8 @@ public class StateSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/loginForm")
-                        .invalidateHttpSession(true) // 세션 무효화
+                        .invalidateHttpSession(true)// 세션 무효화
+                        .deleteCookies("JSESSIONID")
                 )
                 //.httpBasic(withDefaults())
         ;
@@ -61,13 +67,28 @@ public class StateSecurityConfig {
         return userId  -> memberManager
                 .findByUserId(userId)
                 .map(member -> MemberAuth.builder()
+                        .seq(member.getSeq())
                         .username(member.getUserId())
+                        .realUsername(member.getUsername())
                         .password(member.getPassword())
+                        .email(member.getEmail())
+                        .deptCd(member.getDepartmentCode())
+                        .psitCd(member.getPositionCode())
                         // 이 부분 알고 쓰기
                         .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getUserRole())))
                         .build()
                 )
                 // Exception 직접 구현하기
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - userId  : " + userId ));
+    }
+
+    @Bean
+    LoginSuccessHandler getSuccessHandler() {
+        return new LoginSuccessHandler();
+    }
+
+    @Bean
+    LoginFailureHandler getFailureHandler() {
+        return new LoginFailureHandler();
     }
 }
