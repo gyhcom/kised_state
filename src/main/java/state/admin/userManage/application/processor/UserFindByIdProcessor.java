@@ -1,8 +1,8 @@
 package state.admin.userManage.application.processor;
 
 import org.springframework.stereotype.Component;
-import state.admin.userManage.domain.entity.User;
 import state.admin.userManage.domain.repository.UserRepository;
+import state.member.domain.entity.Member;
 
 @Component
 public class UserFindByIdProcessor {
@@ -13,7 +13,7 @@ public class UserFindByIdProcessor {
         this.userRepository = userRepository;
     }
 
-    public User execute(int id) {
-        return userRepository.findById(id);
+    public Member execute(String userId) {
+        return userRepository.findByUserIdOrderBySeqDesc(userId);
     }
 }

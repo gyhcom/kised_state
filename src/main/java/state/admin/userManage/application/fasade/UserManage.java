@@ -6,11 +6,9 @@ import state.admin.userManage.application.command.UserInfoDeleteCommand;
 import state.admin.userManage.application.command.UserInfoUpdateCommand;
 import state.admin.userManage.application.command.UserRegisterCommand;
 import state.admin.userManage.application.processor.*;
-import state.admin.userManage.domain.entity.User;
-import state.admin.userManage.presentation.request.UserListRequest;
+import state.member.domain.entity.Member;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -43,11 +41,11 @@ public class UserManage {
         userInfoDeleteProcessor.execute(userInfoDeleteCommand);
     }
 
-    public List<User> findList(String userNm) {
-        return userFindListProcessor.execute(userNm);
+    public List<Member> findList(String username) {
+        return userFindListProcessor.execute(username);
     }
-    public User findById(int seq) {
-        return userFindByIdProcessor.execute(seq);
+    public Member findById(String userId) {
+        return userFindByIdProcessor.execute(userId);
     }
 
 }

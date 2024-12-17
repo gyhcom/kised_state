@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-2 bg-primary text-white vh-100 p-3">
+        <h4 class="text-center">Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Components</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Utilities</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/dashboard/admin/userList">사용자리스트</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container mt-5">
+        <h1>사용자 리스트</h1>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${members}"
+                th:onclick="pageMove([[${user.userId}]]);">
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.userRole}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function pageMove(userId) {
+        console.log(userId);
+        const userData = {
+            userId: userId
+        }
+        fetch('/dashboard/admin/userInfo/userInfoDetail/' + userId , {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                window.location.href = '/dashboard/admin/userInfo/userInfoDetail/' + userId;
+                return response.json();
+                } else {
+                    throw new Error('회원정보가 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 public class UserResponse {
 
     private String userId;
-    private String userNm;
+    private String username;
     private AuthRole userRole;
     private String email;
     private String deptCd;
     private String manageCd;
 
-    public UserResponse(String userId, String userNm, AuthRole userRole, String email, String deptCd, String manageCd) {
+    public UserResponse(String userId, String username, AuthRole userRole, String email, String deptCd, String manageCd) {
         this.userId = userId;
-        this.userNm = userNm;
+        this.username = username;
         this.userRole = userRole;
         this.email = email;
         this.deptCd = deptCd;
