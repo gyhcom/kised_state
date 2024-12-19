@@ -16,7 +16,9 @@ import state.member.application.fasade.DepartmentManager;
 import state.member.application.fasade.MemberManager;
 import state.member.application.fasade.PositionManager;
 import state.member.domain.entity.Member;
+import state.member.domain.exception.custom.MemberNotFoundException;
 import state.member.presentation.request.member.MemberDeleteRequest;
+import state.member.presentation.request.member.MemberModPasswordRequest;
 import state.member.presentation.request.member.MemberRegisterRequest;
 import state.member.presentation.request.member.MemberUpdateRequest;
 import state.member.presentation.response.MemberResponse;
@@ -24,6 +26,7 @@ import state.member.presentation.response.MemberResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @RequestMapping("/member")
 @Controller
 public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
@@ -84,6 +87,9 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
     @PostMapping("/update")
     public ResponseEntity<ResponseCommand> userUpdate(@Valid @RequestBody MemberUpdateRequest memberUpdateRequest) {
         memberManager.update(memberUpdateRequest.toCommand(memberUpdateRequest));
+        //TODO 회원 정보가 수정된 후 session에 담겨있는 회원 정보도 수정해서 세팅
+
+
         return new ResponseEntity<>(
                 ResponseCommand.builder()
                         .code(200)
@@ -100,12 +106,43 @@ public final class MemberAccountApi { //TODO 에러 처리 -> 클라이언트
         if( session.getAttribute("seq") == null ) throw new ApiException(ErrorCode.SERVER_ERROR);
 
         mv.addObject("member", memberManager.findById((int)session.getAttribute("seq")).get());
-
-        // 부서, 직위 세팅
         mv.addObject("dept", departmentManager.getReferenceById(String.valueOf(session.getAttribute("deptCd"))));
         mv.addObject("psit", positionManager.findById(String.valueOf(session.getAttribute("psitCd"))));
 
         mv.setViewName("member-profile");
         return mv;
+    }
+
+    @GetMapping("update-password-form")
+    public String updatePasswordForm() {
+        return "update-password-form";
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<ResponseCommand> updatePassword(@RequestBody MemberModPasswordRequest memberModPasswordRequest, HttpServletRequest request) {
+        // session으로 사용자 ID, email 가져오기
+        HttpSession session = request.getSession();
+        if(String.valueOf(session.getAttribute("userId")).isBlank()) {
+            throw new ApiException(ErrorCode.SERVER_ERROR, "userId가 존재하지 않습니다.");
+        }
+
+        if(String.valueOf(session.getAttribute("email")).isBlank()) {
+            throw new ApiException(ErrorCode.SERVER_ERROR, "email이 존재하지 않습니다.");
+        }
+
+        memberManager.modifyPassword(
+                session.getAttribute("userId").toString(),
+                session.getAttribute("email").toString(),
+                memberModPasswordRequest.toCommand(memberModPasswordRequest)
+        );
+
+
+        return new ResponseEntity<>(
+                ResponseCommand.builder()
+                        .code(200)
+                        .message("SUCCESS")
+                        .timestamp(LocalDateTime.now())
+                        .build(), HttpStatus.OK
+        );
     }
 }
