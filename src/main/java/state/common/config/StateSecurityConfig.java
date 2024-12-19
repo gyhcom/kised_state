@@ -42,13 +42,19 @@ public class StateSecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/loginForm")
                         .loginProcessingUrl("/loginPost")
-                        .defaultSuccessUrl("/dashboard", true) // 로그인 성공 후 이동할 URL
+                        //.defaultSuccessUrl("/dashboard", true) // 로그인 성공 후 이동할 URL
                         //.failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
                         .successHandler((getSuccessHandler()))
                         .failureHandler(getFailureHandler())
                         .usernameParameter("userId") // userId 사용
                         .passwordParameter("password") // password 유지
                         .permitAll()
+                        /**
+                         * successHandler가 존재하면 defaultSuccessUrl은 무시된다.
+                         * successHandler가 우선적으로 실행되기 때문에 로그인 성공 시
+                         * defaultSuccessUrl로 이동하는 동작은 수행되지 않는다.
+                         */
+
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

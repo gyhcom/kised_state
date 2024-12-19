@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum MemberErrorCode {
     DUPLICATE_USERID(HttpStatus.BAD_REQUEST.value(), 400, "이미 존재하는 아이디입니다."),
-    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST.value(), 400, "이미 존재하는 이메일입니다.");
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST.value(), 400, "이미 존재하는 이메일입니다."),
+    PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST.value(), 400, "비밀번호가 일치하지 않습니다.");
 
     private final Integer httpStatusCode;
     private final Integer errorCode;
