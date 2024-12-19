@@ -76,6 +76,15 @@
             color: #e74c3c;
             font-size: 0.875rem;
             margin-top: 0.25rem;
+            opacity: 0; /* 기본적으로 숨김 */
+            transform: translateY(-10px); /* 살짝 위로 올라간 상태 */
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* 에러 메시지 표시 애니메이션 */
+        .error-text.show {
+            opacity: 1; /* 점점 나타나도록 */
+            transform: translateY(0); /* 제자리로 내려옴 */
         }
 
         /* 헤더 스타일 */
@@ -90,7 +99,8 @@
 <div class="card p-4" style="width: 100%; max-width: 400px;">
     <h3 class="text-center mb-4">로그인</h3>
     <div id="loginError" class="error-text text-center mb-3"></div>
-    <form id="loginForm">
+<!--    <form id="loginForm">-->
+    <form id="loginForm" onsubmit="return validateForm()" action="/loginPost" method="post">
         <div class="mb-3">
             <input type="text" class="form-control" id="userId" name="userId" placeholder="ID">
             <div id="userIdError" class="error-text"></div>
@@ -100,12 +110,18 @@
             <div id="passwordError" class="error-text"></div>
         </div>
         <div class="d-grid">
-            <button type="button" class="btn btn-primary" onclick="login()">로그인</button>
+<!--            <button type="button" class="btn btn-primary" onclick="login()">로그인</button>-->
+            <button type="submit" class="btn btn-primary">로그인</button>
         </div>
     </form>
 </div>
 
-<!-- Bootstrap JS -->
+<script th:inline="javascript">
+    var failedMessage = /*[[${loginFailMsg}]]*/ '';
+    if(failedMessage != null) {
+        alert(failedMessage);
+    }
+</script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script>
     function validateForm() {
@@ -115,16 +131,24 @@
         const password = document.getElementById("password");
         const userIdError = document.getElementById("userIdError");
         const passwordError = document.getElementById("passwordError");
+        const loginError = document.getElementById("loginError");
 
         userIdError.textContent = "";
         passwordError.textContent = "";
 
+        // 초기화: 기존 에러 메시지 숨기기
+        loginError.classList.remove('show');
+        userIdError.classList.remove('show');
+        passwordError.classList.remove('show');
+
         if (!userId.value.trim()) {
+            userIdError.classList.add('show');
             userIdError.textContent = "ID를 입력해주세요.";
             isValid = false;
         }
 
         if (!password.value.trim()) {
+            passwordError.classList.add('show');
             passwordError.textContent = "비밀번호를 입력해주세요.";
             isValid = false;
         }
@@ -143,31 +167,28 @@
 
         //loginError.textContent = "";
 
-        fetch("/loginPost", {
+        fetch("/loginPost", { // TODO 최신 브라우저만 사용할 수 있기 때문에 ajax를 사용하는게 나을수도 있음
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: `userId=${encodeURIComponent(userId)}&password=${encodeURIComponent(password)}`,
-            credentials: "same-origin"
+            /**
+             * TODO 쿠키, 인증 헤더(ex.jwt), TLS 클라이언트 인증 등의 자격 증명을 요청에 포함할지 여부를 제어하는 설정
+             * credentials의 옵션으로는 omit, same-origin, include이 있는데
+             * omit : 자격 증명을 절대 포함하지 않음 (쿠키, 인증 헤더 모두 제외).
+             * same-origin : 요청이 같은 출처(same-origin)일 경우에만 자격 증명을 포함함.
+             *    -> 요청 URL이 요청을 실행하는 페이지의 프로토콜, 호스트, 포트와 동일하면 자격 증명을 포함
+             * include : 항상 자격 증명을 포함 (Cross-Origin 요청에서도 포함).
+             * 자격 증명을 포함하여 서버에 요청하면 자격 증명을 기반으로 보안 처리를 하는 것은 서버의 역할이다.
+             * 적절한 인증 정보(쿠키 or 인증 헤더)가 없는 경우 서버에서 요청을 거부하도록 구현해야 함
+             *
+             * 엔드포인트에 도달하기 전에 인터셉터에서 인증 정보를 확인하는 방식으로 구현이 될 수 있을 것 같음
+             */
+            //credentials: "same-origin"
         })
-            .then(response => {
-                console.dir(response);
-                if (response.ok) {
-                    return response;
-                } else {
-                    throw new Error("로그인 실패");
-                }
-            })
-            .then(data => {
-                console.dir(data);
-                if (data.status === 200) {
-                    window.location.href = "/dashboard"; // 로그인 성공 시 메인 페이지로 이동
-                } else {
-                    loginError.textContent = data.message || "아이디와 비밀번호를 다시 확인해주세요.";
-                }
-            })
             .catch(error => {
+                loginError.classList.add('show');
                 loginError.textContent = "아이디와 비밀번호를 다시 확인해주세요.";
                 console.error(error);
             });
