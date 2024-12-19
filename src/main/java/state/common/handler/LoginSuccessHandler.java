@@ -31,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             session.setAttribute("deptCd", member.getDeptCd());
             session.setAttribute("psitCd", member.getPsitCd());
         }
-        //        response.setContentType("application/json;charset=UTF-8");
-//        response.getWriter().write("{\"status\":\"success\",\"message\":\"로그인 성공\"}");
+
+        response.sendRedirect("/dashboard");
     }
 }
