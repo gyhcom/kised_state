@@ -34,6 +34,7 @@ public class StateSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/loginForm").permitAll()
                         .requestMatchers("/dashboard").permitAll()
+                        .requestMatchers("/getServicesData").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 권한 필요
                         .requestMatchers("/member/**").hasRole("USER") // 사용자 권한 필요
                         .requestMatchers("/edu/**").permitAll()       // 공용 접근 허용
