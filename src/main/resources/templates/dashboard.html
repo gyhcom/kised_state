@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/toastui-chart.min.css">
     <script type="text/javascript" src="/js/toastui-chart.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <!--<script src="/js/scrollreveal.js"></script>-->
 </head>
 <body>
 <div class="container-fluid bg-light vh-100">
@@ -106,245 +107,36 @@
 
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script>
+<script th:inline="javascript">
+    var service_1;
+    var service_2;
+
     $(document).ready(function(){
-        //area 차트
-        {
-            const el = document.getElementById('areaChart');
-            const data = {
-                categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec',
-                ],
-                series: [
-                    {
-                        name: 'Seoul',
-                        data: [20, 40, 25, 50, 15, 45, 33, 34, 20, 30, 22, 13],
-                    },
-                    {
-                        name: 'Sydney',
-                        data: [5, 30, 21, 18, 59, 50, 28, 33, 7, 20, 10, 30],
-                    },
-                    {
-                        name: 'Moscow',
-                        data: [30, 5, 18, 21, 33, 41, 29, 15, 30, 10, 33, 5],
-                    },
-                ],
-            };
-            const options = {
-                chart: {title: 'Average Temperature', width: 550, height: 350},
-                xAxis: {pointOnColumn: false, title: {text: 'Month'}},
-                yAxis: {title: 'Temperature (Celsius)'},
-            };
-
-            const areaChart = toastui.Chart.areaChart({el, data, options});
-        }
-
-        //컬럼차트
-        {
-            const el = document.getElementById('columnChart');
-            const data = {
-                categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                series: [
-                    {
-                        name: 'Budget',
-                        data: [5000, 3000, 5000, 7000, 6000, 4000, 1000],
-                    },
-                    {
-                        name: 'Income',
-                        data: [8000, 4000, 7000, 2000, 6000, 3000, 5000],
-                    },
-                    {
-                        name: 'Expenses',
-                        data: [4000, 4000, 6000, 3000, 4000, 5000, 7000],
-                    },
-                    {
-                        name: 'Debt',
-                        data: [3000, 4000, 3000, 1000, 2000, 4000, 3000],
-                    },
-                ],
-            };
-            const options = {
-                chart: { title: 'Monthly Revenue', width: 550, height: 350 },
-            };
-
-            const columnChart = toastui.Chart.columnChart({ el, data, options });
-        }
-
-        //파이 차트
-        {
-            const el = document.getElementById('pieChart');
-            const data = {
-                categories: ['Browser'],
-                series: [
-                    {
-                        name: 'Chrome',
-                        data: 46.02,
-                    },
-                    {
-                        name: 'IE',
-                        data: 20.47,
-                    },
-                    {
-                        name: 'Firefox',
-                        data: 17.71,
-                    },
-                    {
-                        name: 'Safari',
-                        data: 5.45,
-                    },
-                    {
-                        name: 'Opera',
-                        data: 3.1,
-                    },
-                    {
-                        name: 'Etc',
-                        data: 7.25,
-                    },
-                ],
-            };
-            const options = {
-                chart: { title: 'Usage browsers', width: 250, height: 200 },
-                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
-            };
-
-            const pieChart = toastui.Chart.pieChart({ el, data, options });
-        }
-
-        //파이 차트2
-        {
-            const el = document.getElementById('pieChart2');
-            const data = {
-                categories: ['mobile'],
-                series: [
-                    {
-                        name: 'galaxy',
-                        data: 46.02,
-                    },
-                    {
-                        name: 'apple',
-                        data: 20.47,
-                    },
-                    {
-                        name: 'huawei',
-                        data: 17.71,
-                    },
-                    {
-                        name: 'kfc',
-                        data: 5.45,
-                    },
-                    {
-                        name: 'mcnald',
-                        data: 3.1,
-                    },
-                    {
-                        name: 'momst',
-                        data: 7.25,
-                    },
-                ],
-            };
-            const options = {
-                chart: { title: 'Usage mobile', width: 250, height: 200 },
-                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
-            };
-
-            const pieChart2 = toastui.Chart.pieChart({ el, data, options });
-        }
-
-        //파이차트 도넛
-        {
-            const el = document.getElementById('donutChart');
-            const data = {
-                categories: ['system'],
-                series: [
-                    {
-                        name: 'k-startup',
-                        data: 46.02,
-                    },
-                    {
-                        name: 'edu',
-                        data: 20.47,
-                    },
-                    {
-                        name: 'fds',
-                        data: 17.71,
-                    },
-                    {
-                        name: 'esb_gsls',
-                        data: 5.45,
-                    },
-                    {
-                        name: 'ccei',
-                        data: 3.1,
-                    },
-                    {
-                        name: 'Etc',
-                        data: 7.25,
-                    },
-                ],
-            };
-            const options = {
-                chart: { title: 'Usage system', width: 250, height: 200 },
-                series: {
-                    radiusRange: {
-                        inner: '40%',
-                        outer: '100%',
-                    },
-                },
-                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
-            };
-
-            const donutChart = toastui.Chart.pieChart({ el, data, options });
-        }
-
-        //파이차트 도넛2
-        {
-            const el = document.getElementById('donutChart2');
-            const data = {
-                categories: ['weather'],
-                series: [
-                    {
-                        name: 'spring',
-                        data: 40,
-                    },
-                    {
-                        name: 'summer',
-                        data: 10,
-                    },
-                    {
-                        name: 'fall',
-                        data: 30,
-                    },
-                    {
-                        name: 'winter',
-                        data: 20,
-                    }
-                ],
-            };
-            const options = {
-                chart: { title: 'weather', width: 250, height: 200 },
-                series: {
-                    radiusRange: {
-                        inner: '40%',
-                        outer: '100%',
-                    },
-                },
-                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
-            };
-
-            const donutChart2 = toastui.Chart.pieChart({ el, data, options });
-        }
+        getData();
     });
+
+    function getData() {
+        $.ajax({
+            url: '/getServicesData', // API 엔드포인트
+            type: 'GET',           // HTTP 메서드
+            dataType: 'json',      // 응답 데이터 타입
+            success: function(data) { // 성공 시 실행
+                console.dir(data);
+                /**
+                 * 1. service_1, service_2 세팅
+                 * 2. 차트 생성 function 실행
+                 */
+                service_1 = data[0];
+                service_2 = data[1];
+
+                createChart();
+            },
+            error: function(error) { // 에러 시 실행
+                console.error('Error:', error);
+            }
+        });
+    }
+
     function logout() {
         if(!confirm("로그아웃 하시겠습니까?")) return;
         //csrf 토큰이 있어야 로그아웃 처리할 수 있음. -> 추후 만들기
@@ -367,6 +159,284 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    function createChart() {
+        //컬럼차트
+        {
+            const el = document.getElementById('columnChart');
+            let data = {
+                categories: [],
+                series: [],
+            };
+
+            //series.data 세팅
+            let service_1_data = [];
+            let service_2_data = [];
+
+            // 카테고리 세팅 여부
+            let categoryYn = false;
+
+            // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
+            if( service_1 != null && service_1.length > 0 ) {
+                categoryYn = true;
+
+                //categories 세팅
+                for( var i = 0 ; i < service_1.length ; i++ ) {
+                    /**
+                     * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
+                     * 하나의 차트에 여러 서비스를 보여줄 수 있음
+                     */
+                    data.categories.push(service_1[i].year);
+                    service_1_data.push(service_1[i].usage);
+                    //service_2_data.push(service_2[i].usage);
+                }
+
+                data.series.push({
+                    name : 'service_1',
+                    data : service_1_data
+                })
+            }
+
+            if( service_2 != null && service_2.length > 0 ) {
+
+                if(!categoryYn) {
+                    categoryYn = true;
+                    for( var i = 0 ; i < service_2.length ; i++ ) {
+                        data.categories.push(service_2[i].year);
+                        service_2_data.push(service_2[i].usage);
+                    }
+                } else {
+                    for( var i = 0 ; i < service_2.length ; i++ ) {
+                        service_2_data.push(service_2[i].usage);
+                    }
+                }
+
+                // TODO 위에 코드를 이런 식으로 중복된 내용을 제거하려 리팩토링 할 수 있음. 하지만 아직 이해가 안되기 때문에 주석
+                // if (!categoryYn) {
+                //     categoryYn = true;
+                //     data.categories.push(...service_2.map(item => item.page));
+                // }
+                //
+                // service_2_data.push(...service_2.map(item => item.usage));
+
+                data.series.push({
+                    name : 'service_2',
+                    data : service_2_data
+                })
+            }
+
+            const options = {
+                chart: { title: 'Monthly Revenue', width: 550, height: 350 },
+                series: {
+                    dataLabels: {
+                        visible: true,
+                    },
+                },
+            };
+
+            const columnChart = toastui.Chart.columnChart({ el, data, options });
+        }
+
+        //파이 차트 -> 데이터의 통계를 백분율로 세팅하여 차트에 대입해야 함
+        {
+            const el = document.getElementById('pieChart');
+            let data = {
+                categories: ['system_1'],
+                series: [],
+            };
+
+            if( service_1 != null && service_1.length > 0 ) {
+                for (var i = 0; i < service_1.length; i++) {
+                    data.series.push({
+                        name: service_1[i].year,
+                        data: service_1[i].usage //실제로는 백분율로 데이터가 입력되어야 할 것으로 보임
+                    });
+                }
+            }
+
+            const options = {
+                chart: { title: 'Service_1', width: 250, height: 200 },
+                legend: {visible: true, showCheckbox: false, width: 30}, // 차트 옆에 체크박스처럼 조회되는 차트 데이터
+                series: {
+                    //dataLabels -> 차트 데이터 표시 옵션. 폰트 사이즈 핸들링은 제공되지 않는 것으로 보인다
+                    // https://github.com/nhn/tui.chart/blob/main/docs/ko/chart-pie.md -> 모든 차트의 핸들링 가이드
+                    dataLabels: {
+                        visible: true
+                    },
+                },
+                theme: {
+                    series: {
+                        dataLabels: {
+                            fontSize: 9
+                        },
+                    }
+                }
+            };
+
+            const pieChart = toastui.Chart.pieChart({ el, data, options });
+        }
+
+        //파이 차트2 -> 데이터의 통계를 백분율로 세팅하여 차트에 대입해야 함
+        {
+            const el = document.getElementById('pieChart2');
+            let data = {
+                categories: ['Service_2'],
+                series: [],
+            };
+
+            if( service_2 != null && service_2.length > 0 ) {
+                for (var i = 0; i < service_2.length; i++) {
+                    data.series.push({
+                        name: service_2[i].year,
+                        data: service_2[i].usage //실제로는 백분율로 데이터가 입력되어야 할 것으로 보임
+                    });
+                }
+            }
+
+            const options = {
+                chart: { title: 'Service_2', width: 250, height: 200 },
+                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
+            };
+
+            const pieChart2 = toastui.Chart.pieChart({ el, data, options });
+        }
+
+        //파이차트 도넛 -> 데이터의 통계를 백분율로 세팅하여 차트에 대입해야 함
+        {
+            const el = document.getElementById('donutChart');
+            let data = {
+                categories: ['Service_1_donut'],
+                series: [],
+            };
+
+            if( service_1 != null && service_1.length > 0 ) {
+                for (var i = 0; i < service_1.length; i++) {
+                    data.series.push({
+                        name: service_1[i].year,
+                        data: service_1[i].usage //실제로는 백분율로 데이터가 입력되어야 할 것으로 보임
+                    });
+                }
+            }
+
+            const options = {
+                chart: { title: 'Service_1_donut', width: 250, height: 200 },
+                series: {
+                    radiusRange: {
+                        inner: '40%',
+                        outer: '100%',
+                    },
+                },
+                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
+            };
+
+            const donutChart = toastui.Chart.pieChart({ el, data, options });
+        }
+
+        //파이차트 도넛2 -> 데이터의 통계를 백분율로 세팅하여 차트에 대입해야 함
+        {
+            const el = document.getElementById('donutChart2');
+            let data = {
+                categories: ['Service_2_donut'],
+                series: [],
+            };
+
+            if( service_2 != null && service_2.length > 0 ) {
+                for (var i = 0; i < service_2.length; i++) {
+                    data.series.push({
+                        name: service_2[i].year,
+                        data: service_2[i].usage //실제로는 백분율로 데이터가 입력되어야 할 것으로 보임
+                    });
+                }
+            }
+
+            const options = {
+                chart: { title: 'Service_2_donut', width: 250, height: 200 },
+                series: {
+                    radiusRange: {
+                        inner: '40%',
+                        outer: '100%',
+                    },
+                },
+                legend: {showCheckbox: false, width: 30} // 차트 옆에 체크박스처럼 조회되는 차트 데이터
+            };
+
+            const donutChart2 = toastui.Chart.pieChart({ el, data, options });
+        }
+
+        //area 차트
+        {
+            const el = document.getElementById('areaChart');
+            let data = {
+                // page -> 이 값들은 모두 동일할 필요가 있을 것 같음.(여러 시스템의 데이터를 하나의 차트에서 보여준다면)
+                categories: [],
+                series: [],
+            };
+
+            //series.data 세팅
+            let service_1_data = [];
+            let service_2_data = [];
+
+            // 카테고리 세팅 여부
+            let categoryYn = false;
+
+            // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
+            if( service_1 != null && service_1.length > 0 ) {
+                categoryYn = true;
+
+                //categories 세팅
+                for( var i = 0 ; i < service_1.length ; i++ ) {
+                    /**
+                     * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
+                     * 하나의 차트에 여러 서비스를 보여줄 수 있음
+                     */
+                    data.categories.push(service_1[i].year);
+                    service_1_data.push(service_1[i].usage);
+                    //service_2_data.push(service_2[i].usage);
+                }
+
+                data.series.push({
+                    name : 'service_1',
+                    data : service_1_data
+                })
+            }
+
+            if( service_2 != null && service_2.length > 0 ) {
+                if(!categoryYn) {
+                    categoryYn = true;
+                    for( var i = 0 ; i < service_2.length ; i++ ) {
+                        data.categories.push(service_2[i].year);
+                        service_2_data.push(service_2[i].usage);
+                    }
+                } else {
+                    for( var i = 0 ; i < service_2.length ; i++ ) {
+                        service_2_data.push(service_2[i].usage);
+                    }
+                }
+
+                // TODO 위에 코드를 이런 식으로 중복된 내용을 제거하려 리팩토링 할 수 있음. 하지만 아직 이해가 안되기 때문에 주석
+                // if (!categoryYn) {
+                //     categoryYn = true;
+                //     data.categories.push(...service_2.map(item => item.page));
+                // }
+                //
+                // service_2_data.push(...service_2.map(item => item.usage));
+
+                data.series.push({
+                    name : 'service_2',
+                    data : service_2_data
+                })
+            }
+
+            const options = {
+                chart: {title: 'sevice_usage', width: 550, height: 350},
+                xAxis: {pointOnColumn: false, title: {text: 'year'}},
+                yAxis: {title: 'usage'},
+                series: { showDot: true, dataLabels: { visible: true, offsetY: 10 } },
+            };
+
+            const areaChart = toastui.Chart.areaChart({el, data, options});
+        }
     }
 
     ScrollReveal().reveal('.card', {
