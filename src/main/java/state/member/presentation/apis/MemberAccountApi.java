@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import state.admin.userManage.application.common.exception.ApiException;
+import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.command.ResponseCommand;
 import state.common.exception.ErrorCode;
 import state.member.application.fasade.DepartmentManager;

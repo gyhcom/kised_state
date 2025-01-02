@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/toastui-chart.min.css">
+    <script type="text/javascript" src="/js/toastui-chart.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid bg-light vh-100">
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container-fluid">
+                <!-- 로고 -->
+                <a class="navbar-brand" href="/dashboard">
+                    <img alt="창업진흥원" src="/img/mainLogo.png">
+                </a>
+                <!-- 오른쪽 정렬 -->
+                <div class="d-flex align-items-center ms-auto">
+                    <!-- 회원정보 링크 -->
+                    <a class="nav-link me-3 text-primary fw-bold" href="/member/member-profile">회원정보</a>
+                    <!-- 로그아웃 버튼 -->
+                    <button class="btn btn-primary" onclick="logout()">로그아웃</button>
+                </div>
+            </div>
+        </nav>
+        <!-- Sidebar + Content -->
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-primary text-white vh-100 p-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">회원정보</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/dashboard/admin/memberList">사용자 목록</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/dashboard/admin/memberRegister">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="container mt-5">
+                    <h3 class="fw-bold">사용자 리스트</h3>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="fw-bold text-center">ID</th>
+                            <th class="fw-bold text-center">이름</th>
+                            <th class="fw-bold text-center">이메일</th>
+                            <th class="fw-bold text-center">권한</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="members : ${members}"
+                            th:onclick="pageMove([[${members.userId}]]);">
+                            <td class="fw-bold text-center" th:text="${members.userId}"></td>
+                            <td class="fw-bold text-center" th:text="${members.username}"></td>
+                            <td class="fw-bold text-center" th:text="${members.email}"></td>
+                            <td class="fw-bold text-center" th:text="${members.userRole}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        <footer class="text-center py-3 bg-light mt-4">
+            <small>© 2024 창업진흥원. All rights reserved.</small>
+        </footer>
+    </div>
+<script>
+    function pageMove(userId) {
+        console.log(userId);
+        const userData = {
+            userId: userId
+        }
+        fetch('/dashboard/admin/memberInfo/memberInfoDetail/' + userId , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+            window.location.href = '/dashboard/admin/memberInfo/memberInfoDetail/' + userId;
+            return response.json();
+            } else {
+                throw new Error('회원정보가 없습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+</body>
+</html>

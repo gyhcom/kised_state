@@ -2,7 +2,7 @@ package state.member.application.processor.member;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import state.admin.userManage.application.common.exception.ApiException;
+import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
 import state.member.application.command.member.MemberUpdateCommand;
 import state.member.domain.entity.Member;
