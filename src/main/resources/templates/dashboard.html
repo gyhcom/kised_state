@@ -15,21 +15,7 @@
 <body>
 <div class="container-fluid bg-light vh-100">
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container-fluid">
-            <!-- 로고 -->
-            <a class="navbar-brand" href="/dashboard">
-                <img alt="창업진흥원" src="/img/mainLogo.png">
-            </a>
-            <!-- 오른쪽 정렬 -->
-            <div class="d-flex align-items-center ms-auto">
-                <!-- 회원정보 링크 -->
-                <a class="nav-link me-3 text-primary fw-bold" href="/member/member-profile">회원정보</a>
-                <!-- 로그아웃 버튼 -->
-                <button class="btn btn-primary" onclick="logout()">로그아웃</button>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="header :: navbar"></div>
 
     <!-- Sidebar + Content -->
     <div class="row">
@@ -41,6 +27,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/dashboard/admin/userList">사용자 목록</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/dashboard/admin/memberRegister">사용자 등록</a>
                 </li>
             </ul>
         </div>

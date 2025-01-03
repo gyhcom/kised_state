@@ -1,6 +1,7 @@
 package state.common.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,12 +23,12 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException exception) throws IOException {
+            AuthenticationException exception) throws IOException, ServletException {
         String errorMessage = getString(exception);
+        request.setAttribute("loginFailMsg", errorMessage);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("{\"status\":\"error\", \"message\":\"" + errorMessage + "\"}");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/loginForm");
+        dispatcher.forward(request, response);
     }
 
     private String getString(AuthenticationException exception) {

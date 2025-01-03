@@ -2,6 +2,7 @@ package state.member.application.fasade;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import state.member.application.command.member.MemberModPasswordCommand;
 import state.member.application.command.member.MemberRegisterCommand;
 import state.member.application.command.member.MemberUpdateCommand;
 import state.member.application.processor.member.*;
@@ -17,18 +18,21 @@ public class MemberManager {
     private final MemberDeleteProcessor memberDeleteProcessor;
     private final MemberUpdateProcessor memberUpdateProcessor;
     private final MemberFindByUserIdProcessor memberFindByUserIdProcessor;
+    private final MemberModifyPasswordProcessor memberModifyPasswordProcessor;
 
     public MemberManager(
             MemberRegisterProcessor memberRegisterProcessor,
             MemberFindByIdProcessor memberFindByIdProcessor,
             MemberDeleteProcessor memberDeleteProcessor,
             MemberUpdateProcessor memberUpdateProcessor,
-            MemberFindByUserIdProcessor memberFindByUserIdProcessor) {
+            MemberFindByUserIdProcessor memberFindByUserIdProcessor,
+            MemberModifyPasswordProcessor memberModifyPasswordProcessor) {
         this.memberRegisterProcessor = memberRegisterProcessor;
         this.memberFindByIdProcessor = memberFindByIdProcessor;
         this.memberDeleteProcessor = memberDeleteProcessor;
         this.memberUpdateProcessor = memberUpdateProcessor;
         this.memberFindByUserIdProcessor = memberFindByUserIdProcessor;
+        this.memberModifyPasswordProcessor = memberModifyPasswordProcessor;
     }
 
     public void save(MemberRegisterCommand memberRegisterCommand) {
@@ -48,5 +52,11 @@ public class MemberManager {
         memberUpdateProcessor.execute(memberUpdateCommand);
     }
 
-    public Optional<Member> findByUserId(String userId) {return memberFindByUserIdProcessor.execute(userId);}
+    public Optional<Member> findByUserId(String userId) {
+        return memberFindByUserIdProcessor.execute(userId);
+    }
+
+    public void modifyPassword(String userId, String email, MemberModPasswordCommand memberModPasswordCommand) {
+        memberModifyPasswordProcessor.execute(userId, email, memberModPasswordCommand);
+    }
 }
