@@ -21,11 +21,27 @@ public class DashboardManager {
         this.dashboardGetSystem1DataProcessor = dashboardGetSystem1DataProcessor;
         this.dashboardGetSystem2DataProcessor = dashboardGetSystem2DataProcessor;
     }
-    public Flux<TempRequestDto> getSystems1UsageData() {
-        return dashboardGetSystem1DataProcessor.execute();
+    public Flux<TempRequestDto> getSystems1AnnulData() {
+        return dashboardGetSystem1DataProcessor.annualExecute();
     }
 
-    public Flux<TempRequestDto> getSystems2UsageData() {
-        return dashboardGetSystem2DataProcessor.execute();
+    public Flux<TempRequestDto> getSystem1MonthlyData(String year) {
+        return dashboardGetSystem1DataProcessor.monthlyExecute(year);
+    }
+
+    public Flux<TempRequestDto> getSystem1WeeklyData(String year, String month) {
+        return dashboardGetSystem1DataProcessor.weeklyExecute(year, month);
+    }
+
+    public Flux<TempRequestDto> getSystems2AnnulData() {
+        return dashboardGetSystem2DataProcessor.annualExecute();
+    }
+
+    public Flux<TempRequestDto> getSystem2MonthlyData(String year) {
+        return dashboardGetSystem2DataProcessor.monthlyExecute(year);
+    }
+
+    public Flux<TempRequestDto> getSystem2WeeklyData(String year, String month) {
+        return dashboardGetSystem2DataProcessor.weeklyExecute(year, month);
     }
 }

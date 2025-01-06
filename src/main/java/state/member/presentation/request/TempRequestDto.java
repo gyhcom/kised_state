@@ -9,5 +9,7 @@ import lombok.ToString;
 @Getter
 public class TempRequestDto {
     String year;
+    String month;
+    String week;
     double usage;
 }
