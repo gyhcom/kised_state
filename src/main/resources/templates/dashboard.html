@@ -23,12 +23,11 @@
         <!-- Sidebar -->
         <div class="col-md-2 text-white vh-100 p-4" style="background-color: #06357a; height: 100%">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">회원정보</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/dashboard/admin/memberList">사용자 목록</a>
-                </li>
+                <th:block th:if="${session.auth == 'Y'}">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/dashboard/admin/memberList">사용자 목록</a>
+                    </li>
+                </th:block>
                 <li class="nav-item">
                     <a class="nav-link text-white" onclick="selectService1()">Service_1</a>
                 </li>
@@ -409,9 +408,9 @@
             series: {
                 dataLabels: {
                     fontFamily: 'Arial',
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 400,
-                    color: '#110829',
+                    color: '#dc3545',
                     textBubble: {visible: true, arrow: {visible: true}},
                 },
             },

@@ -24,8 +24,10 @@ public class DashboardGetSystem2DataProcessor {
                     .uri("/getData")
                     .retrieve()
                     .bodyToFlux(TempRequestDto.class)
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
                     .onErrorResume(e -> { // 에러 발생 시 null 반환
-                        System.err.println("System 2 getData 데이터 호출 실패: " + e.getMessage());
+                        log.error("System 2 getData 데이터 호출 실패: " + e.getMessage());
                         return Flux.empty(); // null 반환
                     });
         } catch(Exception e) {
@@ -43,8 +45,10 @@ public class DashboardGetSystem2DataProcessor {
                     .uri("/getMonthlyData?year="+year)
                     .retrieve()
                     .bodyToFlux(TempRequestDto.class)
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
                     .onErrorResume(e -> { // 에러 발생 시 null 반환
-                        System.err.println("System 2 getMonthlyData 데이터 호출 실패: " + e.getMessage());
+                        log.error("System 2 getMonthlyData 데이터 호출 실패: " + e.getMessage());
                         return Flux.empty(); // null 반환
                     });
         } catch(Exception e) {
@@ -62,8 +66,10 @@ public class DashboardGetSystem2DataProcessor {
                     .uri("/getWeeklyData?year="+year+"&month="+month)
                     .retrieve()
                     .bodyToFlux(TempRequestDto.class)
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
                     .onErrorResume(e -> { // 에러 발생 시 null 반환
-                        System.err.println("System 2 getWeeklyData 데이터 호출 실패: " + e.getMessage());
+                        log.error("System 2 getWeeklyData 데이터 호출 실패: " + e.getMessage());
                         return Flux.empty(); // null 반환
                     });
         } catch(Exception e) {
