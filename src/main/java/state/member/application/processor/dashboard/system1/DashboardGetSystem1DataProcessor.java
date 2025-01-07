@@ -7,6 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import state.member.presentation.request.TempRequestDto;
 
+import java.time.Duration;
+
 import static state.member.infrastructure.WebClientHandler.getWebClient;
 
 @Slf4j
@@ -14,20 +16,23 @@ import static state.member.infrastructure.WebClientHandler.getWebClient;
 public class DashboardGetSystem1DataProcessor {
     @Value("${services.service_1.url}")
     String serviceUrl;
-
-    public Flux<TempRequestDto> execute() {
-        //TODO 특정 시스템 데이터 추출 과정에서 에러 발생했을 때 어떻게 처리할 지 생각하기
-        WebClient service_1_conn = getWebClient(serviceUrl);
-
-        Flux<TempRequestDto> data = null;
+    Flux<TempRequestDto> data;
+    public Flux<TempRequestDto> annualExecute() {
+        data = null;
         try {
-            data = service_1_conn
+            /**
+             * 이 부분에선 데이터를 가져오기만 했고, 가져온 데이터를 사용하기 위해선, .subscribe() or .collectList()로
+             * 데이터를 소비(사용)해야한다. -> Service1Api.java, Service2Api.java
+             */
+            data = getWebClient(serviceUrl)
                     .get()
                     .uri("/getData")
-                    .retrieve()
-                    .bodyToFlux(TempRequestDto.class)
+                    .retrieve() //서버에 요청을 전송하고 응답을 받을 준비를 합니다.
+                    .bodyToFlux(TempRequestDto.class) //응답 본문을 Flux로 변환
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
                     .onErrorResume(e -> { // 에러 발생 시 null 반환
-                        System.err.println("System 1 데이터 호출 실패: " + e.getMessage());
+                        log.error("System 1 getData 데이터 호출 실패: " + e.getMessage());
                         return Flux.empty(); // null 반환
                     });
         } catch(Exception e) {
@@ -37,16 +42,45 @@ public class DashboardGetSystem1DataProcessor {
         return data;
     }
 
+    public Flux<TempRequestDto> monthlyExecute(String year) {
+        data = null;
+        try {
+            data = getWebClient(serviceUrl)
+                    .get()
+                    .uri("/getMonthlyData?year="+year)
+                    .retrieve()
+                    .bodyToFlux(TempRequestDto.class)
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
+                    .onErrorResume(e -> { // 에러 발생 시 null 반환
+                        log.error("System 1 getMonthlyData 데이터 호출 실패: " + e.getMessage());
+                        return Flux.empty(); // null 반환
+                    });
+        } catch(Exception e) {
+            log.info("External API ERROR : " + e.getMessage());
+        }
 
-//    return service_1.post()
-//            .uri("/getData")
-//                .retrieve()
-//                .onStatus(status -> status.is4xxClientError(),
-//    response -> Mono.error(new RuntimeException("클라이언트 오류 발생")))
-//            .onStatus(status -> status.is5xxServerError(),
-//    response -> Mono.error(new RuntimeException("서버 오류 발생")))
-//            .bodyToMono(String.class)
-//                .doOnError(WebClientResponseException.class, ex -> {
-//        log.error("에러 발생: {}", ex.getMessage());
-//    });
+        return data;
+    }
+
+    public Flux<TempRequestDto> weeklyExecute(String year, String month) {
+        data = null;
+        try {
+            data = getWebClient(serviceUrl)
+                    .get()
+                    .uri("/getWeeklyData?year="+year+"&month="+month)
+                    .retrieve()
+                    .bodyToFlux(TempRequestDto.class)
+                    .limitRate(10) //데이터 지연 처리 -> 10건 씩 처리함
+                    //.timeout(Duration.ofSeconds(30)) // Timeout 설정
+                    .onErrorResume(e -> { // 에러 발생 시 null 반환
+                        log.error("System 1 getWeeklyData 데이터 호출 실패: " + e.getMessage());
+                        return Flux.empty(); // null 반환
+                    });
+        } catch(Exception e) {
+            log.info("External API ERROR : " + e.getMessage());
+        }
+
+        return data;
+    }
 }

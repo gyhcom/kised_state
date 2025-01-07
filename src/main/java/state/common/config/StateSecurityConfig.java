@@ -33,10 +33,12 @@ public class StateSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/loginForm").permitAll()
-                        .requestMatchers("/dashboard").permitAll()
+                        .requestMatchers("/dashboard").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/service1").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/service2").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/getServicesData").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 권한 필요
-                        .requestMatchers("/member/**").hasRole("USER") // 사용자 권한 필요
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN") // 관리자 권한 필요
+                        .requestMatchers("/member/**").hasAnyRole("USER", "ADMIN") // 사용자 권한 필요
                         .requestMatchers("/edu/**").permitAll()       // 공용 접근 허용
                         .anyRequest().authenticated()                // 나머지 요청은 인증 필요
                 )
