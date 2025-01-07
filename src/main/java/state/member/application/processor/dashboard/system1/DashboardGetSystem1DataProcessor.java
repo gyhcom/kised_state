@@ -14,20 +14,17 @@ import static state.member.infrastructure.WebClientHandler.getWebClient;
 public class DashboardGetSystem1DataProcessor {
     @Value("${services.service_1.url}")
     String serviceUrl;
-
-    public Flux<TempRequestDto> execute() {
-        //TODO 특정 시스템 데이터 추출 과정에서 에러 발생했을 때 어떻게 처리할 지 생각하기
-        WebClient service_1_conn = getWebClient(serviceUrl);
-
-        Flux<TempRequestDto> data = null;
+    Flux<TempRequestDto> data;
+    public Flux<TempRequestDto> annualExecute() {
+        data = null;
         try {
-            data = service_1_conn
+            data = getWebClient(serviceUrl)
                     .get()
                     .uri("/getData")
                     .retrieve()
                     .bodyToFlux(TempRequestDto.class)
                     .onErrorResume(e -> { // 에러 발생 시 null 반환
-                        System.err.println("System 1 데이터 호출 실패: " + e.getMessage());
+                        System.err.println("System 1 getData 데이터 호출 실패: " + e.getMessage());
                         return Flux.empty(); // null 반환
                     });
         } catch(Exception e) {
@@ -37,16 +34,41 @@ public class DashboardGetSystem1DataProcessor {
         return data;
     }
 
+    public Flux<TempRequestDto> monthlyExecute(String year) {
+        data = null;
+        try {
+            data = getWebClient(serviceUrl)
+                    .get()
+                    .uri("/getMonthlyData?year="+year)
+                    .retrieve()
+                    .bodyToFlux(TempRequestDto.class)
+                    .onErrorResume(e -> { // 에러 발생 시 null 반환
+                        System.err.println("System 1 getMonthlyData 데이터 호출 실패: " + e.getMessage());
+                        return Flux.empty(); // null 반환
+                    });
+        } catch(Exception e) {
+            log.info("External API ERROR : " + e.getMessage());
+        }
 
-//    return service_1.post()
-//            .uri("/getData")
-//                .retrieve()
-//                .onStatus(status -> status.is4xxClientError(),
-//    response -> Mono.error(new RuntimeException("클라이언트 오류 발생")))
-//            .onStatus(status -> status.is5xxServerError(),
-//    response -> Mono.error(new RuntimeException("서버 오류 발생")))
-//            .bodyToMono(String.class)
-//                .doOnError(WebClientResponseException.class, ex -> {
-//        log.error("에러 발생: {}", ex.getMessage());
-//    });
+        return data;
+    }
+
+    public Flux<TempRequestDto> weeklyExecute(String year, String month) {
+        data = null;
+        try {
+            data = getWebClient(serviceUrl)
+                    .get()
+                    .uri("/getWeeklyData?year="+year+"&month="+month)
+                    .retrieve()
+                    .bodyToFlux(TempRequestDto.class)
+                    .onErrorResume(e -> { // 에러 발생 시 null 반환
+                        System.err.println("System 1 getWeeklyData 데이터 호출 실패: " + e.getMessage());
+                        return Flux.empty(); // null 반환
+                    });
+        } catch(Exception e) {
+            log.info("External API ERROR : " + e.getMessage());
+        }
+
+        return data;
+    }
 }
