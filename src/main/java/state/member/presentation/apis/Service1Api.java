@@ -48,6 +48,14 @@ public class Service1Api {
         // 파이차트 백분율로 데이터가 넘어오지 않았을 때 어떻게 보여줄 건지
 
         // 모든 Flux를 Mono로 변환
+        /**
+         * 왜 Mono로 변환했는지?
+         *
+         * 최종 데이터를 리스트로 다루기 쉽게 하기 위해서 -> Flux -> Mono<List<TempRequestDto>>
+         * 병렬 처리 및 동기화 작업을 쉽게 하기 위해서
+         * .collectList() : Flux로 흐르는 데이터를 한 번에 수집하여 리스트(List<TempRequestDto>) 만듦
+         * .defaultIfEmpty : 만약 넘어온 데이터가 없을 경우 빈 리스트 세팅한다
+         */
         List<Mono<List<TempRequestDto>>> monoList = list.stream()
                 .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
                 .toList();
