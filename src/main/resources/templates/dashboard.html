@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/toastui-chart.min.css">
+    <link rel="stylesheet" href="/css/tui-grid.css">
+    <link rel="stylesheet" href="/css/tui-pagination.css">
     <script type="text/javascript" src="/js/toastui-chart.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
     <!--<script src="/js/scrollreveal.js"></script>-->
@@ -21,7 +23,7 @@
     <!-- Sidebar + Content -->
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-2 text-white vh-100 p-4" style="background-color: #06357a; height: 100%">
+        <div class="col-md-2 text-white h-auto p-4" style="background-color: #06357a;">
             <ul class="nav flex-column">
                 <th:block th:if="${session.auth == 'Y'}">
                     <li class="nav-item">
@@ -39,7 +41,19 @@
 
         <!-- Main Content -->
         <div class="col-md-10 p-4">
-            <h1 id="systemNm" style="padding-left: 20px; font-size: 2rem;">Service_1</h1>
+            <div class="d-flex align-items-center" style="padding-left: 20px;">
+                <h1 id="systemNm" style="font-size: 2rem;">Service_1</h1>
+                <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
+                <span id="statusText" style="color: #28a745">성공</span>
+            </div>
+
+            <div id="gridBtn" class="text-end mb-3">
+                <button type="button" class="btn btn-success" id="excelDownloadBtn" onclick="excelDownload()">
+                    <i class="bi bi-file-earmark-excel"></i> ExcelDownload
+                </button>
+            </div>
+
+            <div id="grid"></div>
 
             <!-- 차트 화면 포함 -->
             <div id="contentDiv"></div>
@@ -54,6 +68,11 @@
 
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/dashboard_chart.js"></script>
+<script src="/js/xlsx.full.min.js"></script>
+<script src="/js/tui-pagination.js"></script>
+<script src="/js/tui-grid.js"></script>
+<script src="/js/dashboard_grid.js"></script>
 <script th:inline="javascript">
     let annualData;
     let monthlyData;
@@ -62,6 +81,8 @@
     let annualChart;
     let monthlyChart;
     let weeklyChart;
+
+    let serviceGrid;
 
     $(document).ready(function(){
         $.ajax({
@@ -72,55 +93,16 @@
                 $('#contentDiv').html(data);
 
                 //최초 렌더링 service명 세팅
-                $('#systemNm').html('service_1' + getIcon());
+                $('#systemNm').html('service_1');
 
                 chartInit();
+                gridInit();
             },
             error: function(error) {
                 console.error('Error:', error);
             }
         });
     });
-
-    function chartInit(url) {
-        //최초 조회 시 현재 년도 가져오기
-        let year = new Date().getFullYear();
-        let month = new Date().getMonth() + 1;
-
-        if(!url) url = '/service1';
-
-        $.ajax({
-            url: url + '/getServicesData?year='+ year + '&month=' + month,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.dir(data);
-                /**
-                 * 1. 년도별, 월별, 주별 데이터 세팅
-                 * 2. API 호출 상태 ICON 세팅
-                 * 3. 차트 생성 function 실행
-                 */
-                annualData = data[0];
-                monthlyData = data[1];
-                weeklyData = data[2];
-
-                //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-                if(!validateData()) {
-                    $('#statusIcon').css('background-color', '#dc3545');
-                }
-
-                // 성공 여부를 H1 태그에 표현하기
-                createAnnualChart();
-                createMonthlyChart();
-                createWeeklyChart();
-            },
-            error: function(error) { // 에러 시 실행
-                console.error('Error:', error);
-                // 실패 여부를 H1 태그에 표현하기
-                $('#statusIcon').css('background-color', '#dc3545');
-            }
-        });
-    }
 
     function logout() {
         if(!confirm("로그아웃 하시겠습니까?")) return;
@@ -144,313 +126,36 @@
             });
     }
 
-    function createAnnualChart() {
-        //annual 차트
-        {
-            const el = document.getElementById('annualChart');
-            let data = {
-                // page -> 이 값들은 모두 동일할 필요가 있을 것 같음.(여러 시스템의 데이터를 하나의 차트에서 보여준다면)
-                categories: [],
-                series: [],
-            };
-
-            //series.data 세팅
-            let annual_data = [];
-
-            // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-            if( annualData != null && annualData.length > 0 ) {
-                //categories 세팅
-                for( var i = 0 ; i < annualData.length ; i++ ) {
-                    /**
-                     * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                     * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                     */
-                    data.categories.push(annualData[i].year);
-                    annual_data.push(annualData[i].usage);
-                }
-
-                data.series.push({
-                    name : 'service_1',
-                    data : annual_data
-                })
-            }
-
-            const theme = getTheme();
-
-            const options = {
-                chart: {title: '연간 현황', height: 350},
-                legend: {visible: false},
-                xAxis: {pointOnColumn: false, title: {text: 'year'}},
-                yAxis: {title: 'usage'},
-                series: { showDot: true, dataLabels: { visible: true, offsetY: -10 }, selectable: true },
-                theme
-            };
-
-            annualChart = toastui.Chart.areaChart({el, data, options});
-
-            //area 데이터 클릭 이벤트
-            annualChart.on('selectSeries', function(e) {
-                //하나의 서비스만 차트에 보여지기 때문에 0번째 index를 가져온다.
-                let year = e.area[0].data.category;
-                annualChartClick(year);
-            })
-        }
-    }
-
-    function createMonthlyChart() {
-        // month 차트
-        {
-            const el = document.getElementById('monthChart');
-            let data = {
-                categories: [],
-                series: [],
-                year: []
-            };
-
-            //series.data 세팅
-            let monthly_data = [];
-
-            // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-            if( monthlyData != null && monthlyData.length > 0 ) {
-                //categories 세팅
-                for( var i = 0 ; i < monthlyData.length ; i++ ) {
-                    /**
-                     * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                     * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                     */
-                    data.categories.push(monthlyData[i].month);
-                    monthly_data.push(monthlyData[i].usage);
-                    data.year.push(monthlyData[i].year);
-                }
-
-                data.series.push({
-                    name : 'service_1',
-                    data : monthly_data
-                })
-            }
-
-            const theme = getTheme();
-
-            let title = data.year[0] + '년 월간 현황';
-            const options = {
-                chart: { title: title, height: 300 },
-                legend: {visible: false},
-                series: {
-                    dataLabels: {
-                        visible: true,
-                    },
-                    selectable: true
-                },
-                theme
-            };
-
-            monthlyChart = toastui.Chart.columnChart({ el, data, options });
-
-            monthlyChart.on('selectSeries', function(e) {
-                //하나의 서비스만 차트에 보여지기 때문에 0번째 index를 가져온다.
-                let month = e.column[0].data.category;
-                let year = data.year[0];
-
-                monthlyChartClick(year, month);
-            })
-        }
-    }
-
-    function createWeeklyChart() {
-        // week 차트
-        {
-            const el = document.getElementById('weekChart');
-            let data = {
-                categories: [],
-                series: [],
-                year: [],
-                month: []
-            };
-
-            //series.data 세팅
-            let weekly_data = [];
-
-            // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-            if( weeklyData != null && weeklyData.length > 0 ) {
-                //categories 세팅
-                for( var i = 0 ; i < weeklyData.length ; i++ ) {
-                    /**
-                     * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                     * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                     */
-                    data.categories.push(weeklyData[i].week);
-                    weekly_data.push(weeklyData[i].usage);
-                    data.year.push(weeklyData[i].year);
-                    data.month.push(weeklyData[i].month);
-                }
-
-                data.series.push({
-                    name : 'service_1',
-                    data : weekly_data
-                })
-            }
-
-            const theme = getTheme();
-
-            let title = data.year[0] + '년 ' + data.month[0] + '월 주별 현황';
-            const options = {
-                chart: { title: title, height: 350 },
-                legend: {visible: false},
-                series: {
-                    dataLabels: {
-                        visible: true,
-                    },
-                },
-                theme
-            };
-
-            weeklyChart = toastui.Chart.columnChart({ el, data, options });
-        }
-    }
-
-    function annualChartClick(year) {
-        if(!year) {
-            alert("선택한 년도 정보를 가져올 수 없습니다");
-            return;
-        }
-
-        //현재 월 세팅
-        let month = new Date().getMonth() + 1;
-
-        $.ajax({
-            url: '/service1/getMonthlyData?year='+ year + '&month='+month,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.dir(data);
-                /**
-                 * 1. 가져온 데이터 null 체크
-                 * 2. 차트 초기화
-                 * 3. 데이터 다시 세팅
-                 */
-                //월별 데이터, 주별 데이터
-                if(data == null || data.length !== 2) {
-                    alert("월별 데이터가 존재하지 않습니다.");
-                    return;
-                }
-
-                monthlyData = data[0];
-                weeklyData = data[1];
-
-                //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-                if(!validateData()) {
-                    $('#statusIcon').css('background-color', '#dc3545');
-                }
-
-                // 차트 destroy
-                monthlyChart.destroy();
-                weeklyChart.destroy();
-
-                // 새로운 데이터로 재생성
-                createMonthlyChart();
-                createWeeklyChart()
-            },
-            error: function(error) { // 에러 시 실행
-                console.error('Error:', error);
-            }
-        });
-    }
-
-    function monthlyChartClick(year, month) {
-        if(!year) {
-            alert("선택한 년도 정보를 가져올 수 없습니다");
-            return;
-        }
-
-        if(!month) {
-            alert("선택한 월의 정보를 가져올 수 없습니다");
-            return;
-        }
-
-        $.ajax({
-            url: '/service1/getWeeklyData?year='+ year + '&month='+month,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.dir(data);
-                /**
-                 * 1. 가져온 데이터 null 체크
-                 * 2. 차트 초기화
-                 * 3. 데이터 다시 세팅
-                 */
-                //월별 데이터, 주별 데이터
-                if(data == null || data.length !== 1) {
-                    alert("주별 데이터가 존재하지 않습니다.");
-                    return;
-                }
-
-                weeklyData = data[0];
-
-                //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-                if(!validateData()) {
-                    $('#statusIcon').css('background-color', '#dc3545');
-                }
-
-                // 차트 destroy
-                weeklyChart.destroy();
-
-                // 새로운 데이터로 재생성
-                createWeeklyChart()
-            },
-            error: function(error) { // 에러 시 실행
-                console.error('Error:', error);
-            }
-        });
-    }
-
-    function getTheme() {
-        return {
-            series: {
-                dataLabels: {
-                    fontFamily: 'Arial',
-                    fontSize: 12,
-                    fontWeight: 400,
-                    color: '#dc3545',
-                    textBubble: {visible: true, arrow: {visible: true}},
-                },
-            },
-        };
-    }
 
     function selectService1() {
         destroyChart();
+        destroyGrid();
 
-        $('#systemNm').html('service_1' + getIcon());
+        $('#systemNm').html('service_1');
 
         chartInit('/service1');
+        gridInit('/service1');
     }
 
     function selectService2() {
         destroyChart();
+        destroyGrid();
 
-        $('#systemNm').html('service_2' + getIcon());
+        $('#systemNm').html('service_2');
 
         chartInit('/service2');
     }
 
-    function destroyChart() {
-        if(annualChart && monthlyChart && weeklyChart) {
-            annualChart.destroy();
-            monthlyChart.destroy();
-            weeklyChart.destroy();
-        }
+    function setApiFailureIcon() {
+        $('#statusIcon').css('background-color', '#dc3545');
+        $('#statusText').css('color', '#dc3545');
+        $('#statusText').text('실패')
     }
 
-    function getIcon() {
-        return '<span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>';
-    }
-
-    function validateData() {
-        if(!annualData || annualData.length <= 0) return false;
-        if(!monthlyData || monthlyData.length <= 0) return false;
-        if(!weeklyData || weeklyData.length <= 0) return false;
-
-        return true;
+    function setApiSuccessIcon() {
+        $('#statusIcon').css('background-color', '#28a745');
+        $('#statusText').css('color', '#28a745');
+        $('#statusText').text('성공')
     }
 
     ScrollReveal().reveal('.card', {
