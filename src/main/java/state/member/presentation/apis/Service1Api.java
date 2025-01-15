@@ -13,6 +13,7 @@ import state.member.presentation.request.TempRequestDto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/service1")
@@ -105,5 +106,11 @@ public class Service1Api {
                         .map(result -> (List<TempRequestDto>) result)
                         .toList()
         );
+    }
+
+    @ResponseBody
+    @GetMapping("/getGridData")
+    public Flux<Map<String, Object>> getGridData() {
+        return dashboardManager.getGridData();
     }
 }

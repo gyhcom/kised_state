@@ -8,6 +8,7 @@ import state.member.application.processor.dashboard.system2.DashboardGetSystem2D
 import state.member.presentation.request.TempRequestDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DashboardManager {
@@ -31,6 +32,10 @@ public class DashboardManager {
 
     public Flux<TempRequestDto> getSystem1WeeklyData(String year, String month) {
         return dashboardGetSystem1DataProcessor.weeklyExecute(year, month);
+    }
+
+    public Flux<Map<String, Object>> getGridData() {
+        return dashboardGetSystem1DataProcessor.getGridData();
     }
 
     public Flux<TempRequestDto> getSystems2AnnulData() {
