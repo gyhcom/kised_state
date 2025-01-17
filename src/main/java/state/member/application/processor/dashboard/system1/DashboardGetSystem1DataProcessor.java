@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static state.member.infrastructure.WebClientHandler.getWebClient;
 
+@Deprecated
 @Slf4j
 @Component
 public class DashboardGetSystem1DataProcessor {

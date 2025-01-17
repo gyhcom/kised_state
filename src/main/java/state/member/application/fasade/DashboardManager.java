@@ -10,6 +10,7 @@ import state.member.presentation.request.TempRequestDto;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Service
 public class DashboardManager {
     private final DashboardGetSystem1DataProcessor dashboardGetSystem1DataProcessor;

@@ -9,6 +9,7 @@ import state.member.presentation.request.TempRequestDto;
 
 import static state.member.infrastructure.WebClientHandler.getWebClient;
 
+@Deprecated
 @Slf4j
 @Component
 public class DashboardGetSystem2DataProcessor {

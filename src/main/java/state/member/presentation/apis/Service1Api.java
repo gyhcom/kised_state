@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Controller
 @RequestMapping("/service1")
 public class Service1Api {
@@ -26,7 +27,7 @@ public class Service1Api {
 
     @GetMapping
     public String service1() {
-        return "serviceChart";
+        return "/serviceChart";
     }
 
     /**
