@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/toastui-chart.min.css">
+    <link rel="stylesheet" href="/css/tui-grid.css">
+    <link rel="stylesheet" href="/css/tui-pagination.css">
     <script type="text/javascript" src="/js/toastui-chart.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 <div>
     <div class="d-flex align-items-center" style="padding-left: 20px;">
-        <h1 id="systemNm" style="font-size: 2rem;">SERVICE_1</h1>
+        <h1 id="systemNm" style="font-size: 2rem;">기관 홈페이지</h1>
         <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
         <span id="statusText" style="color: #28a745">성공</span>
     </div>
@@ -23,9 +25,9 @@
     <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 my-3">
         <!-- DAU 카드 -->
         <div class="col">
-            <div class="card text-center border-0 shadow-sm stat-card">
+            <div class="card text-center border-1 shadow-sm stat-card">
                 <div class="card-body">
-                    <h5 class="card-title stat-title">DAU</h5>
+                    <h5 class="card-title stat-title">월평균 방문자수</h5>
                     <h2 class="card-text stat-value" id="dauValue">120,000</h2>
                     <p class="stat-comparison text-success mb-0">+5% (전주 대비)</p>
                 </div>
@@ -34,33 +36,11 @@
 
         <!-- MAU 카드 -->
         <div class="col">
-            <div class="card text-center border-0 shadow-sm stat-card">
+            <div class="card text-center border-1 shadow-sm stat-card">
                 <div class="card-body">
-                    <h5 class="card-title stat-title">MAU</h5>
+                    <h5 class="card-title stat-title">일평균 방문자수</h5>
                     <h2 class="card-text stat-value" id="mauValue">300,000</h2>
                     <p class="stat-comparison text-danger mb-0">-2% (전주 대비)</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 다른 카드 예: 결제 전환율 -->
-        <div class="col">
-            <div class="card text-center border-0 shadow-sm stat-card">
-                <div class="card-body">
-                    <h5 class="card-title stat-title">결제 전환율</h5>
-                    <h2 class="card-text stat-value">23%</h2>
-                    <p class="stat-comparison text-success mb-0">+1.2% (전주 대비)</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 다른 카드 예: 신규 가입자 -->
-        <div class="col">
-            <div class="card text-center border-0 shadow-sm stat-card">
-                <div class="card-body">
-                    <h5 class="card-title stat-title">신규 가입자</h5>
-                    <h2 class="card-text stat-value">2,500</h2>
-                    <p class="stat-comparison text-success mb-0">+10% (전주 대비)</p>
                 </div>
             </div>
         </div>
@@ -68,48 +48,52 @@
 
     <div id="contentDiv">
         <div class="container-fluid p-4">
-            <div class="row">
-                <!-- Cards -->
-<!--                <div class="col-md-12">-->
-<!--                    <div class="card shadow-sm">-->
-<!--                        <div class="card-body" style="width: 100%">-->
-<!--                            <div id="monthChart"></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-            </div>
-
             <!-- Charts Section -->
-            <div class="row mt-4">
-                <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div id="annualChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+<!--                <div class="col-md-6">-->
+<!--                    <div class="card shadow-sm">-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="weekChart" style="width: 100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+
+            <div class="row mt-4">
+                <!-- Cards -->
+                <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body" style="width: 100%">
                             <div id="monthChart"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="weekChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+
+    <div id="gridBtn" class="container-fluid text-end pe-4 pt-3">
+        <button type="button" class="btn btn-success" id="excelDownloadBtn" onclick="excelDownload()">
+            <i class="bi bi-file-earmark-excel"></i> ExcelDownload
+        </button>
+    </div>
+
+    <div id="grid" class="container-fluid p-4"></div>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/temp.js"></script>
+<script src="/js/kisedorkr.js"></script>
+<script src="/js/xlsx.full.min.js"></script>
+<script src="/js/tui-pagination.js"></script>
+<script src="/js/tui-grid.js"></script>
 <script th:inline="javascript">
     let annualData;
     let monthlyData;

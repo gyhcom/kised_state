@@ -1,6 +1,3 @@
-/* TODO 최초에 한번 로딩되고 그 이후엔 js가 계속 남아 있어서 안되는 것 일수도 있음. 확인해보기
- *  DOMContentLoaded가 실행되지 않고 있음
-*/
 document.addEventListener("DOMContentLoaded", function () {
     chartInit();
     gridInit();
@@ -11,10 +8,10 @@ function chartInit(url) {
     let year = new Date().getFullYear();
     let month = new Date().getMonth() + 1;
 
-    if(!url) url = '/kisedorkr';
+    if(!url) url = '/service1';
 
     $.ajax({
-        url: url + '/getAnnualData?year='+ year + '&month=' + month,
+        url: url + '/getServicesData?year='+ year + '&month=' + month,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -37,7 +34,7 @@ function chartInit(url) {
             // 성공 여부를 H1 태그에 표현하기
             createAnnualChart();
             createMonthlyChart();
-            //createWeeklyChart();
+            createWeeklyChart();
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -81,7 +78,7 @@ function createAnnualChart() {
         const theme = getTheme();
 
         const options = {
-            chart: {title: '연간 방문자수', width: 'auto', height: 350},
+            chart: {title: '연간 현황', height: 350},
             legend: {visible: false},
             xAxis: {pointOnColumn: false, title: {text: 'year'}},
             yAxis: {title: 'usage'},
@@ -134,9 +131,9 @@ function createMonthlyChart() {
 
         const theme = getTheme();
 
-        let title = data.year[0] + '년 월간 방문자수';
+        let title = data.year[0] + '년 월간 현황';
         const options = {
-            chart: { title: title, width:'auto', height: 300 },
+            chart: { title: title, height: 300 },
             legend: {visible: false},
             series: {
                 dataLabels: {
@@ -149,7 +146,6 @@ function createMonthlyChart() {
 
         monthlyChart = toastui.Chart.columnChart({ el, data, options });
 
-        // TODO : 주별 현황 대신 일별 현황이 보여진다면 월별 차트의 select 이벤트는 사라져야 할 것으로 보임
         monthlyChart.on('selectSeries', function(e) {
             //하나의 서비스만 차트에 보여지기 때문에 0번째 index를 가져온다.
             let month = e.column[0].data.category;
@@ -196,7 +192,7 @@ function createWeeklyChart() {
 
         const theme = getTheme();
 
-        let title = '일별 현황';
+        let title = '테스트용입니다!!!!!!!!!!!';
         const options = {
             chart: { title: title, height: 350 },
             legend: {visible: false},
@@ -224,7 +220,7 @@ function annualChartClick(year) {
     let month = new Date().getMonth() + 1;
 
     $.ajax({
-        url: '/kisedorkr/getMonthlyData?year='+ year + '&month='+month,
+        url: '/service1/getMonthlyData?year='+ year + '&month='+month,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -251,11 +247,11 @@ function annualChartClick(year) {
 
             // 차트 destroy
             monthlyChart.destroy();
-            //weeklyChart.destroy();
+            weeklyChart.destroy();
 
             // 새로운 데이터로 재생성
             createMonthlyChart();
-            //createWeeklyChart()
+            createWeeklyChart()
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -276,7 +272,7 @@ function monthlyChartClick(year, month) {
     }
 
     $.ajax({
-        url: '/kisedorkr/getWeeklyData?year='+ year + '&month='+month,
+        url: '/service1/getWeeklyData?year='+ year + '&month='+month,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -301,10 +297,10 @@ function monthlyChartClick(year, month) {
             }
 
             // 차트 destroy
-            //weeklyChart.destroy();
+            weeklyChart.destroy();
 
             // 새로운 데이터로 재생성
-            //createWeeklyChart()
+            createWeeklyChart()
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -331,7 +327,7 @@ function destroyChart() {
     if(annualChart && monthlyChart && weeklyChart) {
         annualChart.destroy();
         monthlyChart.destroy();
-        //weeklyChart.destroy();
+        weeklyChart.destroy();
     }
 }
 
@@ -341,86 +337,4 @@ function validateData() {
     if(!weeklyData || weeklyData.length <= 0) return false;
 
     return true;
-}
-
-function gridInit() {
-    $.ajax({
-        url: '/kisedorkr/getGridData',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-
-            setApiSuccessIcon();
-
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            createGrid(data);
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function createGrid(gridData) {
-    serviceGrid = new tui.Grid({
-        el: document.getElementById('grid'),
-        data: gridData,
-        scrollX: false,
-        scrollY: false,
-        columns: [
-            {
-                header: '사업명',
-                name: 'bsnsNm'
-            },
-            {
-                header: '기관명',
-                name: 'facilityNm'
-            },
-            {
-                header: '사업자등록번호',
-                name: 'facilityBsnsNum'
-            },
-            {
-                header: '상태',
-                name: 'status'
-            },
-            {
-                header: '탐지결과',
-                name: 'detNm'
-            }
-        ],
-        rowHeaders: ['rowNum'],
-        pageOptions: {
-            useClient: true,
-            perPage: 5
-        },
-        summary: {
-            position: 'bottom',
-            height: 40,
-            columnContent: {
-                bsnsNm: {
-                    template(summary) {
-                        return 'TOTAL : ' + summary.cnt;
-                    }
-                }
-            }
-        }
-    });
-
-    $('#gridBtn').css('display', 'block');
-}
-
-function excelDownload() {
-    serviceGrid.export('xls', { onlySelected: true });
-}
-
-function destroyGrid() {
-    if(serviceGrid && serviceGrid.el) {
-        serviceGrid.destroy();
-        $('#gridBtn').css('display', 'none');
-    }
 }
