@@ -204,6 +204,8 @@ function createWeeklyChart() {
     }
 }
 
+
+
 function annualChartClick(year) {
     if(!year) {
         alert("선택한 년도 정보를 가져올 수 없습니다");

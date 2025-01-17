@@ -5,11 +5,14 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import state.common.handler.LoginFailureHandler;
 import state.common.handler.LoginSuccessHandler;
@@ -65,6 +68,10 @@ public class StateSecurityConfig {
                         .invalidateHttpSession(true)// 세션 무효화
                         .deleteCookies("JSESSIONID")
                 )
+                // iframe 보안 설정. -> 같은 도메인에서 가져온 html은 iframe을 허용한다
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                );
                 //.httpBasic(withDefaults())
         ;
         //TODO: 인증 부분 토큰방식으로 구현 필요
@@ -90,6 +97,21 @@ public class StateSecurityConfig {
                 // Exception 직접 구현하기
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - userId  : " + userId ));
     }
+
+    // DB가 없을 때 임시로 사용될 LoadUserByUserName
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        PasswordEncoder encoder = passwordEncoder();
+//
+//        // 사용자 생성 (비밀번호를 암호화하여 저장)
+//        return new InMemoryUserDetailsManager(
+//                org.springframework.security.core.userdetails.User
+//                        .withUsername("test")
+//                        .password(encoder.encode("1234")) // 암호화된 비밀번호
+//                        .roles("ADMIN")
+//                        .build()
+//        );
+//    }
 
     @Bean
     LoginSuccessHandler getSuccessHandler() {
