@@ -35,6 +35,6 @@ public class DashBoardApi {
             session.setAttribute("auth", "N");
         }
 
-        return "dashboard";
+        return "/common/dashboard";
     }
 }
