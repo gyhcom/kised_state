@@ -1,20 +1,25 @@
-/* TODO 최초에 한번 로딩되고 그 이후엔 js가 계속 남아 있어서 안되는 것 일수도 있음. 확인해보기
- *  DOMContentLoaded가 실행되지 않고 있음
-*/
+let annualData;
+let monthlyData;
+let weeklyData;
+
+let annualChart;
+let monthlyChart;
+let weeklyChart;
+
+let serviceGrid;
+
 document.addEventListener("DOMContentLoaded", function () {
     chartInit();
     gridInit();
 });
 
-function chartInit(url) {
+function chartInit() {
     //최초 조회 시 현재 년도 가져오기
     let year = new Date().getFullYear();
     let month = new Date().getMonth() + 1;
 
-    if(!url) url = '/kisedorkr';
-
     $.ajax({
-        url: url + '/getAnnualData?year='+ year + '&month=' + month,
+        url: '/kisedorkr/getAnnualData?year='+ year + '&month=' + month,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -136,7 +141,7 @@ function createMonthlyChart() {
 
         let title = data.year[0] + '년 월간 방문자수';
         const options = {
-            chart: { title: title, width:'auto', height: 300 },
+            chart: { title: title, height: 300 },
             legend: {visible: false},
             series: {
                 dataLabels: {
@@ -228,11 +233,6 @@ function annualChartClick(year) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            /**
-             * 1. 가져온 데이터 null 체크
-             * 2. 차트 초기화
-             * 3. 데이터 다시 세팅
-             */
             //월별 데이터, 주별 데이터
             if(data == null || data.length !== 2) {
                 alert("월별 데이터가 존재하지 않습니다.");

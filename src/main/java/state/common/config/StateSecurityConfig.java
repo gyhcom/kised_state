@@ -37,9 +37,8 @@ public class StateSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/loginForm").permitAll()
                         .requestMatchers("/dashboard").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/service1").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/service2").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/getServicesData").permitAll()
+                        .requestMatchers("/kisedorkr").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/kstup").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN") // 관리자 권한 필요
                         .requestMatchers("/member/**").hasAnyRole("USER", "ADMIN") // 사용자 권한 필요
                         .requestMatchers("/edu/**").permitAll()       // 공용 접근 허용
@@ -72,7 +71,7 @@ public class StateSecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 );
-                //.httpBasic(withDefaults())
+                //.httpBasic(withDefaults());
         ;
         //TODO: 인증 부분 토큰방식으로 구현 필요
         return http.build();

@@ -14,7 +14,7 @@ import java.util.Collection;
 @Builder
 @Setter
 public class MemberAuth implements UserDetails {
-    private int seq = -1;
+    private int seq;
     private String password;
     private String username; // loadUserByUsername에서 사용하는 username 실제론 userId가 세팅됨
     private String realUsername; // userId가 아닌 실제 username이 담길 변수
@@ -80,7 +80,7 @@ public class MemberAuth implements UserDetails {
         // 어떤 값이 존재하지 않는지 명확히 표현하기 위해 if - else if 사용
         if(password.isBlank()) {
             throw new ApiException(ErrorCode.NULL_POINT, "Password가 존재하지 않습니다.");
-        } else if(seq == -1) {
+        } else if(seq <= -1) {
             throw new ApiException(ErrorCode.SERVER_ERROR);
         } else if(username.isBlank()) {
             throw new ApiException(ErrorCode.NULL_POINT, "Username이 존재하지 않습니다.");
