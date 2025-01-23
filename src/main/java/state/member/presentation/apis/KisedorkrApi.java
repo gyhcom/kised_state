@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import state.member.application.fasade.DashboardManager;
+import state.member.application.fasade.KisedorkrManager;
 import state.member.presentation.request.TempRequestDto;
 
 import java.util.ArrayList;
@@ -15,19 +15,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@Deprecated
+/**
+ * 기관 홈페이지 API
+ */
+@RequestMapping("/kisedorkr")
 @Controller
-@RequestMapping("/service1")
-public class Service1Api {
-    private final DashboardManager dashboardManager;
+public class KisedorkrApi {
+    private final KisedorkrManager kisedorkrManager;
 
-    public Service1Api(DashboardManager dashboardManager) {
-        this.dashboardManager = dashboardManager;
+    public KisedorkrApi(KisedorkrManager kisedorkrManager) {
+        this.kisedorkrManager = kisedorkrManager;
     }
 
     @GetMapping
-    public String service1() {
-        return "/serviceChart";
+    public String kisedorkrView() {
+        return "/services/kisedorkr";
     }
 
     /**
@@ -35,12 +37,12 @@ public class Service1Api {
      * @return
      */
     @ResponseBody
-    @GetMapping("/getServicesData")
-    public Mono<List<List<TempRequestDto>>> getEachServiceData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<TempRequestDto>> list = new ArrayList<>();
-        list.add(dashboardManager.getSystems1AnnulData());
-        list.add(dashboardManager.getSystem1MonthlyData(year));
-        list.add(dashboardManager.getSystem1WeeklyData(year, month));
+    @GetMapping("/getAnnualData")
+    public Mono<List<List<Map<String, Object>>>> getEachServiceData(@RequestParam String year, @RequestParam String month) {
+        List<Flux<Map<String, Object>>> list = new ArrayList<>();
+        list.add(kisedorkrManager.getAnnulData());
+        list.add(kisedorkrManager.getMonthlyData(year));
+        list.add(kisedorkrManager.getWeeklyData(year, month));
 
         //TODO WebFlux, WebClient에 대해 함께 설명이 있었다면 좋았을 것 같음
         // 납득시킬만한 내용이 있었으면 베스트
@@ -58,53 +60,53 @@ public class Service1Api {
          * .collectList() : Flux로 흐르는 데이터를 한 번에 수집하여 리스트(List<TempRequestDto>) 만듦
          * .defaultIfEmpty : 만약 넘어온 데이터가 없을 경우 빈 리스트 세팅한다
          */
-        List<Mono<List<TempRequestDto>>> monoList = list.stream()
+        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
                 .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
                 .toList();
 
         // 병렬 처리로 모든 Mono 완료
         return Mono.zip(monoList, results ->
                 Arrays.stream(results)
-                        .map(result -> (List<TempRequestDto>) result)
+                        .map(result -> (List<Map<String, Object>>) result)
                         .toList()
         );
     }
 
     @ResponseBody
     @GetMapping("/getMonthlyData")
-    public Mono<List<List<TempRequestDto>>> getMonthlyData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<TempRequestDto>> list = new ArrayList<>();
-        list.add(dashboardManager.getSystem1MonthlyData(year));
-        list.add(dashboardManager.getSystem1WeeklyData(year, month));
+    public Mono<List<List<Map<String, Object>>>> getMonthlyData(@RequestParam String year, @RequestParam String month) {
+        List<Flux<Map<String, Object>>> list = new ArrayList<>();
+        list.add(kisedorkrManager.getMonthlyData(year));
+        list.add(kisedorkrManager.getWeeklyData(year, month));
 
         // 모든 Flux를 Mono로 변환
-        List<Mono<List<TempRequestDto>>> monoList = list.stream()
+        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
                 .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
                 .toList();
 
         // 병렬 처리로 모든 Mono 완료
         return Mono.zip(monoList, results ->
                 Arrays.stream(results)
-                        .map(result -> (List<TempRequestDto>) result)
+                        .map(result -> (List<Map<String, Object>>) result)
                         .toList()
         );
     }
 
     @ResponseBody
     @GetMapping("/getWeeklyData")
-    public Mono<List<List<TempRequestDto>>> getWeeklyData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<TempRequestDto>> list = new ArrayList<>();
-        list.add(dashboardManager.getSystem1WeeklyData(year, month));
+    public Mono<List<List<Map<String, Object>>>> getWeeklyData(@RequestParam String year, @RequestParam String month) {
+        List<Flux<Map<String, Object>>> list = new ArrayList<>();
+        list.add(kisedorkrManager.getWeeklyData(year, month));
 
         // 모든 Flux를 Mono로 변환
-        List<Mono<List<TempRequestDto>>> monoList = list.stream()
+        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
                 .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
                 .toList();
 
         // 병렬 처리로 모든 Mono 완료
         return Mono.zip(monoList, results ->
                 Arrays.stream(results)
-                        .map(result -> (List<TempRequestDto>) result)
+                        .map(result -> (List<Map<String, Object>>) result)
                         .toList()
         );
     }
@@ -112,6 +114,6 @@ public class Service1Api {
     @ResponseBody
     @GetMapping("/getGridData")
     public Flux<Map<String, Object>> getGridData() {
-        return dashboardManager.getGridData();
+        return kisedorkrManager.getGridData();
     }
 }

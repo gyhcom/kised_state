@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
+    <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
+    <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div>
+    <div class="d-flex align-items-center" style="padding-left: 20px;">
+        <h1 id="systemNm" style="font-size: 2rem;">K-Startup - 인기 키워드</h1>
+        <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
+        <span id="statusText" style="color: #28a745">성공</span>
+    </div>
+
+    <div>
+        <div class="d-flex align-items-center ms-auto ps-4 pt-4">
+            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                <input type="text" id="datepicker-input" aria-label="Date-Time">
+                <span class="tui-ico-date"></span>
+            </div>
+            <div id="wrapper" style="margin-top: -1px;"></div>
+            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">조회</button>
+        </div>
+    </div>
+
+    <div id="contentDiv">
+        <div class="container-fluid p-4">
+            <!-- Charts Section -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordAnnualChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordMonthChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordWeekChart1" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordWeekChart2" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordWeekChart3" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="popKeywordWeekChart4" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/js/toast-ui/tui-date-picker.js"></script>
+<script th:inline="javascript">
+    function setApiFailureIcon() {
+        $('#statusIcon').css('background-color', '#dc3545');
+        $('#statusText').css('color', '#dc3545');
+        $('#statusText').text('실패')
+    }
+
+    function setApiSuccessIcon() {
+        $('#statusIcon').css('background-color', '#28a745');
+        $('#statusText').css('color', '#28a745');
+        $('#statusText').text('성공')
+    }
+
+    ScrollReveal().reveal('.card', {
+        distance: '50px',
+        origin: 'bottom',
+        opacity: 0,
+        duration: 600,
+        easing: 'ease-out',
+        interval: 100
+    });
+</script>
+<script src="/js/services/kstup/kstup-keyword.js"></script>
+</body>
+</html>

@@ -1,3 +1,8 @@
+document.addEventListener("DOMContentLoaded", function () {
+    chartInit();
+    gridInit();
+});
+
 function chartInit(url) {
     //최초 조회 시 현재 년도 가져오기
     let year = new Date().getFullYear();
@@ -10,7 +15,6 @@ function chartInit(url) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
             /**
              * 1. 년도별, 월별, 주별 데이터 세팅
              * 2. API 호출 상태 ICON 세팅
@@ -188,7 +192,7 @@ function createWeeklyChart() {
 
         const theme = getTheme();
 
-        let title = data.year[0] + '년 ' + data.month[0] + '월 주별 현황';
+        let title = '테스트용입니다!!!!!!!!!!!';
         const options = {
             chart: { title: title, height: 350 },
             legend: {visible: false},
@@ -204,6 +208,8 @@ function createWeeklyChart() {
     }
 }
 
+
+
 function annualChartClick(year) {
     if(!year) {
         alert("선택한 년도 정보를 가져올 수 없습니다");
@@ -218,7 +224,6 @@ function annualChartClick(year) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
             /**
              * 1. 가져온 데이터 null 체크
              * 2. 차트 초기화
@@ -271,7 +276,6 @@ function monthlyChartClick(year, month) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
             /**
              * 1. 가져온 데이터 null 체크
              * 2. 차트 초기화

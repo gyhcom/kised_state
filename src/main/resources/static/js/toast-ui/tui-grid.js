@@ -6,11 +6,11 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
     if(typeof exports === 'object' && typeof module === 'object')
-        module.exports = factory(require("tui-date-picker"), require("tui-pagination"), require("xlsx"));
+        module.exports = factory(require("./tui-date-picker"), require("./tui-pagination"), require("xlsx"));
     else if(typeof define === 'function' && define.amd)
-        define(["tui-date-picker", "tui-pagination", "xlsx"], factory);
+        define(["./tui-date-picker", "static/js/toast-ui/tui-pagination", "xlsx"], factory);
     else if(typeof exports === 'object')
-        exports["Grid"] = factory(require("tui-date-picker"), require("tui-pagination"), require("xlsx"));
+        exports["Grid"] = factory(require("./tui-date-picker"), require("./tui-pagination"), require("xlsx"));
     else
         root["tui"] = root["tui"] || {}, root["tui"]["Grid"] = factory(root["tui"]["DatePicker"], root["tui"]["Pagination"], root["XLSX"]);
 })(window, function(__WEBPACK_EXTERNAL_MODULE__44__, __WEBPACK_EXTERNAL_MODULE__122__, __WEBPACK_EXTERNAL_MODULE__129__) {
