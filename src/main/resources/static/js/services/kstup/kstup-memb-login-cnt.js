@@ -160,8 +160,8 @@ function createMonthlyChart() {
             },
             theme
         };
-
-        //options.theme.series.push({colors: ['#EDAE49']});
+        //차트 색상 변경
+        options.theme.series.colors = ['#49c9ed'];
 
         monthlyLoginChart = toastui.Chart.columnChart({ el, data, options });
 
@@ -216,6 +216,8 @@ function createDailyChart() {
             },
             theme
         };
+        //차트 색상 변경
+        options.theme.series.colors = ['#49eddd'];
 
         dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
     }
