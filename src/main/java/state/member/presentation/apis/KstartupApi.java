@@ -1,11 +1,10 @@
 package state.member.presentation.apis;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.KstupManager;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequestMapping("/kstup")
 @Controller
 public class KstartupApi {
@@ -24,14 +24,47 @@ public class KstartupApi {
         this.kstupManager = kstupManager;
     }
 
+    /**
+     * 인기 검색어 화면 이동
+     * @return
+     */
     @GetMapping("/popKeyword")
     public String kstupPopKeywordView() {
         return "/services/kstartup/kstup-keyword";
     }
 
+    /**
+     * 회원 & 로그인수 화면
+     * @return
+     */
     @GetMapping("/membAndLogin")
     public String kstupMembLoginView() {
         return "/services/kstartup/kstup-memb-login-cnt";
+    }
+
+    /**
+     * 통합공고 등록 현황 화면
+     * @param mv
+     * @return
+     */
+    @GetMapping("/combNotice")
+    public ModelAndView kstupCombNoticeView(ModelAndView mv) {
+        mv.setViewName("/services/kstartup/kstup-comb-notice");
+
+        // 분야조회
+        mv.addObject("fields", kstupManager.getFields().collectList().block());
+        return mv;
+    }
+
+    /**
+     * 통합공고 등록 현황
+     * @param searchData
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getCombNotiReg")
+    public Flux<Map<String, Object>> getCombNotiReg(@RequestParam Map<String, Object> searchData) {
+        return kstupManager.getCombNotiReg(searchData);
     }
 
     /**
@@ -121,6 +154,12 @@ public class KstartupApi {
                 });
     }
 
+    /**
+     * 인기 검색어 Top10(연도별, 월별, 주별)
+     * @param year
+     * @param month
+     * @return
+     */
     @ResponseBody
     @GetMapping("/getPopKeyword")
     public Mono<List<List<Map<String, Object>>>> getPopKeyword(@RequestParam String year, @RequestParam String month) {
