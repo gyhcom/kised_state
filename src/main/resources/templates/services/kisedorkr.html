@@ -70,8 +70,8 @@
                 <!-- Cards -->
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="card-body" style="width: 100%">
-                            <div id="monthChart"></div>
+                        <div class="card-body">
+                            <div id="monthChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
@@ -105,14 +105,6 @@
         $('#statusText').text('성공')
     }
 
-    ScrollReveal().reveal('.card', {
-        distance: '50px',
-        origin: 'bottom',
-        opacity: 0,
-        duration: 600,
-        easing: 'ease-out',
-        interval: 100
-    });
 </script>
 <script src="/js/services/kisedorkr/kisedorkr.js"></script>
 <script src="/js/toast-ui/tui-grid.js"></script>
