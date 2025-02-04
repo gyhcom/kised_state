@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
+    <link rel="stylesheet" href="/css/toast-ui/tui-grid.css">
+    <link rel="stylesheet" href="/css/toast-ui/tui-pagination.css">
+    <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
+    <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div>
+    <div class="d-flex align-items-center" style="padding-left: 20px;">
+        <h1 id="systemNm" style="font-size: 2rem;">이상거래탐지 현황</h1>
+        <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
+        <span id="statusText" style="color: #28a745">성공</span>
+    </div>
+
+    <div>
+        <div class="d-flex align-items-center ms-auto ps-4 pt-4">
+            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                <input type="text" id="datepicker-input" aria-label="Date-Time">
+                <span class="tui-ico-date"></span>
+            </div>
+            <div id="wrapper" style="margin-top: -1px;"></div>
+            <button class="btn btn-primary" onclick="searchData()" style="background-color: #4d4d4d; border-color: #4d4d4d;">조회</button>
+            <button type="button" class="btn btn-success text-end ms-auto me-4" id="excelDownloadBtn" onclick="excelDownload()">
+                <i class="bi bi-file-earmark-excel"></i> ExcelDownload
+            </button>
+        </div>
+    </div>
+
+<!--    <div id="gridBtn" class="container-fluid text-end pe-4 pt-3" style="display: block">-->
+<!--        <button type="button" class="btn btn-success text-end" id="excelDownloadBtn" onclick="excelDownload()">-->
+<!--            <i class="bi bi-file-earmark-excel"></i> ExcelDownload-->
+<!--        </button>-->
+<!--    </div>-->
+    <div id="grid" class="container-fluid p-4 h-auto"></div>
+
+    <div id="contentDiv">
+        <div class="container-fluid p-4">
+            <!-- Charts Section -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="preDetCntAnnualChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="preDetCntMonthlyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="preDetProfCntAnnualChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="preDetProfCntMonthlyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="totalDetCntAnnualChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="totalDetCntMonthlyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/js/toast-ui/tui-date-picker.js"></script>
+<script src="/js/xlsx.full.min.js"></script>
+<script src="/js/toast-ui/tui-pagination.js"></script>
+<script th:inline="javascript">
+    function setApiFailureIcon() {
+        $('#statusIcon').css('background-color', '#dc3545');
+        $('#statusText').css('color', '#dc3545');
+        $('#statusText').text('실패')
+    }
+
+    function setApiSuccessIcon() {
+        $('#statusIcon').css('background-color', '#28a745');
+        $('#statusText').css('color', '#28a745');
+        $('#statusText').text('성공')
+    }
+
+</script>
+<script src="/js/toast-ui/tui-grid.js"></script>
+<script src="/js/services/fds/fds.js"></script>
+</body>
+</html>
