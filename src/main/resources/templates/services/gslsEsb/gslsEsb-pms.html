@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
+    <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div>
+    <div class="d-flex align-items-center" style="padding-left: 20px;">
+        <h1 id="systemNm" style="font-size: 2rem;">국고보조금 - PMS</h1>
+        <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
+        <span id="statusText" style="color: #28a745">성공</span>
+    </div>
+
+    <div id="contentDiv">
+        <div class="container-fluid p-4">
+            <!-- Charts Section -->
+            <div class="row">
+                <div class="d-flex align-items-center border-bottom mb-3" style="padding-left: 20px;">
+                    <h3 id="subTitle1" style="font-size: 2rem;">정보공시 내역</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="infoPubNotiAnnChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="infoPubNotiMonChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="d-flex align-items-center border-bottom mb-3" style="padding-left: 20px;">
+                    <h3 id="subTitle2" style="font-size: 2rem;">세입세출 내역</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="rveExptrAnnChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="rveExptrMonChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="d-flex align-items-center border-bottom mb-3" style="padding-left: 20px;">
+                    <h3 id="subTitle3" style="font-size: 2rem;">재무제표 결산서 내역</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="fnlsttAnnChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="fnlsttMonChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="d-flex align-items-center border-bottom mb-3" style="padding-left: 20px;">
+                    <h3 id="subTitle4" style="font-size: 2rem;">수급자 집행정보</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="excutAnnChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="excutMonChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="d-flex align-items-center border-bottom mb-3" style="padding-left: 20px;">
+                    <h3 id="subTitle5" style="font-size: 2rem;">상세내역 사업정보</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="dtlBsnsInfoAnnChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="dtlBsnsInfoMonChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    function setApiFailureIcon() {
+        $('#statusIcon').css('background-color', '#dc3545');
+        $('#statusText').css('color', '#dc3545');
+        $('#statusText').text('실패')
+    }
+
+    function setApiSuccessIcon() {
+        $('#statusIcon').css('background-color', '#28a745');
+        $('#statusText').css('color', '#28a745');
+        $('#statusText').text('성공')
+    }
+</script>
+<script src="/js/services/gslsEsb/gslsEsb-pms.js"></script>
+</body>
+</html>
