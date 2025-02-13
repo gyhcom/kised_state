@@ -49,4 +49,21 @@ public class GslsEsbGetFnlsttProcessor {
                     return Flux.empty(); // null 반환
                 });
     }
+
+    /**
+     * 재무제표결산서 내역
+     * @param year
+     * @return
+     */
+    public Flux<Map<String, Object>> dtlInfoExecute(String year, String month, String searchValue) {
+        return getWebClient(serviceUrl)
+                .get()
+                .uri("/getFnlstt?year="+year+"&month="+month+"&searchValue="+searchValue)
+                .retrieve()
+                .bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .onErrorResume(e -> { // 에러 발생 시 null 반환
+                    log.error("GslsEsb getFnlstt 데이터 호출 실패: " + e.getMessage());
+                    return Flux.empty(); // null 반환
+                });
+    }
 }
