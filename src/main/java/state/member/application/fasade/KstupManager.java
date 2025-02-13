@@ -4,10 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import state.member.application.processor.kstartup.KstartupDurationProcessor;
-import state.member.application.processor.kstartup.KstartupLoginCntProcessor;
-import state.member.application.processor.kstartup.KstartupMemberCntProcessor;
-import state.member.application.processor.kstartup.KstartupPopKeywordProcessor;
+import state.member.application.processor.kstartup.*;
 
 import java.util.Map;
 
@@ -18,16 +15,22 @@ public class KstupManager {
     private final KstartupPopKeywordProcessor kstartupPopKeywordProcessor;
     private final KstartupLoginCntProcessor kstartupLoginCntProcessor;
     private final KstartupMemberCntProcessor kstartupMemberCntProcessor;
+    private final KstartupFieldsProcessor kstartupFieldsProcessor;
+    private final KstartupCombNoticeProcessor kstartupCombNoticeProcessor;
 
     public KstupManager(
             KstartupDurationProcessor kstartupDurationProcessor,
             KstartupPopKeywordProcessor kstartupPopKeywordProcessor,
             KstartupLoginCntProcessor kstartupLoginCntProcessor,
-            KstartupMemberCntProcessor kstartupMemberCntProcessor) {
+            KstartupMemberCntProcessor kstartupMemberCntProcessor,
+            KstartupFieldsProcessor kstartupFieldsProcessor,
+            KstartupCombNoticeProcessor kstartupCombNoticeProcessor) {
         this.kstartupDurationProcessor = kstartupDurationProcessor;
         this.kstartupPopKeywordProcessor = kstartupPopKeywordProcessor;
         this.kstartupLoginCntProcessor = kstartupLoginCntProcessor;
         this.kstartupMemberCntProcessor = kstartupMemberCntProcessor;
+        this.kstartupFieldsProcessor = kstartupFieldsProcessor;
+        this.kstartupCombNoticeProcessor = kstartupCombNoticeProcessor;
     }
 
     public Mono<Map<String, Object>> getCurrentMemberCnt() {
@@ -68,5 +71,13 @@ public class KstupManager {
 
     public Flux<Map<String, Object>> getWeeklyData(String year, String month) {
         return kstartupDurationProcessor.weeklyExecute(year, month);
+    }
+
+    public Flux<Map<String, Object>> getFields() {
+        return kstartupFieldsProcessor.execute();
+    }
+
+    public Flux<Map<String, Object>> getCombNotiReg(Map<String, Object> searchData) {
+        return kstartupCombNoticeProcessor.execute(searchData);
     }
 }

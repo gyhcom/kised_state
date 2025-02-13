@@ -141,7 +141,7 @@ function createMonthlyChart() {
 
         let title = data.year[0] + '년 월간 방문자수';
         const options = {
-            chart: { title: title, height: 300 },
+            chart: { title: title, width: 'auto', height: 300 },
             legend: {visible: false},
             series: {
                 dataLabels: {
