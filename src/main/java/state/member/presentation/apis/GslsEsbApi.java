@@ -90,4 +90,56 @@ public class GslsEsbApi {
     public Flux<Map<String, Object>> getDtlBsnsInfoMonCnt(@RequestParam String year) {
         return gslsEsbManager.getDtlBsnsInfoMonCnt(year);
     }
+
+    @ResponseBody
+    @GetMapping("/getAllGslsEsbDtlInfo")
+    public Mono<List<List<Map<String, Object>>>> getAllGslsEsbDtlInfo(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        List<Flux<Map<String, Object>>> list = new ArrayList<>();
+        list.add(gslsEsbManager.getInfoPubNoti(year, month, searchValue));
+        list.add(gslsEsbManager.getRveExptr(year, month, searchValue));
+        list.add(gslsEsbManager.getFnlstt(year, month, searchValue));
+        list.add(gslsEsbManager.getExcutKstup(year, month, searchValue));
+        list.add(gslsEsbManager.getDtlBsnsInfo(year, month, searchValue));
+
+        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
+                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
+                .toList();
+
+        // 병렬 처리로 모든 Mono 완료
+        return Mono.zip(monoList, results ->
+                Arrays.stream(results)
+                        .map(result -> (List<Map<String, Object>>) result)
+                        .toList()
+        );
+    }
+
+    @ResponseBody
+    @GetMapping("/getInfoPubNoti")
+    public Flux<Map<String, Object>> getInfoPubNoti(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        return gslsEsbManager.getInfoPubNoti(year, month, searchValue);
+    }
+
+    @ResponseBody
+    @GetMapping("/getExcutKstup")
+    public Flux<Map<String, Object>> getExcutKstup(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        return gslsEsbManager.getExcutKstup(year, month, searchValue);
+    }
+
+    @ResponseBody
+    @GetMapping("/getFnlstt")
+    public Flux<Map<String, Object>> getFnlstt(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        return gslsEsbManager.getFnlstt(year, month, searchValue);
+    }
+
+    @ResponseBody
+    @GetMapping("/getRveExptr")
+    public Flux<Map<String, Object>> getRveExptr(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        return gslsEsbManager.getRveExptr(year, month, searchValue);
+    }
+
+    @ResponseBody
+    @GetMapping("/getDtlBsnsInfo")
+    public Flux<Map<String, Object>> getDtlBsnsInfo(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
+        return gslsEsbManager.getDtlBsnsInfo(year, month, searchValue);
+    }
 }

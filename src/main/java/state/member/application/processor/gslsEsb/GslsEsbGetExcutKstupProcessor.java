@@ -49,4 +49,22 @@ public class GslsEsbGetExcutKstupProcessor {
                     return Flux.empty(); // null 반환
                 });
     }
+
+    /**
+     * 수급자 집행정보
+     * @param year
+     * @param month
+     * @return
+     */
+    public Flux<Map<String, Object>> dtlInfoExecute(String year, String month, String searchValue) {
+        return getWebClient(serviceUrl)
+                .get()
+                .uri("/getExcutKstup?year="+year+"&month="+month+"&searchValue="+searchValue)
+                .retrieve()
+                .bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .onErrorResume(e -> { // 에러 발생 시 null 반환
+                    log.error("GslsEsb getExcutKstup 데이터 호출 실패: " + e.getMessage());
+                    return Flux.empty(); // null 반환
+                });
+    }
 }
