@@ -20,3 +20,9 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+services:
+  service_1:
+    url: 'http://localhost:8081/service1'
+  service_2:
+    url: 'http://localhost:8090/service2'
