@@ -30,7 +30,7 @@ public class KstartupApi {
      */
     @GetMapping("/popKeyword")
     public String kstupPopKeywordView() {
-        return "/services/kstartup/kstup-keyword";
+        return "services/kstartup/kstup-keyword";
     }
 
     /**
@@ -39,7 +39,7 @@ public class KstartupApi {
      */
     @GetMapping("/membAndLogin")
     public String kstupMembLoginView() {
-        return "/services/kstartup/kstup-memb-login-cnt";
+        return "services/kstartup/kstup-memb-login-cnt";
     }
 
     /**
@@ -49,11 +49,29 @@ public class KstartupApi {
      */
     @GetMapping("/combNotice")
     public ModelAndView kstupCombNoticeView(ModelAndView mv) {
-        mv.setViewName("/services/kstartup/kstup-comb-notice");
+        mv.setViewName("services/kstartup/kstup-comb-notice");
 
         // 분야조회
         mv.addObject("fields", kstupManager.getFields().collectList().block());
         return mv;
+    }
+
+    /**
+     * 공고등록 기관수 화면
+     * @return
+     */
+    @GetMapping("/institutionStats")
+    public String institutionStatsView() {
+        return "services/kstartup/kstup-institutionStats";
+    }
+
+    /**
+     * 기관별 공고등록 건수
+     * @return
+     */
+    @GetMapping("/institutionRegCnt")
+    public String institutionRegCntView() {
+        return "services/kstartup/kstup-institutionRegCnt";
     }
 
     /**
