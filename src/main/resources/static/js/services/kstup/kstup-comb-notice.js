@@ -19,7 +19,7 @@ function gridInit(year, month, searchValue1, searchValue2, searchValue3) {
             "searchValue3": searchValue3
         },
         success: function(data) {
-            console.dir(data);
+            //console.dir(data);
             setApiSuccessIcon();
 
             if(!data || data.length <= 0) {
@@ -73,7 +73,7 @@ function createGrid(gridData) {
             position: 'bottom',
             height: 40,
             columnContent: {
-                bsnsNm: {
+                fieldNm: {
                     template(summary) {
                         return 'TOTAL : ' + summary.cnt;
                     }
@@ -82,19 +82,11 @@ function createGrid(gridData) {
         }
     });
 
-    //$('#gridBtn').css('display', 'block');
+    tui.Grid.applyTheme('striped');
 }
 
 function datePickerInit() {
-    datepicker = new tui.DatePicker('#wrapper', {
-        language: 'en',
-        date: new Date(),
-        input: {
-            element: '#datepicker-input',
-            format: 'yyyy-MM'
-        },
-        type: 'month',
-    });
+    rangeDatePickerInit()
 }
 
 function excelDownload() {
