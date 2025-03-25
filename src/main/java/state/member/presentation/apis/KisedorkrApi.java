@@ -29,7 +29,7 @@ public class KisedorkrApi {
 
     @GetMapping
     public String kisedorkrView() {
-        return "/services/kisedorkr";
+        return "services/kisedorkr";
     }
 
     /**

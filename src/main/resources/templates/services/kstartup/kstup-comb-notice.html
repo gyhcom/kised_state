@@ -6,66 +6,83 @@
     <title>Dashboard</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-grid.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-pagination.css">
     <script src="/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-<div>
-    <div class="d-flex align-items-center" style="padding-left: 20px;">
-        <h1 id="systemNm" style="font-size: 2rem;">K-Startup - 통합공고 등록 현황</h1>
-        <span id="statusIcon" style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #28a745; margin-left: 10px;"></span>
-        <span id="statusText" style="color: #28a745">성공</span>
-        <div class="ms-auto pe-4">
-            <button class="btn btn-primary ms-auto" onclick="searchData()" style="background-color: #4d4d4d; border-color: #4d4d4d;">조회</button>
+<div class="root">
+    <div class="d-flex justify-content-between align-items-center px-3 pt-5 pb-4">
+        <div class="d-flex align-items-center">
+            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 통합공고 등록 현황</h1>
+            <span id="statusIcon" class="ms-3 d-inline-block rounded-circle" style="width: 12px; height: 12px; background-color: #28a745;"></span>
+            <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
+        </div>
+
+        <div class="d-flex align-items-center ms-auto">
+            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                <input id="startpicker-input" type="text" aria-label="Date">
+                <span class="tui-ico-date"></span>
+                <div id="startpicker-container" style="margin-left: -1px;"></div>
+            </div>
+            <span> ~ </span>
+            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                <input id="endpicker-input" type="text" aria-label="Date">
+                <span class="tui-ico-date"></span>
+                <div id="endpicker-container" style="margin-left: -1px;"></div>
+            </div>
+            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>
         </div>
     </div>
 
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <table class="table table-bordered align-middle">
-                <tr>
-                    <th class="align-items-start">기준년월</th>
-                    <td>
-                        <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                            <input type="text" id="datepicker-input" aria-label="Date-Time">
-                            <span class="tui-ico-date"></span>
-                        </div>
-                        <div id="wrapper" style="margin-top: -1px;"></div>
-                    </td>
-                    <th>분야</th>
-                    <td>
+    <div class="w-auto p-3">
+        <div class="rounded pb-1 mb-1 border-bottom">
+            <form>
+                <div class="row align-items-center g-3">
+                    <div class="col-auto">
+                        <label for="searchValue1" class="fw-bold">분야</label>
+                    </div>
+                    <div class="col-md-2">
                         <select id="searchValue1" class="form-select" aria-label="분야">
                             <option value="" selected>전체</option>
                             <option th:each="fields : ${fields}" th:value="${fields.idx}" th:utext="${fields.name}"></option>
                         </select>
-                    </td>
-                    <th>소관부처</th>
-                    <td>
-                        <input type="text" id="searchValue2" class="form-control" placeholder="소관부처" aria-label="소관부처" aria-describedby="basic-addon1">
-                    </td>
-                    <th>사업명</th>
-                    <td>
-                        <input type="text" id="searchValue3" class="form-control" placeholder="사업명" aria-label="사업명" aria-describedby="basic-addon1">
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </nav>
+                    </div>
 
-    <div id="gridBtn" class="container-fluid text-end pe-4 pt-3" style="display: block">
-        <button type="button" class="btn btn-success" id="excelDownloadBtn" onclick="excelDownload()">
-            <i class="bi bi-file-earmark-excel"></i> ExcelDownload
-        </button>
+                    <div class="col-auto">
+                        <label for="searchValue2" class="fw-bold">소관부처</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="searchValue2" placeholder="소관부처를 입력해주세요.">
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="searchValue3" class="fw-bold">사업명</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="searchValue3" placeholder="사업명을 입력해주세요.">
+                    </div>
+
+                    <!-- 검색 및 초기화 버튼 -->
+                    <div class="col text-end">
+<!--                        <button type="submit" class="btn btn-primary flex-fill">검색</button>-->
+                        <button type="button" class="btn btn-success" id="excelDownloadBtn" onclick="excelDownload()">
+                            <i class="bi bi-file-earmark-excel"></i> ExcelDownload
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-    <div id="grid" class="container-fluid p-4 h-auto"></div>
+    <div id="grid" class="container-fluid p-3 h-auto"></div>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="/js/toast-ui/tui-date-picker.js"></script>
+<script src="/js/common/date-picker.js"></script>
 <script src="/js/xlsx.full.min.js"></script>
 <script src="/js/toast-ui/tui-pagination.js"></script>
 <script th:inline="javascript">

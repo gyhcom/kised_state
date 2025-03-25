@@ -3,12 +3,14 @@ let monthlyData;
 let weeklyData;
 
 let annualChart;
+let monthlyChart;
+let weeklyChart;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     chartInit();
 });
-
+0
 function chartInit() {
     //최초 조회 시 현재 년도 가져오기
     let year = new Date().getFullYear();
@@ -37,8 +39,6 @@ function chartInit() {
 
             // 성공 여부를 H1 태그에 표현하기
             createAnnualChart();
-            //createMonthlyChart();
-            //createWeeklyChart();
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -135,52 +135,8 @@ function createAnnualChart() {
             theme,
         };
 
-        const chart = toastui.Chart.lineChart({ el, data, options });
+        const chart = toastui.Chart.areaChart({ el, data, options });
     }
-}
-
-function annualChartClick(year) {
-    if(!year) {
-        alert("선택한 년도 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    //현재 월 세팅
-    let month = new Date().getMonth() + 1;
-
-    $.ajax({
-        url: '/kisedorkr/getMonthlyData?year='+ year + '&month='+month,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            //월별 데이터, 주별 데이터
-            if(data == null || data.length !== 2) {
-                alert("월별 데이터가 존재하지 않습니다.");
-                return;
-            }
-
-            monthlyData = data[0];
-            weeklyData = data[1];
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
-                setApiFailureIcon();
-            }
-
-            // 차트 destroy
-            monthlyChart.destroy();
-            //weeklyChart.destroy();
-
-            // 새로운 데이터로 재생성
-            //createMonthlyChart();
-        },
-        error: function(error) { // 에러 시 실행
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
 }
 
 function getTheme() {
@@ -204,5 +160,5 @@ function validateData() {
 }
 
 function datePickerInit() {
-    rangeDatePickerInit()
+    rangeDatePickerInit();
 }

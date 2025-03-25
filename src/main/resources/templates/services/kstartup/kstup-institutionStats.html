@@ -10,13 +10,14 @@
     <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
     <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
     <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
+    <script src="/js/common/date-picker.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 <div class="root">
     <div class="d-flex justify-content-between align-items-center px-4 pt-5 pb-4">
         <div class="d-flex align-items-center">
-            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 기관 홈페이지</h1>
+            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 공고등록 기관수</h1>
             <span id="statusIcon" class="ms-3 d-inline-block rounded-circle" style="width: 12px; height: 12px; background-color: #28a745;"></span>
             <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
         </div>
@@ -42,9 +43,9 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
-                        <div class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">월평균 방문자수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">연평균 통합공고 등록 기관수</h5>
                     </div>
                     <h2 class="card-text stat-value fw-bold text-dark mt-2" id="dauValue">120,000</h2>
                     <p class="stat-comparison text-success fs-6 fw-semibold mb-0">▲ +5% (전주 대비)</p>
@@ -58,7 +59,7 @@
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-people-fill text-danger fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">일평균 방문자수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">월평균 통합공고 등록 기관수</h5>
                     </div>
                     <h2 class="card-text stat-value fw-bold text-dark mt-2" id="mauValue">300,000</h2>
                     <p class="stat-comparison text-danger fs-6 fw-semibold mb-0">▼ -2% (전주 대비)</p>
@@ -72,7 +73,7 @@
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">기간별 방문자수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">기간별 통합공고 등록 기관수</h5>
                     </div>
                     <h2 class="card-text stat-value fw-bold text-dark mt-2" id="periodVisitValue">-</h2>
                     <p class="stat-comparison text-primary fs-6 fw-semibold mb-0">▲ +3% (지난 기간 대비)</p>
@@ -100,7 +101,6 @@
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="/js/toast-ui/tui-date-picker.js"></script>
-<script src="/js/common/date-picker.js"></script>
 <script th:inline="javascript">
     function setApiFailureIcon() {
         $('#statusIcon').css('background-color', '#dc3545');
@@ -115,6 +115,6 @@
     }
 
 </script>
-<script src="/js/services/kisedorkr/kisedorkr.js"></script>
+<script src="/js/services/kstup/kstup-institutionStats.js"></script>
 </body>
 </html>

@@ -1,39 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap & FontAwesome -->
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/common/all.min.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/common/common.css">
     <script src="/js/jquery-3.7.1.min.js"></script>
-    <!--https://github.com/nhn/tui.chart/blob/main/docs/ko/chart-pie.md -> 모든 차트의 핸들링 가이드-->
+    <!-- Google Fonts -->
+
+<!--    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">-->
 </head>
 <body>
-<div class="container-fluid bg-light vh-100 w-100">
-    <!-- Header -->
-    <div th:replace="/common/header :: navbar"></div>
 
-    <!-- Sidebar + Content -->
-    <div id="frameContainer" class="row" style="height: 1080px">
-        <!-- Sidebar -->
-        <div th:replace="/common/sidebar :: sidebar"></div>
+<!-- 🔹 전체 레이아웃 -->
+<div class="container-fluid">
+    <!-- 🔹 사이드바 -->
+    <div th:replace="common/sidebar :: sidebar"></div>
 
-        <!-- Main Content -->
-        <iframe id="dynamicFrame" class="col-md-10 p-4 h-auto" src="/kisedorkr"></iframe>
+    <!-- 🔹 메인 콘텐츠 -->
+    <div class="content">
+        <!-- Header -->
+        <div th:replace="common/header :: navbar"></div>
+
+        <iframe id="dynamicFrame" class="col-md-12" src="/kisedorkr"></iframe>
     </div>
-
-    <footer class="text-center py-3 bg-light mt-4">
-        <small>© 2024 창업진흥원. All rights reserved.</small>
-    </footer>
 </div>
 
+<!-- 🔹 JavaScript -->
+<script>
+    $(document).ready(function() {
+        $(document).on("click", function (event) {
+            const isMenuButton = $(event.target).closest(".p-menu").length > 0;
+            const isSubmenu = $(event.target).closest(".submenu").length > 0;
 
-<!-- Bootstrap JS -->
-<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="/js/loader.js"></script>
-<script th:inline="javascript">
+            if (!isMenuButton && !isSubmenu) {
+                $(".submenu").removeClass("show");
+            }
+        });
+
+        window.addEventListener("blur", function () {
+            const activeEl = document.activeElement;
+
+            // 포커스를 받은 요소가 iframe일 때만 처리
+            if (activeEl && activeEl.tagName === "IFRAME") {
+                $(".submenu").removeClass("show");
+            }
+        });
+    })
+
     function logout() {
         if(!confirm("로그아웃 하시겠습니까?")) return;
         //csrf 토큰이 있어야 로그아웃 처리할 수 있음. -> 추후 만들기
@@ -56,33 +75,33 @@
             });
     }
 
-    function selectKisedorkr() {
-        loadHTMLAndScript('/kisedorkr');
+    function toggleSubmenu(menuId, element) {
+        const submenu = document.getElementById(menuId);
+        const allSubmenus = document.querySelectorAll(".submenu");
+
+        const isAlreadyVisible = submenu.classList.contains("show");
+
+        // 모든 서브메뉴 닫기
+        allSubmenus.forEach(menu => {
+            menu.classList.remove("show");
+        });
+
+        if (!isAlreadyVisible) {
+            // 위치 조정 (클릭한 버튼 기준)
+            const rect = element.getBoundingClientRect();
+            submenu.style.top = `${rect.top}px`;
+
+            // 서브 메뉴 표시
+            submenu.classList.add("show");
+        }
     }
 
-    function selectKstupPopKeyword() {
-        loadHTMLAndScript('/kstup/popKeyword');
-    }
-
-    function selectMembAndLoginCnt() {
-        loadHTMLAndScript('/kstup/membAndLogin');
-    }
-
-    function selectCombNotice() {
-        loadHTMLAndScript('/kstup/combNotice');
-    }
-
-    function selectFds() {
-        loadHTMLAndScript('/fds');
-    }
-
-    function selectGukgoPms() {
-        loadHTMLAndScript('/gslsEsb/pms');
-    }
-
-    function selectGukgoMis() {
-        loadHTMLAndScript('/gslsEsb/mis');
+    function loadPage(url) {
+        document.getElementById("dynamicFrame").src = url;
     }
 </script>
+<!-- Bootstrap JS -->
+<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/js/loader.js"></script>
 </body>
 </html>

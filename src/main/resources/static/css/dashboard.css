@@ -1,65 +1,142 @@
-.navbar-brand img {
-    transition: transform 0.3s ease;
-}
-.navbar-brand img:hover {
-    transform: scale(1.1); /* 약간 확대 */
-}
-
-button.btn-primary {
-    transition: background-color 0.3s ease, transform 0.3s ease;
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
 }
 
-button.btn-primary:hover {
-    background-color: #0056b3; /* 더 진한 색상 */
-    transform: scale(1.05); /* 약간 확대 */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
-}
-.nav-link {
-    transition: background-color 0.3s ease, color 0.3s ease;
-    padding: 10px;
-    border-radius: 5px;
-}
-.nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* 살짝 밝은 색 */
-    color: #f8f9fa; /* 더 밝은 흰색 */
-    font-weight: bold; /* 텍스트 강조 */
-}
-.nav-link.active {
-    background-color: rgba(255, 255, 255, 0.2); /* 선택된 메뉴 */
-    font-weight: bold;
+/* 🔹 전체 스타일 */
+body {
+    font-family: 'Poppins', sans-serif;
 }
 
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-10px); /* 살짝 위로 이동 */
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+/* 🔹 사이드바 스타일 */
+.sidebar {
+    background-color: #e3f2fd;
+    color: #000;
+    height: 100vh;
+    width: 90px; /* 기본 너비 */
+    padding: 1rem 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    transition: width 0.3s ease-in-out;
 }
 
-.card-body {
-    transition: background-color 0.3s ease;
-}
-.card-body:hover {
-    background-color: #f8f9fa; /* 부드러운 회색 */
+/* 사이드바 확장 효과 */
+.sidebar:hover {
+    width: 220px;
+    align-items: flex-start;
+    padding-left: 15px;
 }
 
-footer a {
+/* 아이콘 버튼 스타일 */
+.sidebar .nav-link {
+    color: #004080;
+    font-size: 1.5rem;
+    padding: 12px;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: 500;
+    position: relative;
+}
+
+.sidebar .nav-link i {
+    width: 40px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(0, 64, 128, 0.15);
+    transform: translateX(5px);
+}
+
+/* 🔹 사이드바 텍스트 스타일 */
+.sidebar .nav-text {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    color: #004080;
+}
+
+/* 사이드바 확장 시 텍스트 표시 */
+.sidebar:hover .nav-text {
+    opacity: 1;
+}
+
+/* 🔹 서브 메뉴 스타일 */
+.submenu {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px;
+    border-radius: 8px;
+    display: none;
+    position: fixed;
+    left: 230px; /* 사이드바 우측에 위치 */
+    z-index: 1000;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.submenu a {
+    display: block;
+    color: #004080;
+    padding: 6px;
+    font-size: 13px;
+    transition: background 0.3s ease-in-out;
     text-decoration: none;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
-    border-bottom: 2px solid transparent;
-}
-footer a:hover {
-    color: #0056b3; /* 강조 색 */
-    border-bottom: 2px solid #0056b3;
+    font-weight: 500;
 }
 
-/* 로그아웃 버튼 간격 조정 */
-.navbar .btn-primary {
-    margin-left: 10px; /* 회원정보 링크와 버튼 간격 */
+.submenu a:hover {
+    background: rgba(0, 64, 128, 0.2);
 }
 
-/* 정렬을 유지하기 위한 Flex 스타일 */
-.d-flex {
-    gap: 10px; /* 회원정보와 버튼 사이의 간격 */
+/* 서브 메뉴 표시 효과 */
+.submenu.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 🔹 메인 콘텐츠 스타일 */
+.content {
+    margin-left: 90px;
+    flex-grow: 1;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* 사이드바 확장 시 메인 콘텐츠 조정 */
+.sidebar:hover ~ .content {
+    margin-left: 220px;
+}
+
+iframe {
+    width: 100%;
+    height: 100vh;
+
+    border: none;
+}
+
+#dynamicFrame {
+    background-color: #f5f5f5;
+    padding-bottom: 90px;
 }
