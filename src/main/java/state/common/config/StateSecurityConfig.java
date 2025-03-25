@@ -41,21 +41,23 @@ public class StateSecurityConfig {
                         .requestMatchers("/kisedorkr").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/kstup").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/fds").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/release-log").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/release-log").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN") // 관리자 권한 필요
                         .requestMatchers("/member/**").hasAnyRole("USER", "ADMIN") // 사용자 권한 필요
                         .requestMatchers("/edu/**").permitAll()       // 공용 접근 허용
                         .anyRequest().authenticated()                // 나머지 요청은 인증 필요
                 )
                 .formLogin(form -> form
-                        .loginPage("/loginForm")
-                        .loginProcessingUrl("/loginPost")
-                        //.defaultSuccessUrl("/dashboard", true) // 로그인 성공 후 이동할 URL
-                        //.failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
-                        .successHandler((getSuccessHandler()))
-                        .failureHandler(getFailureHandler())
-                        .usernameParameter("userId") // userId 사용
-                        .passwordParameter("password") // password 유지
-                        .permitAll()
+                                .loginPage("/loginForm")
+                                .loginProcessingUrl("/loginPost")
+                                //.defaultSuccessUrl("/dashboard", true) // 로그인 성공 후 이동할 URL
+                                //.failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
+                                .successHandler((getSuccessHandler()))
+                                .failureHandler(getFailureHandler())
+                                .usernameParameter("userId") // userId 사용
+                                .passwordParameter("password") // password 유지
+                                .permitAll()
                         /**
                          * successHandler가 존재하면 defaultSuccessUrl은 무시된다.
                          * successHandler가 우선적으로 실행되기 때문에 로그인 성공 시
@@ -79,40 +81,40 @@ public class StateSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(MemberManager memberManager){
-        return userId  -> memberManager
-                .findByUserId(userId)
-                .map(member -> MemberAuth.builder()
-                        .seq(member.getSeq())
-                        .username(member.getUserId())
-                        .realUsername(member.getUsername())
-                        .password(member.getPassword())
-                        .email(member.getEmail())
-                        .deptCd(member.getDepartmentCode())
-                        .psitCd(member.getPositionCode())
-                        // 이 부분 알고 쓰기
-                        .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getUserRole())))
-                        .build()
-                )
-                // Exception 직접 구현하기
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - userId  : " + userId ));
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(MemberManager memberManager){
+//        return userId  -> memberManager
+//                .findByUserId(userId)
+//                .map(member -> MemberAuth.builder()
+//                        .seq(member.getSeq())
+//                        .username(member.getUserId())
+//                        .realUsername(member.getUsername())
+//                        .password(member.getPassword())
+//                        .email(member.getEmail())
+//                        .deptCd(member.getDepartmentCode())
+//                        .psitCd(member.getPositionCode())
+//                        // 이 부분 알고 쓰기
+//                        .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getUserRole())))
+//                        .build()
+//                )
+//                // Exception 직접 구현하기
+//                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - userId  : " + userId ));
+//    }
 
     // DB가 없을 때 임시로 사용될 LoadUserByUserName
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        PasswordEncoder encoder = passwordEncoder();
-//
-//        // 사용자 생성 (비밀번호를 암호화하여 저장)
-//        return new InMemoryUserDetailsManager(
-//                org.springframework.security.core.userdetails.User
-//                        .withUsername("test")
-//                        .password(encoder.encode("1234")) // 암호화된 비밀번호
-//                        .roles("ADMIN")
-//                        .build()
-//        );
-//    }
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        PasswordEncoder encoder = passwordEncoder();
+
+        // 사용자 생성 (비밀번호를 암호화하여 저장)
+        return new InMemoryUserDetailsManager(
+                org.springframework.security.core.userdetails.User
+                        .withUsername("test")
+                        .password(encoder.encode("1234")) // 암호화된 비밀번호
+                        .roles("ADMIN")
+                        .build()
+        );
+    }
 
     @Bean
     LoginSuccessHandler getSuccessHandler() {
