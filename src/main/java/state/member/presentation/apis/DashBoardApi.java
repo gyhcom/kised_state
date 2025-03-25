@@ -14,6 +14,15 @@ import java.util.Collection;
 @Slf4j
 @Controller
 public class DashBoardApi {
+    @GetMapping("/")
+    public String redirectToDashbord(HttpSession session) {
+        if(session.getAttribute("userId") != null) {
+            return "redirect:/dashboard";
+        }
+
+        return "redirect:/loginForm";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -35,6 +44,6 @@ public class DashBoardApi {
             session.setAttribute("auth", "N");
         }
 
-        return "/common/dashboard";
+        return "common/dashboard";
     }
 }
