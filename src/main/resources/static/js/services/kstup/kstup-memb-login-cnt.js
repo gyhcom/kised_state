@@ -10,8 +10,6 @@ let annualLoginChart;
 let monthlyLoginChart;
 let dailyLoginChart;
 
-let datepicker;
-
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     init();
@@ -328,7 +326,7 @@ function getMemberCount(year, month) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
+            //console.dir(data);
             if(data == null || data.length <= 0) {
                 alert("회원 수 정보를 가져올 수 없습니다.");
                 return;
@@ -382,15 +380,7 @@ function validateData() {
 }
 
 function datePickerInit() {
-    datepicker = new tui.DatePicker('#wrapper', {
-        language: 'en',
-        date: new Date(),
-        input: {
-            element: '#datepicker-input',
-            format: 'yyyy-MM'
-        },
-        type: 'month',
-    });
+    rangeDatePickerInit()
 }
 
 function searchMembAndLoginCnt() {
@@ -432,7 +422,7 @@ function monthlyMemberRateInit(obj) {
 //회원수 현재 대비 증감률 계산
 //{(변화한 값 – 처음 값) / 처음 값} x 100 = 변화율(%)
 function calcMemberRate(cnt) {
-    console.log("cnt : " + cnt + " / current" + currentMemberData[0].cnt);
+    //console.log("cnt : " + cnt + " / current" + currentMemberData[0].cnt);
     var rate = ((parseInt(cnt) - parseInt(currentMemberData[0].cnt)) / parseInt(currentMemberData[0].cnt)) * 100;
     //소숫점 반올림
     rate = rate.toFixed(2);
