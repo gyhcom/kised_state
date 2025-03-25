@@ -27,7 +27,7 @@ public class FdsApi {
 
     @GetMapping
     public String fdsView() {
-        return "/services/fds/fds";
+        return "services/fds/fds";
     }
 
     @ResponseBody

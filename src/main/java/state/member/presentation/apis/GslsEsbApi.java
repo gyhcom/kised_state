@@ -25,12 +25,12 @@ public class GslsEsbApi {
 
     @GetMapping("/pms")
     public String gslsEsbPmsView() {
-        return "/services/gslsEsb/gslsEsb-pms";
+        return "services/gslsEsb/gslsEsb-pms";
     }
 
     @GetMapping("/mis")
     public String gslsEsbMisView() {
-        return "/services/gslsEsb/gslsEsb-mis";
+        return "services/gslsEsb/gslsEsb-mis";
     }
 
     @ResponseBody
