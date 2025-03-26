@@ -15,12 +15,12 @@ body {
     background-color: #e3f2fd;
     color: #000;
     height: 100vh;
-    width: 90px; /* 기본 너비 */
+    width: 140px; /* 아이콘 + 텍스트에 적당한 너비 */
     padding: 1rem 0;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* 텍스트 정렬 */
     position: fixed;
     left: 0;
     top: 0;
@@ -28,49 +28,36 @@ body {
     transition: width 0.3s ease-in-out;
 }
 
-/* 사이드바 확장 효과 */
-.sidebar:hover {
-    width: 220px;
-    align-items: flex-start;
-    padding-left: 15px;
-}
-
-/* 아이콘 버튼 스타일 */
+/* 🔹 사이드바 아이템 스타일 */
 .sidebar .nav-link {
     color: #004080;
-    font-size: 1.5rem;
-    padding: 12px;
-    text-align: left;
+    font-size: 14px;
+    padding: 10px 16px;
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 14px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    gap: 10px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
     white-space: nowrap;
-    overflow: hidden;
-    font-weight: 500;
-    position: relative;
 }
 
 .sidebar .nav-link i {
-    width: 40px;
+    width: 20px;
     text-align: center;
-    transition: transform 0.3s ease-in-out;
 }
 
-.sidebar .nav-link:hover {
-    background-color: rgba(0, 64, 128, 0.15);
-    transform: translateX(5px);
-}
-
-/* 🔹 사이드바 텍스트 스타일 */
+/* 🔹 텍스트 스타일 */
 .sidebar .nav-text {
-    font-size: 15px;
-    font-weight: 600;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    font-size: 14px;
+    font-weight: 500;
     color: #004080;
+}
+
+/* 🔹 hover 스타일 */
+.sidebar .nav-link:hover {
+    background-color: #dbeeff;
+    color: #003366;
 }
 
 /* 사이드바 확장 시 텍스트 표시 */
@@ -139,4 +126,44 @@ iframe {
 #dynamicFrame {
     background-color: #f5f5f5;
     padding-bottom: 90px;
+}
+
+/* 카테고리 제목 */
+.nav-section-title {
+    width: 100%;
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+    padding: 10px 20px 4px 20px;
+    margin-top: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* 카테고리 제목 */
+.nav-section-title {
+    width: 100%;
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+    padding: 10px 20px 4px 20px;
+    margin-top: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.sidebar .nav-link {
+    padding: 12px 20px;
+    font-size: 15px;
+    color: #004080;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.sidebar {
+    width: 180px;  /* 기존보다 넓게 */
+}
+
+.sidebar .nav-link:hover {
+    background-color: #dbeeff;
+    color: #003366;
 }
