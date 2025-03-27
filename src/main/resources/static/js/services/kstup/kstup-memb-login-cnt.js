@@ -48,14 +48,14 @@ function init(year, month) {
                 setApiFailureIcon();
             }
 
-            createAnnualChart();
-            createMonthlyChart();
-            createDailyChart();
+            //createAnnualChart();
+            //createMonthlyChart();
+            createMembDailyChart(); // 일일 회원 수 차트
+            createLoginDailyChart(); // 일일 로그인 수 차트
+            createVisitDailyChart(); // 일일 방문자 수 차트
 
             //회원수 세팅
             $('#currentMembCnt').text(currentMemberData[0].cnt);
-            annualMemberRateInit(data[1]);
-            monthlyMemberRateInit(data[2]);
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -171,7 +171,107 @@ function createMonthlyChart() {
     }
 }
 
-function createDailyChart() {
+function createMembDailyChart() {
+    {
+        const el = document.getElementById('membCntDailyChart');
+        let data = {
+            categories: [],
+            series: []
+        };
+
+        let daily_data = [];
+
+        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
+        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
+            //categories 세팅
+            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
+                /**
+                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
+                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
+                 */
+                data.categories.push(dailyLoginData[i].day);
+                daily_data.push(dailyLoginData[i].cnt);
+            }
+
+            data.series.push({
+                name : 'Count',
+                data : daily_data
+            })
+        }
+
+        const theme = getTheme();
+
+        const options = {
+            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 회원 수', width: 'auto', height: 350},
+            legend: {visible: false},
+            xAxis: {pointOnColumn: false, title: {text: 'day'}},
+            yAxis: {title: 'count'},
+            series: {
+                dataLabels: {
+                    visible: true,
+                },
+                selectable: true
+            },
+            theme
+        };
+        //차트 색상 변경
+        options.theme.series.colors = ['#49eddd'];
+
+        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
+    }
+}
+
+function createVisitDailyChart() {
+    {
+        const el = document.getElementById('visitCntDailyChart');
+        let data = {
+            categories: [],
+            series: []
+        };
+
+        let daily_data = [];
+
+        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
+        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
+            //categories 세팅
+            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
+                /**
+                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
+                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
+                 */
+                data.categories.push(dailyLoginData[i].day);
+                daily_data.push(dailyLoginData[i].cnt);
+            }
+
+            data.series.push({
+                name : 'Count',
+                data : daily_data
+            })
+        }
+
+        const theme = getTheme();
+
+        const options = {
+            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 방문자 수', width: 'auto', height: 350},
+            legend: {visible: false},
+            xAxis: {pointOnColumn: false, title: {text: 'day'}},
+            yAxis: {title: 'count'},
+            series: {
+                dataLabels: {
+                    visible: true,
+                },
+                selectable: true
+            },
+            theme
+        };
+        //차트 색상 변경
+        options.theme.series.colors = ['#7a7af5'];
+
+        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
+    }
+}
+
+function createLoginDailyChart() {
     {
         const el = document.getElementById('loginCntDailyChart');
         let data = {
@@ -202,7 +302,7 @@ function createDailyChart() {
         const theme = getTheme();
 
         const options = {
-            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 로그인 수', width: 'auto', height: 350},
+            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 로그인 수(중복제거와 함께 표현될 예정)', width: 'auto', height: 350},
             legend: {visible: false},
             xAxis: {pointOnColumn: false, title: {text: 'day'}},
             yAxis: {title: 'count'},
@@ -215,7 +315,7 @@ function createDailyChart() {
             theme
         };
         //차트 색상 변경
-        options.theme.series.colors = ['#49eddd'];
+        options.theme.series.colors = ['#eddf8c'];
 
         dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
     }
@@ -341,10 +441,6 @@ function getMemberCount(year, month) {
             if(!validateData()) {
                 setApiFailureIcon();
             }
-
-            // 회원 수 카드 수정. 현재 대비 증감 계산하기
-            annualMemberRateInit([data[0]]);
-            monthlyMemberRateInit([data[1]]);
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -394,38 +490,38 @@ function searchMembAndLoginCnt() {
     getMemberCount(year, month);
 }
 
-function annualMemberRateInit(obj) {
-    $('#yearMembCnt').text(obj[0].cnt);
-
-    $('#yearMembTitle').text(obj[0].year+"년도 기준 회원수");
-
-    var calcedRate = calcMemberRate(obj[0].cnt);
-
-    //monthMembRate
-    calcedRate >= 0 ? $('#yearMembRate').css('color', 'red') : $('#yearMembRate').css('color', 'blue')
-
-    $('#yearMembRate').text(calcedRate+"% (현재 대비)");
-}
-
-function monthlyMemberRateInit(obj) {
-    $('#monthMembCnt').text(obj[0].cnt);
-
-    $('#monthMembTitle').text(obj[0].year+"년 "+obj[0].month+"월 기준 회원수");
-
-    var calcedRate = calcMemberRate(obj[0].cnt);
-
-    calcedRate >= 0 ? $('#monthMembRate').css('color', 'red') : $('#monthMembRate').css('color', 'blue');
-
-    $('#monthMembRate').text(calcedRate+"% (현재 대비)");
-}
-
-//회원수 현재 대비 증감률 계산
-//{(변화한 값 – 처음 값) / 처음 값} x 100 = 변화율(%)
-function calcMemberRate(cnt) {
-    //console.log("cnt : " + cnt + " / current" + currentMemberData[0].cnt);
-    var rate = ((parseInt(cnt) - parseInt(currentMemberData[0].cnt)) / parseInt(currentMemberData[0].cnt)) * 100;
-    //소숫점 반올림
-    rate = rate.toFixed(2);
-
-    return parseInt(cnt) >= parseInt(currentMemberData[0].cnt) ? "+" + rate : rate;
-}
+// function annualMemberRateInit(obj) {
+//     $('#yearMembCnt').text(obj[0].cnt);
+//
+//     $('#yearMembTitle').text(obj[0].year+"년도 기준 회원수");
+//
+//     var calcedRate = calcMemberRate(obj[0].cnt);
+//
+//     //monthMembRate
+//     calcedRate >= 0 ? $('#yearMembRate').css('color', 'red') : $('#yearMembRate').css('color', 'blue')
+//
+//     $('#yearMembRate').text(calcedRate+"% (현재 대비)");
+// }
+//
+// function monthlyMemberRateInit(obj) {
+//     $('#monthMembCnt').text(obj[0].cnt);
+//
+//     $('#monthMembTitle').text(obj[0].year+"년 "+obj[0].month+"월 기준 회원수");
+//
+//     var calcedRate = calcMemberRate(obj[0].cnt);
+//
+//     calcedRate >= 0 ? $('#monthMembRate').css('color', 'red') : $('#monthMembRate').css('color', 'blue');
+//
+//     $('#monthMembRate').text(calcedRate+"% (현재 대비)");
+// }
+//
+// //회원수 현재 대비 증감률 계산
+// //{(변화한 값 – 처음 값) / 처음 값} x 100 = 변화율(%)
+// function calcMemberRate(cnt) {
+//     //console.log("cnt : " + cnt + " / current" + currentMemberData[0].cnt);
+//     var rate = ((parseInt(cnt) - parseInt(currentMemberData[0].cnt)) / parseInt(currentMemberData[0].cnt)) * 100;
+//     //소숫점 반올림
+//     rate = rate.toFixed(2);
+//
+//     return parseInt(cnt) >= parseInt(currentMemberData[0].cnt) ? "+" + rate : rate;
+// }

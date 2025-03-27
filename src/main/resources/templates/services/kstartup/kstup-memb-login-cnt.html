@@ -16,7 +16,7 @@
 <div class="root">
     <div class="d-flex justify-content-between align-items-center px-4 pt-5 pb-4">
         <div class="d-flex align-items-center">
-            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 회원 & 로그인수</h1>
+            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 회원 & 로그인 & 방문자 수</h1>
             <span id="statusIcon" class="ms-3 d-inline-block rounded-circle" style="width: 12px; height: 12px; background-color: #28a745;"></span>
             <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
         </div>
@@ -38,43 +38,54 @@
     </div>
 
     <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 p-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">현재 회원수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">현재 회원 수</h5>
                     </div>
                     <h2 id="currentMembCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
-                    <p class="stat-comparison text-success fs-6 fw-semibold mb-0">-</p>
+                    <p id="currMembYmd" class="stat-comparison text-success fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
                 </div>
             </div>
         </div>
 
-        <!-- 일평균 방문자수 카드 -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-people-fill text-danger fs-3 me-2"></i>
-                        <h5 id="yearMembTitle" class="card-title stat-title fw-semibold text-dark">년도 기준 회원수</h5>
+                        <h5 id="yearMembTitle" class="card-title stat-title fw-semibold text-dark">로그인 수</h5>
                     </div>
-                    <h2 id="yearMembCnt" class="card-text stat-value fw-bold text-dark mt-2" >-</h2>
-                    <p id="yearMembRate" class="stat-comparison text-danger fs-6 fw-semibold mb-0">-</p>
+                    <h2 id="loginCnt" class="card-text stat-value fw-bold text-dark mt-2" >7613</h2>
+                    <p id="loginYmd" class="stat-comparison text-danger fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
                 </div>
             </div>
         </div>
 
-        <!-- 기간별 방문자수 카드 (추가됨) -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
-                        <h5 id="monthMembTitle" class="card-title stat-title fw-semibold text-dark">월 기준 회원수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">로그인(중복제거) 수</h5>
                     </div>
-                    <h2 id="monthMembCnt" class="card-text stat-value fw-bold text-dark mt-2">-</h2>
-                    <p id="monthMembRate" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
+                    <h2 id="loginOrigCnt" class="card-text stat-value fw-bold text-dark mt-2">5123</h2>
+                    <p id="loginOrigYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
+                        <h5 id="monthMembTitle" class="card-title stat-title fw-semibold text-dark">방문자 수</h5>
+                    </div>
+                    <h2 id="visitCnt" class="card-text stat-value fw-bold text-dark mt-2">-</h2>
+                    <p id="visitYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
                 </div>
             </div>
         </div>
@@ -83,18 +94,28 @@
     <div id="contentDiv">
         <div class="container-fluid p-4">
             <!-- Charts Section -->
-            <div class="row">
-                <div class="col-md-4">
+<!--            <div class="row">-->
+<!--                <div class="col-md-4">-->
+<!--                    <div class="card shadow-sm">-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="loginCntAnnualChart" style="width: 100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-8">-->
+<!--                    <div class="card shadow-sm">-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="loginCntMonthChart" style="width: 100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div class="row mt-4">
+                <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <div id="loginCntAnnualChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="loginCntMonthChart" style="width: 100%"></div>
+                            <div id="membCntDailyChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
@@ -105,6 +126,16 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div id="loginCntDailyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="visitCntDailyChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
