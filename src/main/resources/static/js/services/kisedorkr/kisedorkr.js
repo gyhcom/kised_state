@@ -7,6 +7,73 @@ let annualChart;
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     chartInit();
+
+    // 로고/타이틀
+    gsap.from("#systemNm", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 상태 아이콘 + 텍스트
+    gsap.from(["#statusIcon", "#statusText"], {
+        duration: 1,
+        x: -20,
+        opacity: 0,
+        delay: 0.3,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // 날짜 선택 영역 & 버튼
+    gsap.from(".date-picker", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 통계 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#annualChart", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
+
+    /* 일평균 방문자 수 */
+    gsap.to("#dauValue", {
+        innerText: 3512,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#dauValue").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    /* 월평균 방문자 수 */
+    gsap.to("#mauValue", {
+        innerText: 24621, // 실제 요소의 값에서 '24621' 값이 증가되는 것을 보여주기 때문에 요소의 값은 0이어야 한다
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#mauValue").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
 });
 
 function chartInit() {
@@ -137,50 +204,6 @@ function createAnnualChart() {
 
         const chart = toastui.Chart.lineChart({ el, data, options });
     }
-}
-
-function annualChartClick(year) {
-    if(!year) {
-        alert("선택한 년도 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    //현재 월 세팅
-    let month = new Date().getMonth() + 1;
-
-    $.ajax({
-        url: '/kisedorkr/getMonthlyData?year='+ year + '&month='+month,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            //월별 데이터, 주별 데이터
-            if(data == null || data.length !== 2) {
-                alert("월별 데이터가 존재하지 않습니다.");
-                return;
-            }
-
-            monthlyData = data[0];
-            weeklyData = data[1];
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
-                setApiFailureIcon();
-            }
-
-            // 차트 destroy
-            monthlyChart.destroy();
-            //weeklyChart.destroy();
-
-            // 새로운 데이터로 재생성
-            //createMonthlyChart();
-        },
-        error: function(error) { // 에러 시 실행
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
 }
 
 function getTheme() {

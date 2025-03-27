@@ -1,6 +1,10 @@
 <div th:fragment="sidebar" class="sidebar">
     <!-- 🔸 시스템 -->
-    <div class="nav-section-title">📁 시스템</div>
+
+    <div class="rTitle">
+        <div class="hideIcon">📁</div>
+        <span class="nav-section-title">📁 시스템</span>
+    </div>
 
     <a class="nav-link active" onclick="loadPage('/kisedorkr')">
         <i class="fa-solid fa-building-columns text-primary"></i>
@@ -26,7 +30,10 @@
     </div>
 
     <!-- 🔸 행정 서비스 -->
-    <div class="nav-section-title">📝 서비스</div>
+    <div class="rTitle">
+        <div class="hideIcon">📝</div>
+        <span class="nav-section-title">📝 서비스</span>
+    </div>
 
     <a class="nav-link" onclick="loadPage('/incorp')">
         <i class="fa-solid fa-file-signature text-success"></i>
@@ -39,7 +46,10 @@
     </a>
 
     <!-- 🔸 데이터 분석 -->
-    <div class="nav-section-title">📊 데이터</div>
+    <div class="rTitle">
+        <div class="hideIcon">📊</div>
+        <span class="nav-section-title">📊 데이터</span>
+    </div>
 
     <a class="nav-link" onclick="loadPage('/data-import-log')">
         <i class="fa-solid fa-cloud-arrow-up text-primary"></i>
