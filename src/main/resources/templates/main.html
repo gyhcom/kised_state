@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>현황 통계 시스템</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/common/all.min.css">
+    <script src="/js/gsap/gsap.min.js"></script>
+    <script src="/js/gsap/ScrollTrigger.min.js"></script>
+    <script src="/js/main/main.js"></script>
+    <script src="/js/common/header.js"></script>
+</head>
+<body>
+<header th:replace="common/header :: navbar"></header>
+<div>
+    <div class="gallery">
+        <h1 class="main-title">Stats Dashboard📊</h1>
+        <ul class="cards">
+            <li>
+                <div class="card-content">
+                    <h3>
+                        <i class="fa-solid fa-rocket"></i>
+                        <span class="nav-text">K-Startup</span>
+                    </h3>
+                    <div id="kStartupMenu" class="submenu">
+                        <p>인기 키워드 Top10</p>
+                        <p>회원 & 로그인 수</p>
+                        <p>공고등록 관련 건수</p>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="card-content">
+                    <h3 class="nav-text">
+                        <i class="fa-solid fa-house"></i>
+                        기관 홈페이지
+                    </h3>
+                    <div class="submenu">
+                        <p>방문자 수</p>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="card-content">
+                    <h3 class="nav-text">
+                        <i class="fa-solid fa-balance-scale"></i>
+                        온라인법인설립
+                    </h3>
+                    <div class="submenu">
+                        <p>법인 설립 건수</p>
+                        <p>업종별 법인설립 건수</p>
+                        <p>방문자수</p>
+                    </div>
+                    <a onclick="loadPage('/incorp')">
+                        <i class="fa-solid fa-square-check"></i>
+                        통계 확인하기
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="card-content">
+                    <h3 class="nav-text">
+                        <i class="fa-solid fa-file-text"></i>
+                        창업기업확인
+                    </h3>
+                    <div class="submenu">
+                        <p>방문자수</p>
+                        <p>확인서 신청 건수</p>
+                        <p>발급 건수</p>
+                        <p>반려 건수</p>
+                    </div>
+                    <a onclick="loadPage('/cert')">
+                        <i class="fa-solid fa-square-check"></i>
+                        통계 확인하기
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="card-content">
+                    <h3 class="nav-text">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        이상거래탐지 현황
+                    </h3>
+                    <div class="submenu">
+                        <p>사전 탐지 건수</p>
+                        <p>사전 탐지 증빙 제출 건수</p>
+                        <p>총 이상거래 탐지 건수</p>
+                        <p>유형별 탐지 건수</p>
+                    </div>
+                    <a onclick="loadPage('/fds')">
+                        <i class="fa-solid fa-square-check"></i>
+                        통계 확인하기
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="card-content">
+                    <h3 class="nav-link">
+                        <i class="fa-solid fa-coins"></i>
+                        국고보조금
+                    </h3>
+                    <div id="gukgoMenu" class="submenu">
+                        <p>국고보조금(PMS) 현황</p>
+                        <p>국고보조금(MIS) 현황</p>
+                    </div>
+                    <a onclick="loadPage('/gslsEsb/pms')">
+                        <i class="fa-solid fa-square-check"></i>
+                        통계 확인하기
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <div class="actions">
+            <button class="main-btn prev">이전</button>
+            <button class="main-btn next">다음</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
