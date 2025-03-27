@@ -6,14 +6,20 @@
         <span class="nav-section-title">📁 시스템</span>
     </div>
 
+    <a class="nav-link" onclick="loadPage('/release-log')">
+        <i class="fa-solid fa-clock-rotate-left text-info"></i>
+        <span class="nav-text">시스템 릴리즈</span>
+    </a>
+
+    <!-- 🔸 행정 서비스 -->
+    <div class="rTitle">
+        <div class="hideIcon">📝</div>
+        <span class="nav-section-title">📝 서비스</span>
+    </div>
+
     <a class="nav-link active" onclick="loadPage('/kisedorkr')">
         <i class="fa-solid fa-building-columns text-primary"></i>
         <span class="nav-text">기관 홈페이지</span>
-    </a>
-
-    <a class="nav-link" onclick="loadPage('/release-log')">
-        <i class="fa-solid fa-clock-rotate-left text-info"></i>
-        <span class="nav-text">업데이트 로그</span>
     </a>
 
     <a class="p-menu nav-link" onclick="toggleSubmenu('kStartupMenu', this)">
@@ -21,18 +27,11 @@
         <span class="nav-text">K-Startup</span>
     </a>
     <div id="kStartupMenu" class="submenu">
-        <a onclick="loadPage('/release-log')">시스템 릴리즈 정보</a>
         <a onclick="loadPage('/kstup/popKeyword')">인기 키워드 Top10</a>
         <a onclick="loadPage('/kstup/membAndLogin')">회원 & 로그인 수</a>
         <a onclick="loadPage('/kstup/combNotice')">통합공고 등록 건수</a>
         <a onclick="loadPage('/kstup/institutionStats')">공고 등록 기관수</a>
         <a onclick="loadPage('/kstup/institutionRegCnt')">기관별 등록 건수</a>
-    </div>
-
-    <!-- 🔸 행정 서비스 -->
-    <div class="rTitle">
-        <div class="hideIcon">📝</div>
-        <span class="nav-section-title">📝 서비스</span>
     </div>
 
     <a class="nav-link" onclick="loadPage('/incorp')">
@@ -45,16 +44,6 @@
         <span class="nav-text">창업기업확인</span>
     </a>
 
-    <!-- 🔸 데이터 분석 -->
-    <div class="rTitle">
-        <div class="hideIcon">📊</div>
-        <span class="nav-section-title">📊 데이터</span>
-    </div>
-
-    <a class="nav-link" onclick="loadPage('/data-import-log')">
-        <i class="fa-solid fa-cloud-arrow-up text-primary"></i>
-        <span class="nav-text">데이터 업로드</span>
-    </a>
 
     <a class="nav-link" onclick="loadPage('/fds')">
         <i class="fa-solid fa-eye text-danger"></i>
@@ -69,4 +58,15 @@
         <a onclick="loadPage('/gslsEsb/pms')">PMS 현황</a>
         <a onclick="loadPage('/gslsEsb/mis')">MIS 현황</a>
     </div>
+
+    <!-- 🔸 데이터 분석 -->
+    <div class="rTitle">
+        <div class="hideIcon">📊</div>
+        <span class="nav-section-title">📊 데이터</span>
+    </div>
+
+    <a class="nav-link" onclick="loadPage('/data-import-log')">
+        <i class="fa-solid fa-cloud-arrow-up text-primary"></i>
+        <span class="nav-text">데이터 업로드</span>
+    </a>
 </div>
