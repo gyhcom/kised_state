@@ -116,4 +116,14 @@ public class KisedorkrApi {
     public Flux<Map<String, Object>> getGridData() {
         return kisedorkrManager.getGridData();
     }
+
+    /**
+     * 기관 홈페이지 방문자 수
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/visitCnt")
+    public Mono<Map<String, Object>> visitCnt() {
+        return kisedorkrManager.visitCnt();
+    }
 }

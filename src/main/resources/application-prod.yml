@@ -1,0 +1,8 @@
+services:
+  urls:
+    kstup: '' # K-Startup
+    kisedorkr: '' # 기관 홈페이지
+    cert: '' # 창업기업확인
+    startbiz: '' # 법인설립 시스템
+
+# 보안상의 이유로 URL은 작성하지 않음

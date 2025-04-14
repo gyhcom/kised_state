@@ -46,6 +46,13 @@ dependencies {
 
     // Webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.4'
+
+    //TEST
+    implementation 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    // spring batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
 }
 
 test {

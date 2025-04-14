@@ -19,6 +19,21 @@ function rangeDatePickerInit() {
     });
 
     picker.on('change:end', () => {
-        //console.log(123);
     })
+
+    // 기간별 데이터 정의 될 때까지 비활성화
+    picker._endpicker.disable();
+    picker._startpicker.disable();
+}
+
+function singleDatePickerInit() {
+    return new tui.DatePicker('#wrapper', {
+        language: 'en',
+        date: new Date(),
+        input: {
+            element: '#datepicker-input',
+            format: 'yyyy-MM'
+        },
+        type: 'month',
+    });
 }

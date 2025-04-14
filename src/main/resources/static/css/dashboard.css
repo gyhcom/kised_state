@@ -15,7 +15,7 @@ body {
     background-color: #e3f2fd;
     color: #000;
     height: 100vh;
-    width: 55px; /* 아이콘 + 텍스트에 적당한 너비 */
+    width: 220px;
     padding: 1rem 0;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -26,13 +26,6 @@ body {
     top: 0;
     overflow-y: auto;
     transition: width 0.3s ease-in-out;
-}
-
-/* 사이드바 확장 효과 */
-.sidebar:hover {
-    width: 220px;
-    align-items: flex-start;
-    padding-left: 15px;
 }
 
 /* 아이콘 버튼 스타일 */
@@ -48,22 +41,8 @@ body {
     transition: background-color 0.2s ease;
     white-space: nowrap;
 
-    /*padding: 12px 20px;*/
-    /*font-size: 15px;*/
-    /*color: #004080;*/
     font-weight: 500;
-    /*border-radius: 6px;*/
-    /*transition: background 0.2s ease;*/
 }
-
-/*.sidebar .nav-link {*/
-/*    padding: 12px 20px;*/
-/*    font-size: 15px;*/
-/*    color: #004080;*/
-/*    font-weight: 500;*/
-/*    border-radius: 6px;*/
-/*    transition: background 0.2s ease;*/
-/*}*/
 
 .sidebar .nav-link i {
     width: 20px;
@@ -74,7 +53,7 @@ body {
 .sidebar .nav-text {
     font-size: 13px;
     font-weight: 600;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s ease-in-out;
     color: #004080;
 }
@@ -136,8 +115,7 @@ body {
     transition: margin-left 0.3s ease-in-out;
 }
 
-/* 사이드바 확장 시 메인 콘텐츠 조정 */
-.sidebar:hover ~ .content {
+.content {
     margin-left: 220px;
 }
 
@@ -153,17 +131,6 @@ iframe {
     padding-bottom: 90px;
 }
 
-/* 카테고리 제목 */
-/*.nav-section-title {*/
-/*    width: 100%;*/
-/*    font-size: 13px;*/
-/*    font-weight: bold;*/
-/*    color: #666;*/
-/*    margin-top: 10px;*/
-/*    border-bottom: 1px solid #ccc;*/
-/*    display: none;*/
-/*}*/
-
 .rTitle {
     width: 100%;
     color: #666;
@@ -176,23 +143,5 @@ iframe {
 .rTitle .nav-section-title {
     font-size: 15px;
     font-weight: bold;
-    display: none;
-}
-
-.sidebar:hover .rTitle .nav-section-title {
     display: block;
 }
-
-.hideIcon {
-    width: 100%;
-    color: #666;
-    display: block;
-}
-
-.sidebar:hover .rTitle .hideIcon {
-    display: none;
-}
-
-/*.sidebar {*/
-/*    width: 180px;  !* 기존보다 넓게 *!*/
-/*}*/

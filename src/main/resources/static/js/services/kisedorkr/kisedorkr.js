@@ -1,8 +1,4 @@
-let annualData;
-let monthlyData;
-let weeklyData;
-
-let annualChart;
+let visitCntData;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
@@ -45,34 +41,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 차트 카드 애니메이션
-    gsap.from("#annualChart", {
+    gsap.from("#contentDiv", {
         duration: 1,
         scale: 0.9,
         opacity: 0,
         delay: 1.5,
         ease: "power2.out"
-    });
-
-    /* 일평균 방문자 수 */
-    gsap.to("#dauValue", {
-        innerText: 3512,
-        duration: 3,
-        snap: "innerText",
-        onUpdate: function () {
-            document.querySelector("#dauValue").innerText =
-                Math.floor(this.targets()[0].innerText).toLocaleString();
-        }
-    });
-
-    /* 월평균 방문자 수 */
-    gsap.to("#mauValue", {
-        innerText: 24621, // 실제 요소의 값에서 '24621' 값이 증가되는 것을 보여주기 때문에 요소의 값은 0이어야 한다
-        duration: 3,
-        snap: "innerText",
-        onUpdate: function () {
-            document.querySelector("#mauValue").innerText =
-                Math.floor(this.targets()[0].innerText).toLocaleString();
-        }
     });
 });
 
@@ -82,30 +56,21 @@ function chartInit() {
     let month = new Date().getMonth() + 1;
 
     $.ajax({
-        url: '/kisedorkr/getAnnualData?year='+ year + '&month=' + month,
+        url: '/kisedorkr/visitCnt',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            /**
-             * 1. 년도별, 월별, 주별 데이터 세팅
-             * 2. API 호출 상태 ICON 세팅
-             * 3. 차트 생성 function 실행
-             */
-            annualData = data[0];
-            monthlyData = data[1];
-            weeklyData = data[2];
+            console.dir(data);
 
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
+            if(data.resultMessage !== 'success') {
                 setApiFailureIcon();
             }
 
-            // 성공 여부를 H1 태그에 표현하기
-            createAnnualChart();
-            //createMonthlyChart();
-            //createWeeklyChart();
+            setKisedorkrCnt(data);
+            createDailyVisitCntChart();
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -115,10 +80,10 @@ function chartInit() {
     });
 }
 
-function createAnnualChart() {
+function createDailyVisitCntChart() {
     //annual 차트
     {
-        const el = document.getElementById('annualChart');
+        const el = document.getElementById('dailyVisitCntChart');
         const data = {
             categories: [
                 '1월',
@@ -180,7 +145,7 @@ function createAnnualChart() {
         };
 
         const options = {
-            chart: { title: '연도별 방문자수', width: 'auto', height: 550 },
+            chart: { title: '일일 방문자수', width: 'auto', height: 550 },
             xAxis: {
                 title: 'Month',
             },
@@ -228,4 +193,48 @@ function validateData() {
 
 function datePickerInit() {
     rangeDatePickerInit()
+}
+
+function setKisedorkrCnt(obj) {
+    if(!obj) {
+        console.error('기관 홈페이지 데이터가 비어있습니다.');
+        return;
+    }
+
+    /* 일평균 방문자 수 */
+    gsap.to("#dauValue", {
+        innerText: 3512,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#dauValue").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    /* 월평균 방문자 수 */
+    gsap.to("#mauValue", {
+        innerText: 24621, // 실제 요소의 값에서 '24621' 값이 증가되는 것을 보여주기 때문에 요소의 값은 0이어야 한다
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#mauValue").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = (date.getMonth()+1)+"";
+    let day = date.getDate()+"";
+
+    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
+    if( day.length === 1 ) {
+        day = "0"+day;
+    }
+    if( month.length === 1 ) {
+        month = "0"+month;
+    }
+
+    $('#dailyVisitCnt').text('(' + year + '-' + month + '-' + day + ' 기준)');
 }
