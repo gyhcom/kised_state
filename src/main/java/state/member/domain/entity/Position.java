@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Setter
 @Getter
-@Table(name = "POSITION")
+@Table(name = "`POSITION`")
 @Entity
 public class Position {
     @Id

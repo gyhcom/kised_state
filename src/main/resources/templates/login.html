@@ -69,6 +69,12 @@
 
         return isValid;
     }
+
+    // 세션 만료 시 iframe에서 login 화면으로 이동하는 현상 수정
+    if (window.top !== window.self) {
+        // iframe 내부에서 열린 경우
+        window.top.location.href = window.location.href;
+    }
 </script>
 
 </body>

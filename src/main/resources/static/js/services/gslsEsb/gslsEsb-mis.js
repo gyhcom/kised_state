@@ -15,6 +15,41 @@ let datepicker;
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     gridInit();
+
+    // 로고/타이틀
+    gsap.from("#systemNm", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 상태 아이콘 + 텍스트
+    gsap.from(["#statusIcon", "#statusText"], {
+        duration: 1,
+        x: -20,
+        opacity: 0,
+        delay: 0.3,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // 날짜 선택 영역 & 버튼
+    gsap.from(".date-picker", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
 });
 
 function gridInit(year, month, searchValue) {
@@ -300,15 +335,7 @@ function validateData() {
 }
 
 function datePickerInit() {
-    datepicker = new tui.DatePicker('#wrapper', {
-        language: 'en',
-        date: new Date(),
-        input: {
-            element: '#datepicker-input',
-            format: 'yyyy-MM'
-        },
-        type: 'month',
-    });
+    rangeDatePickerInit();
 }
 
 function searchData() {

@@ -374,7 +374,7 @@
 .tui-datepicker-input {
     position: relative;
     display: inline-block;
-    width: 140px;
+    width: 100px;
     height: 36px;
     vertical-align: top;
     border: 1px solid #ccc;

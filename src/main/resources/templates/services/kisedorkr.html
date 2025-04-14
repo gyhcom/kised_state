@@ -35,7 +35,8 @@
                 <span class="tui-ico-date"></span>
                 <div id="endpicker-container" style="margin-left: -1px;"></div>
             </div>
-            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>
+            <span class="fw-bold text-dark">👈 추후 제공될 기능</span>
+<!--            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>-->
         </div>
     </div>
 
@@ -46,10 +47,10 @@
                 <div class="card-body py-4">
                         <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">일평균 방문자수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">일일 방문자수</h5>
                     </div>
                     <h2 class="card-text stat-value fw-bold text-dark mt-2" id="dauValue">0</h2>
-                    <p class="stat-comparison text-success fs-6 fw-semibold mb-0">▲ +5% (전주 대비)</p>
+                    <p id="dailyVisitCnt" class="stat-comparison text-success fs-6 fw-semibold mb-0">▲ +5% (전주 대비)</p>
                 </div>
             </div>
         </div>
@@ -90,7 +91,7 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <div id="annualChart" style="width: 100%"></div>
+                            <div id="dailyVisitCntChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>

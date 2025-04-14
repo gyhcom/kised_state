@@ -9,8 +9,44 @@ let weeklyChart;
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     chartInit();
+
+    // 로고/타이틀
+    gsap.from("#systemNm", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 상태 아이콘 + 텍스트
+    gsap.from(["#statusIcon", "#statusText"], {
+        duration: 1,
+        x: -20,
+        opacity: 0,
+        delay: 0.3,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // 날짜 선택 영역 & 버튼
+    gsap.from(".date-picker", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 통계 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
 });
-0
+
 function chartInit() {
     //최초 조회 시 현재 년도 가져오기
     let year = new Date().getFullYear();

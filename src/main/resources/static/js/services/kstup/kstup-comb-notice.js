@@ -13,49 +13,70 @@ let dailyLoginChart;
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     init();
+
+    // 로고/타이틀
+    gsap.from("#systemNm", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 상태 아이콘 + 텍스트
+    gsap.from(["#statusIcon", "#statusText"], {
+        duration: 1,
+        x: -20,
+        opacity: 0,
+        delay: 0.3,
+        stagger: 0.2,
+        ease: "power2.out"
+    });
+
+    // 날짜 선택 영역 & 버튼
+    gsap.from(".date-picker", {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    // 통계 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
 })
 
 function init(year, month) {
-    //최초 조회 시 현재 년도 가져오기
-    if(!year || year === '') year = new Date().getFullYear();
-    if(!month || month === '') month = new Date().getMonth() + 1;
-
     $.ajax({
-        url: '/kstup/getMembAndLoginCnt?year='+year+'&month='+month,
+        url: '/kstup/intgPbancRegCnt',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            /**
-             * [0] : 현재 회원 수
-             * [1] : 연도별 회원 수
-             * [2] : 월별 회원 수
-             * [3] : 연도별 로그인 수
-             * [4] : 월별 로그인 수
-             * [5] : 일일 로그인 수
-             */
-            currentMemberData = data[0];
-            annualMemberData = data[1];
-            monthlyMemberData = data[2];
-
-            annualLoginData = data[3];
-            monthlyLoginData = data[4];
-            dailyLoginData = data[5];
+            console.dir(data);
 
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
+            if(!data) {
                 setApiFailureIcon();
             }
 
-            //createAnnualChart();
-            //createMonthlyChart();
-            createMembDailyChart(); // 일일 회원 수 차트
-            createLoginDailyChart(); // 일일 로그인 수 차트
-            createVisitDailyChart(); // 일일 방문자 수 차트
-
-            //회원수 세팅
-            $('#currentMembCnt').text(currentMemberData[0].cnt);
+            setCombNotice(data);
+            createPbancRegChart();
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -65,402 +86,86 @@ function init(year, month) {
     });
 }
 
-function createAnnualChart() {
-    //annual 차트
+function createPbancRegChart() {
     {
-        const el = document.getElementById('loginCntAnnualChart');
-        let data = {
-            // page -> 이 값들은 모두 동일할 필요가 있을 것 같음.(여러 시스템의 데이터를 하나의 차트에서 보여준다면)
-            categories: [],
-            series: [],
+        const el = document.getElementById('pbancRegChart');
+        const data = {
+            categories: [
+                '2025-03-29',
+                '2025-03-30',
+                '2025-03-31',
+                '2025-04-01',
+                '2025-04-02',
+                '2025-04-03',
+                '2025-04-04',
+                '2025-04-05',
+                '2025-04-06',
+                '2025-04-07',
+                '2025-04-08',
+                '2025-04-09',
+            ],
+            series: [
+                {
+                    name: '통합공고 등록 건수',
+                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 25.9, 27.2, 24.4, 13.9, 6.6, -0.6],
+                },
+                {
+                    name: '공고등록 기관 수',
+                    data: [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.6, 3.7],
+                },
+                {
+                    name: '기관별 공고 등록 건수',
+                    data: [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2],
+                }
+            ],
         };
-
-        let annual_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( annualLoginData != null && annualLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < annualLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(annualLoginData[i].year);
-                //임시용이기 때문에 만들어진 함수 재사용함. usage -> cnt로 바뀌어야 하는게 맞음
-                annual_data.push(annualLoginData[i].usage);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : annual_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: '연도별 로그인 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'year'}},
-            yAxis: {title: 'count'},
-            series: { showDot: true, dataLabels: { visible: true, offsetY: -10 }, selectable: true },
-            theme
-        };
-
-        annualLoginChart = toastui.Chart.columnChart({el, data, options});
-
-        annualLoginChart.on('selectSeries', function(e) {
-            let year = e.column[0].data.category;
-            annualLoginChartClick(year);
-        })
-    }
-}
-
-function createMonthlyChart() {
-    // month 차트
-    {
-        const el = document.getElementById('loginCntMonthChart');
-        let data = {
-            categories: [],
-            series: [],
-        };
-
-        let monthly_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( monthlyLoginData != null && monthlyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < monthlyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(monthlyLoginData[i].month);
-                //임시용이기 때문에 만들어진 함수 재사용함. usage -> cnt로 바뀌어야 하는게 맞음
-                monthly_data.push(monthlyLoginData[i].usage);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : monthly_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: monthlyLoginData[0].year + '년 월별 로그인 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'year'}},
-            yAxis: {title: 'count'},
+        const theme = {
             series: {
-                showDot: true, dataLabels: { visible: true, offsetY: -10 }, selectable: true
+                dataLabels: {
+                    fontFamily: 'monaco',
+                    fontSize: 10,
+                    fontWeight: 300,
+                    useSeriesColor: true,
+                    textBubble: {
+                        visible: true,
+                        paddingY: 3,
+                        paddingX: 6,
+                        arrow: {
+                            visible: true,
+                            width: 5,
+                            height: 5,
+                            direction: 'bottom',
+                        },
+                    },
+                },
             },
-            theme
         };
-        //차트 색상 변경
-        options.theme.series.colors = ['#49c9ed'];
-
-        monthlyLoginChart = toastui.Chart.columnChart({ el, data, options });
-
-        monthlyLoginChart.on('selectSeries', function(e) {
-            const year = monthlyLoginData[0].year;
-            const month = e.column[0].data.category;
-            monthlyLoginChartClick(year, month);
-        })
-    }
-}
-
-function createMembDailyChart() {
-    {
-        const el = document.getElementById('membCntDailyChart');
-        let data = {
-            categories: [],
-            series: []
-        };
-
-        let daily_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(dailyLoginData[i].day);
-                daily_data.push(dailyLoginData[i].cnt);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : daily_data
-            })
-        }
-
-        const theme = getTheme();
 
         const options = {
-            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 회원 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'day'}},
-            yAxis: {title: 'count'},
+            chart: { title: '공고 등록 관련 건수 Chart', width: 'auto', height: 550 },
+            xAxis: {
+                title: 'day',
+            },
+            yAxis: {
+                title: 'Count',
+            },
+            tooltip: {
+                formatter: (value) => `${value}건`,
+            },
+            legend: {
+                align: 'bottom',
+            },
             series: {
                 dataLabels: {
                     visible: true,
+                    offsetY: -10
                 },
-                selectable: true
             },
-            theme
-        };
-        //차트 색상 변경
-        options.theme.series.colors = ['#49eddd'];
-
-        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
-    }
-}
-
-function createVisitDailyChart() {
-    {
-        const el = document.getElementById('visitCntDailyChart');
-        let data = {
-            categories: [],
-            series: []
+            theme,
         };
 
-        let daily_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(dailyLoginData[i].day);
-                daily_data.push(dailyLoginData[i].cnt);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : daily_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 방문자 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'day'}},
-            yAxis: {title: 'count'},
-            series: {
-                dataLabels: {
-                    visible: true,
-                },
-                selectable: true
-            },
-            theme
-        };
-        //차트 색상 변경
-        options.theme.series.colors = ['#7a7af5'];
-
-        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
+        toastui.Chart.lineChart({ el, data, options });
     }
-}
-
-function createLoginDailyChart() {
-    {
-        const el = document.getElementById('loginCntDailyChart');
-        let data = {
-            categories: [],
-            series: []
-        };
-
-        let daily_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(dailyLoginData[i].day);
-                daily_data.push(dailyLoginData[i].cnt);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : daily_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 로그인 수(중복제거와 함께 표현될 예정)', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'day'}},
-            yAxis: {title: 'count'},
-            series: {
-                dataLabels: {
-                    visible: true,
-                },
-                selectable: true
-            },
-            theme
-        };
-        //차트 색상 변경
-        options.theme.series.colors = ['#eddf8c'];
-
-        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
-    }
-}
-
-function annualLoginChartClick(year, month) {
-    if(!year) {
-        alert("선택한 년도 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    // month가 빈 값이면 현재 월 세팅
-    if(!month || month == '') month = new Date().getMonth() + 1;
-
-    $.ajax({
-        url: '/kstup/getMonthlyMembAndLoginCnt?year='+year+"&month="+month,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            //월별 데이터, 주별 데이터
-            if(data == null || data.length !== 2) {
-                alert("월별 데이터가 존재하지 않습니다.");
-                return;
-            }
-
-            monthlyLoginData = data[0];
-            dailyLoginData = data[1];
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
-                setApiFailureIcon();
-            }
-
-            // 차트 destroy
-            monthlyLoginChart.destroy();
-            dailyLoginChart.destroy();
-
-            // 새로운 데이터로 재생성
-            createMonthlyChart();
-            createDailyChart();
-        },
-        error: function(error) { // 에러 시 실행
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function monthlyLoginChartClick(year, month) {
-    if(!year) {
-        alert("선택한 년도 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    if(!month) {
-        alert("선택한 월의 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    $.ajax({
-        url: '/kstup/getDailyMembAndLoginCnt?year='+ year + '&month='+month,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if(data == null || data.length <= 0) {
-                alert("일별 데이터가 존재하지 않습니다.");
-                return;
-            }
-
-            dailyLoginData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
-                setApiFailureIcon();
-            }
-
-            // 차트 destroy
-            dailyLoginChart.destroy();
-
-            // 새로운 데이터로 재생성
-            createDailyChart()
-        },
-        error: function(error) { // 에러 시 실행
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-//현재 회원 수를 제외한 [연도별, 월별] 회원 수 조회
-function getMemberCount(year, month) {
-    if(!year) {
-        alert("선택한 년도 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    if(!month) {
-        alert("선택한 월의 정보를 가져올 수 없습니다");
-        return;
-    }
-
-    $.ajax({
-        url: '/kstup/getMembCnt?year='+ year + '&month='+month,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            //console.dir(data);
-            if(data == null || data.length <= 0) {
-                alert("회원 수 정보를 가져올 수 없습니다.");
-                return;
-            }
-
-            // annualMemberData = data[0];
-            // monthlyMemberData = data[1];
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
-                setApiFailureIcon();
-            }
-        },
-        error: function(error) { // 에러 시 실행
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function getTheme() {
-    return {
-        series: {
-            dataLabels: {
-                fontFamily: 'Arial',
-                fontSize: 12,
-                fontWeight: 400,
-                color: '#dc3545',
-                textBubble: {visible: true, arrow: {visible: true}},
-            },
-        },
-    };
 }
 
 function validateData() {
@@ -479,15 +184,61 @@ function datePickerInit() {
     rangeDatePickerInit()
 }
 
-function searchMembAndLoginCnt() {
-    let year = datepicker.getDate().getFullYear();
-    let month = datepicker.getDate().getMonth()+1;
+function setCombNotice(obj) {
+    if(!obj) {
+        console.error('공고등록 관련 데이터가 비어있습니다.');
+        return;
+    }
 
-    //차트 세팅
-    annualLoginChartClick(year, month);
+    /* 통합공고 등록 건수 */
+    gsap.to("#combRegCnt", {
+        innerText: 1874,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#combRegCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
 
-    //회원수 세팅
-    getMemberCount(year, month);
+    /* 공고등록 기관 수 */
+    gsap.to("#instCnt", {
+        innerText: 78,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#instCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    /* 기관별 공고등록 건수 */
+    gsap.to("#instRegCnt", {
+        innerText: 341,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#instRegCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = (date.getMonth()+1)+"";
+    let day = date.getDate()+"";
+
+    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
+    if( day.length === 1 ) {
+        day = "0"+day;
+    }
+    if( month.length === 1 ) {
+        month = "0"+month;
+    }
+
+    $('#combRegYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#instYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#instRegYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
 }
 
 // function annualMemberRateInit(obj) {

@@ -1,5 +1,6 @@
 package state.member.application.fasade;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class KstupManager {
     private final KstartupDurationProcessor kstartupDurationProcessor;
     private final KstartupPopKeywordProcessor kstartupPopKeywordProcessor;
@@ -18,20 +20,12 @@ public class KstupManager {
     private final KstartupFieldsProcessor kstartupFieldsProcessor;
     private final KstartupCombNoticeProcessor kstartupCombNoticeProcessor;
 
-    public KstupManager(
-            KstartupDurationProcessor kstartupDurationProcessor,
-            KstartupPopKeywordProcessor kstartupPopKeywordProcessor,
-            KstartupLoginCntProcessor kstartupLoginCntProcessor,
-            KstartupMemberCntProcessor kstartupMemberCntProcessor,
-            KstartupFieldsProcessor kstartupFieldsProcessor,
-            KstartupCombNoticeProcessor kstartupCombNoticeProcessor) {
-        this.kstartupDurationProcessor = kstartupDurationProcessor;
-        this.kstartupPopKeywordProcessor = kstartupPopKeywordProcessor;
-        this.kstartupLoginCntProcessor = kstartupLoginCntProcessor;
-        this.kstartupMemberCntProcessor = kstartupMemberCntProcessor;
-        this.kstartupFieldsProcessor = kstartupFieldsProcessor;
-        this.kstartupCombNoticeProcessor = kstartupCombNoticeProcessor;
-    }
+    private final KstartupLginCntProcessor kstartupLginCntProcessor;
+    private final KstartupBizPbancRegInstCntProcessor kstartupBizPbancRegInstCntProcessor;
+    private final KstartupGetSearchStatusProcessor kstartupGetSearchStatusProcessor;
+    private final KstartupInstBizPbancRegCntProcessor kstartupInstBizPbancRegCntProcessor;
+    private final KstartupIntgPbancRegCntProcessor kstartupIntgPbancRegCntProcessor;
+    private final KstartupMnpwCntProcessor kstartupMnpwCntProcessor;
 
     public Mono<Map<String, Object>> getCurrentMemberCnt() {
         return kstartupMemberCntProcessor.currentExecute();
@@ -79,5 +73,38 @@ public class KstupManager {
 
     public Flux<Map<String, Object>> getCombNotiReg(Map<String, Object> searchData) {
         return kstartupCombNoticeProcessor.execute(searchData);
+    }
+
+    /**
+     * API 제공 후 사용
+     */
+    // 로그인 수 조회
+    public Mono<Map<String, Object>> lginCnt() {
+        return kstartupLginCntProcessor.execute();
+    }
+
+    // 통합공고 등록 건수 조회
+    public Mono<Map<String, Object>> intgPbancRegCnt() {
+        return kstartupIntgPbancRegCntProcessor.execute();
+    }
+
+    // 사업공고 등록 기관(주관기관) 수 조회
+    public Mono<Map<String, Object>> bizPbancRegInstCnt() {
+        return kstartupBizPbancRegInstCntProcessor.execute();
+    }
+
+    // 기관유형별 사업공고 등록 건수 조회
+    public Flux<Map<String, Object>> instBizPbancRegCnt() {
+        return kstartupInstBizPbancRegCntProcessor.execute();
+    }
+
+    // 최근 7일 인기 검색어 목록
+    public Flux<Map<String, Object>> getSearchStatus(String weekDaySe) {
+        return kstartupGetSearchStatusProcessor.execute(weekDaySe);
+    }
+
+    // 회원 수 조회
+    public Mono<Map<String, Object>> mnpwCnt() {
+        return kstartupMnpwCntProcessor.execute();
     }
 }
