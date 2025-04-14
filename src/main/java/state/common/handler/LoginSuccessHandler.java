@@ -20,17 +20,17 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             Authentication authentication) throws IOException, ServletException {
         HttpSession session = request.getSession();
 
-        MemberAuth member = (MemberAuth) authentication.getPrincipal();
-
-        if(member.validate()) {
-            session.setAttribute("seq", member.getSeq());
-            session.setAttribute("userId", member.getUsername());
-            session.setAttribute("username", member.getRealUsername());
-            session.setAttribute("auth", member.getAuthorities());
-            session.setAttribute("email", member.getEmail());
-            session.setAttribute("deptCd", member.getDeptCd());
-            session.setAttribute("psitCd", member.getPsitCd());
-        }
+//        MemberAuth member = (MemberAuth) authentication.getPrincipal();
+//
+//        if(member.validate()) {
+//            session.setAttribute("seq", member.getSeq());
+//            session.setAttribute("userId", member.getUsername());
+//            session.setAttribute("username", member.getRealUsername());
+//            session.setAttribute("auth", member.getAuthorities());
+//            session.setAttribute("email", member.getEmail());
+//            session.setAttribute("deptCd", member.getDeptCd());
+//            session.setAttribute("psitCd", member.getPsitCd());
+//        }
 
         response.sendRedirect("/dashboard");
     }

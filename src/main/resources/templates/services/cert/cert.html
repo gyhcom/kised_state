@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
     <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/gsap/gsap.min.js"></script>
+    <script src="/js/gsap/ScrollTrigger.min.js"></script>
 </head>
 <body>
 <div class="root">
@@ -21,7 +23,7 @@
             <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
         </div>
 
-        <div class="d-flex align-items-center ms-auto me-4">
+        <div class="date-picker d-flex align-items-center ms-auto me-4">
             <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
                 <input id="startpicker-input" type="text" aria-label="Date">
                 <span class="tui-ico-date"></span>
@@ -33,11 +35,12 @@
                 <span class="tui-ico-date"></span>
                 <div id="endpicker-container" style="margin-left: -1px;"></div>
             </div>
-            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>
+            <span class="fw-bold text-dark">👈 추후 제공될 기능</span>
+<!--            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>-->
         </div>
     </div>
 
-    <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 p-4">
+    <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 p-4 card-group">
         <div class="col-md-4">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
@@ -45,8 +48,8 @@
                         <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
                         <h5 class="card-title stat-title fw-semibold text-dark">확인서 신청 건수</h5>
                     </div>
-                    <h2 id="currentMembCnt" class="card-text stat-value fw-bold text-dark mt-2">224</h2>
-                    <p id="currMembYmd" class="stat-comparison text-success fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
+                    <h2 id="applyCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="applyYmd" class="stat-comparison text-success fs-6 fw-semibold mb-0">-</p>
                 </div>
             </div>
         </div>
@@ -56,10 +59,10 @@
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-people-fill text-danger fs-3 me-2"></i>
-                        <h5 id="yearMembTitle" class="card-title stat-title fw-semibold text-dark">확인서 발급 건수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">확인서 발급 건수</h5>
                     </div>
-                    <h2 id="loginCnt" class="card-text stat-value fw-bold text-dark mt-2" >63</h2>
-                    <p id="loginYmd" class="stat-comparison text-danger fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
+                    <h2 id="issueCnt" class="card-text stat-value fw-bold text-dark mt-2" >0</h2>
+                    <p id="issueYmd" class="stat-comparison text-danger fs-6 fw-semibold mb-0">-</p>
                 </div>
             </div>
         </div>
@@ -71,8 +74,8 @@
                         <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
                         <h5 class="card-title stat-title fw-semibold text-dark">확인서 반려 건수</h5>
                     </div>
-                    <h2 id="loginOrigCnt" class="card-text stat-value fw-bold text-dark mt-2">11</h2>
-                    <p id="loginOrigYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">(2025-03-25 기준)</p>
+                    <h2 id="rejectCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="rejectYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
                 </div>
             </div>
         </div>
@@ -84,7 +87,7 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <div id="membCntDailyChart" style="width: 100%"></div>
+                            <div id="certCntDailyChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>

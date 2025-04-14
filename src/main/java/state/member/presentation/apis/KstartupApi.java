@@ -2,6 +2,7 @@ package state.member.presentation.apis;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -258,5 +259,65 @@ public class KstartupApi {
                         .map(result -> (List<Map<String, Object>>) result)
                         .toList()
         );
+    }
+
+    /**
+     * K-Startup 사용자 활동 관련 건수 화면 데이터
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/lginCnt")
+    public Mono<List<Map<String, Object>>> lginCnt() {
+        List<Flux<Map<String, Object>>> list = new ArrayList<>();
+        list.add(kstupManager.lginCnt().flux());
+        list.add(kstupManager.mnpwCnt().flux());
+        list.add(kstupManager.getSearchStatus("day"));
+        list.add(kstupManager.getSearchStatus("week"));
+
+        // TODO 현재 순서 보장이 안되고 있음. 방법을 찾아보고 수정하기
+        return Flux.fromIterable(list)
+                //.flatMap(mono -> mono)    // 병렬 수행
+                .concatMap(mono -> mono)    // 직렬 수행
+                .collectList();
+    }
+
+    /**
+     * K-Startup 통합공고 등록 건수 조회
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/intgPbancRegCnt")
+    public Mono<List<Map<String, Object>>> intgPbancRegCnt() {
+        List<Mono<Map<String, Object>>> list = new ArrayList<>();
+        list.add(kstupManager.intgPbancRegCnt());
+        list.add(kstupManager.bizPbancRegInstCnt());
+
+        return Flux.fromIterable(list)
+                .concatMap(mono ->  mono)
+                .collectList();
+    }
+
+    /**
+     * K-Startup 기관유형별 사업공고 등록 건수 조회
+     * TODO 화면 따로 만들어야 함
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/instBizPbancRegCnt")
+    ResponseEntity<Flux<Map<String, Object>>> instBizPbancRegCnt() {
+        return ResponseEntity.ok(kstupManager.instBizPbancRegCnt());
+    }
+
+    /**
+     * K-Startup 최근 7일 인기 검색어 목록
+     * @param weekDaySe -> day : 1일, week : 7일 조회
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getSearchStatus")
+    public Mono<List<Map<String, Object>>> getSearchStatus(@RequestParam String weekDaySe) {
+        return kstupManager.getSearchStatus(weekDaySe)
+                .collectList()
+                .defaultIfEmpty(new ArrayList<>());
     }
 }

@@ -6,27 +6,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Mono;
-import state.member.application.fasade.CertManager;
+import state.member.application.fasade.StartbizManager;
 
 import java.util.Map;
 
-/**
- * 창업기업확인
- */
-@RequestMapping("/cert")
+@RequestMapping("/startbiz")
 @Controller
 @RequiredArgsConstructor
-public class CertApi {
-    private CertManager certManager;
+public class StartbizApi {
+    private final StartbizManager startbizManager;
 
     @GetMapping
-    public String certView() {
-        return "services/cert/cert";
+    public String incorpView() {
+        return "services/startbiz/startbiz";
     }
 
+    /**
+     * 법인설립건수, 방문자수
+     * @return
+     */
     @ResponseBody
-    @GetMapping("/certCnt")
-    public Mono<Map<String, Object>> getCertCnt() {
-        return certManager.getCertCnt();
+    @GetMapping("/bizStatsInfoApi")
+    public Mono<Map<String, Object>> bizStatsInfoApi() {
+        return startbizManager.bizStatsInfoApi();
     }
 }
