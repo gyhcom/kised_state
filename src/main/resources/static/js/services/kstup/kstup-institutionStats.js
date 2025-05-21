@@ -1,14 +1,11 @@
-let annualData;
-let monthlyData;
-let weeklyData;
-
-let annualChart;
-let monthlyChart;
-let weeklyChart;
+let pbancRegChartData;
+let instBizPbancChartData;
+let intgPbancRegCnt;
+let bizPbancRegCnt;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
-    chartInit();
+    init();
 
     // 로고/타이틀
     gsap.from("#systemNm", {
@@ -33,99 +30,68 @@ document.addEventListener("DOMContentLoaded", function () {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out"
-    });
-
-    // 통계 카드 애니메이션
-    gsap.from(".card-group", {
-        duration: 1,
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        delay: 1,
-        ease: "back.out(1.4)"
+        ease: "power3.out",
+        onComplete: () => {
+            document.querySelector('.date-picker').style.transform = 'none';
+        }
     });
 });
 
-function chartInit() {
-    //최초 조회 시 현재 년도 가져오기
-    let year = new Date().getFullYear();
-    let month = new Date().getMonth() + 1;
-
+function init() {
     $.ajax({
-        url: '/kisedorkr/getAnnualData?year='+ year + '&month=' + month,
+        url: '/kstup/instBizPbancRegCnt',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            /**
-             * 1. 년도별, 월별, 주별 데이터 세팅
-             * 2. API 호출 상태 ICON 세팅
-             * 3. 차트 생성 function 실행
-             */
-            annualData = data[0];
-            monthlyData = data[1];
-            weeklyData = data[2];
-
+            console.dir(data);
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
+            if(!data) {
                 setApiFailureIcon();
             }
 
-            // 성공 여부를 H1 태그에 표현하기
-            createAnnualChart();
+            pbancRegChartData = data.dailyCntList;
+            instBizPbancChartData = data.instPbancRegCntMap;
+            intgPbancRegCnt = data.intgPbancRegCnt;
+            bizPbancRegCnt = data.bizPbancRegCnt;
+
+            createPbancRegChart();
+            createInstBizPbancChart();
+            setInstRegCnt();
         },
-        error: function(error) { // 에러 시 실행
+        error: function(error) {
             console.error('Error:', error);
-            // 실패 여부를 H1 태그에 표현하기
             setApiFailureIcon();
         }
     });
 }
 
-function createAnnualChart() {
-    //annual 차트
+function createPbancRegChart() {
     {
-        const el = document.getElementById('annualChart');
+        const el = document.getElementById('pbancRegChart');
         const data = {
-            categories: [
-                '1월',
-                '2월',
-                '3월',
-                '4월',
-                '5월',
-                '6월',
-                '7월',
-                '8월',
-                '9월',
-                '10월',
-                '11월',
-                '12월',
-            ],
+            categories: [],
             series: [
                 {
-                    name: '2021',
-                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 25.9, 27.2, 24.4, 13.9, 6.6, -0.6],
+                    name: '통합공고 등록 건수',
+                    data: [],
                 },
                 {
-                    name: '2022',
-                    data: [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.6, 3.7],
-                },
-                {
-                    name: '2023',
-                    data: [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2],
-                },
-                {
-                    name: '2024',
-                    data: [-10.3, -9.1, -4.1, 4.4, 12.2, 16.3, 18.5, 16.7, 10.9, 4.2, -2.0, -7.5],
-                },
-                {
-                    name: '2025',
-                    data: [-13.2, -13.7, -13.1, -10.3],
-                },
+                    name: '사업공고 등록 기관 수',
+                    data: [],
+                }
             ],
         };
+
+        if( pbancRegChartData != null ) {
+            for( var i = 0 ; i < pbancRegChartData.length ; i++ ) {
+                data.categories.push(pbancRegChartData[i].baseDt);
+                data.series[0].data.push(Number(pbancRegChartData[i].bizPbancRegInstCnt));
+                data.series[1].data.push(Number(pbancRegChartData[i].intgPbancRegCnt));
+            }
+        }
+
         const theme = {
             series: {
                 dataLabels: {
@@ -149,15 +115,15 @@ function createAnnualChart() {
         };
 
         const options = {
-            chart: { title: '연도별 방문자수', width: 'auto', height: 550 },
+            chart: { title: '공고등록 관련 Chart', width: 'auto', height: 550 },
             xAxis: {
-                title: 'Month',
+                title: 'day',
             },
             yAxis: {
                 title: 'Count',
             },
             tooltip: {
-                formatter: (value) => `${value}°C`,
+                formatter: (value) => `${value}건`,
             },
             legend: {
                 align: 'bottom',
@@ -171,30 +137,155 @@ function createAnnualChart() {
             theme,
         };
 
-        const chart = toastui.Chart.areaChart({ el, data, options });
+        toastui.Chart.lineChart({ el, data, options });
     }
 }
 
-function getTheme() {
-    return {
-        series: {
-            dataLabels: {
-                fontFamily: 'Arial',
-                fontSize: 12,
-                fontWeight: 400,
-                color: '#dc3545',
-                textBubble: {visible: true, arrow: {visible: true}},
+function createInstBizPbancChart() {
+    {
+        const el = document.getElementById('instBizPbancChart');
+        const data = {
+            categories: [],
+            series: [
+                {
+                    name: '민간',
+                    data: [],
+                },
+                {
+                    name: '공공기관',
+                    data: [],
+                },
+                {
+                    name: '지자체',
+                    data: [],
+                },
+                {
+                    name: '교육기관',
+                    data: [],
+                }
+            ],
+        };
+
+        // 기관유형 : 민간 데이터 세팅
+        if( instBizPbancChartData.private != null ) {
+            // 민간, 공공기관, 지자체, 교육기관 모두 데이터 length가 같다는 가정
+            for( var i = 0 ; i < instBizPbancChartData.private.length ; i++ ) {
+                data.categories.push(instBizPbancChartData.private[i].baseDt);
+                data.series[0].data.push(Number(instBizPbancChartData.private[i].bizPbancRegCnt));
+                data.series[1].data.push(Number(instBizPbancChartData.public[i].bizPbancRegCnt));
+                data.series[2].data.push(Number(instBizPbancChartData.local[i].bizPbancRegCnt));
+                data.series[3].data.push(Number(instBizPbancChartData.edu[i].bizPbancRegCnt));
+            }
+        }
+
+        const theme = {
+            series: {
+                dataLabels: {
+                    fontFamily: 'monaco',
+                    fontSize: 10,
+                    fontWeight: 300,
+                    useSeriesColor: true,
+                    textBubble: {
+                        visible: true,
+                        paddingY: 3,
+                        paddingX: 6,
+                        arrow: {
+                            visible: true,
+                            width: 5,
+                            height: 5,
+                            direction: 'bottom',
+                        },
+                    },
+                },
             },
-        },
-    };
-}
+        };
 
-function validateData() {
-    if(!annualData || annualData.length <= 0) return false;
+        const options = {
+            chart: { title: '기관유형별 사업공고 등록 Chart', width: 'auto', height: 550 },
+            xAxis: {
+                title: 'day',
+            },
+            yAxis: {
+                title: 'Count',
+            },
+            tooltip: {
+                formatter: (value) => `${value}건`,
+            },
+            legend: {
+                align: 'bottom',
+            },
+            series: {
+                dataLabels: {
+                    visible: true,
+                    offsetY: -10
+                },
+            },
+            theme,
+        };
 
-    return true;
+        toastui.Chart.lineChart({ el, data, options });
+    }
 }
 
 function datePickerInit() {
     rangeDatePickerInit();
+}
+
+function setInstRegCnt() {
+    // 통계 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
+
+    /* 통합공고 등록 건수 */
+    gsap.to("#intgPbancRegCnt", {
+        innerText: intgPbancRegCnt.resultData.cnt,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#intgPbancRegCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    /* 사업공고 등록 기관(주관기관) 수 */
+    gsap.to("#bizPbancRegInst", {
+        innerText: bizPbancRegCnt.resultData.cnt,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function () {
+            document.querySelector("#bizPbancRegInst").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
+
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = (date.getMonth()+1)+"";
+    let day = date.getDate()+"";
+
+    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
+    if( day.length === 1 ) {
+        day = "0"+day;
+    }
+    if( month.length === 1 ) {
+        month = "0"+month;
+    }
+
+    $('#intgPbancRegCntYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#bizPbancRegInstYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
 }

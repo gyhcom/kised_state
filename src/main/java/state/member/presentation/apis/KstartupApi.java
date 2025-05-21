@@ -9,11 +9,12 @@ import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.KstupManager;
+import state.member.domain.entity.KisedorkrCountStatistics;
+import state.member.domain.entity.KstupCountStatistics;
+import state.member.domain.entity.KstupInstPbancRegStatistics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/kstup")
@@ -44,20 +45,6 @@ public class KstartupApi {
     }
 
     /**
-     * 통합공고 등록 현황 화면
-     * @param mv
-     * @return
-     */
-    @GetMapping("/combNotice")
-    public ModelAndView kstupCombNoticeView(ModelAndView mv) {
-        mv.setViewName("services/kstartup/kstup-comb-notice");
-
-        // 분야조회
-        mv.addObject("fields", kstupManager.getFields().collectList().block());
-        return mv;
-    }
-
-    /**
      * 공고등록 기관수 화면
      * @return
      */
@@ -73,212 +60,6 @@ public class KstartupApi {
     @GetMapping("/institutionRegCnt")
     public String institutionRegCntView() {
         return "services/kstartup/kstup-institutionRegCnt";
-    }
-
-    /**
-     * 통합공고 등록 현황
-     * @param searchData
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getCombNotiReg")
-    public Flux<Map<String, Object>> getCombNotiReg(@RequestParam Map<String, Object> searchData) {
-        return kstupManager.getCombNotiReg(searchData);
-    }
-
-    /**
-     * [년도별, 월별, 일별] 회원 수, 로그인 수
-     * @param year
-     * @param month
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getMembAndLoginCnt")
-    public Mono<List<List<Map<String, Object>>>> getMembAndLoginCnt(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getCurrentMemberCnt().flux());            //현재 회원수
-        list.add(kstupManager.getAnnualMemberCnt(year).flux());         //연도별 회원수
-        list.add(kstupManager.getMonthlyMemberCnt(year, month).flux()); //월별 회원수
-        list.add(kstupManager.getAnnualData());                         //연도별 로그인 수
-        list.add(kstupManager.getMonthlyData(year));                    //월별 로그인 수
-        list.add(kstupManager.getDailyLoginCnt(year, month));           //일별 로그인 수
-
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        // 병렬 처리로 모든 Mono 완료
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    /**
-     * [월별, 일별] 로그인 수
-     * @param year
-     * @param month
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getMonthlyMembAndLoginCnt")
-    public Mono<List<List<Map<String, Object>>>> getMonthlyMembAndLoginCnt(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getMonthlyData(year));            //월별 로그인 수
-        list.add(kstupManager.getDailyLoginCnt(year, month));   //일별 로그인 수
-
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        // 병렬 처리로 모든 Mono 완료
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    /**
-     * [일별] 로그인 수
-     * @param year
-     * @param month
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getDailyMembAndLoginCnt")
-    public Flux<Map<String, Object>> getDailyMembAndLoginCnt(@RequestParam String year, @RequestParam String month) {
-        return kstupManager.getDailyLoginCnt(year, month);
-    }
-
-    /**
-     * [연도별, 월별] 회원 수
-     * @param year
-     * @param month
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getMembCnt")
-    public Mono<List<Map<String, Object>>> getMembCnt(@RequestParam String year, @RequestParam String month) {
-        Mono<Map<String, Object>> annualMemberCnt = kstupManager.getAnnualMemberCnt(year);
-        Mono<Map<String, Object>> monthlyMemberCnt = kstupManager.getMonthlyMemberCnt(year, month);
-
-        return Mono.zip(annualMemberCnt, monthlyMemberCnt)
-                .map(tuple -> {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    list.add(tuple.getT1()); // 연도별 로그인 수
-                    list.add(tuple.getT2()); // 월별 로그인 수
-                    return list;
-                });
-    }
-
-    /**
-     * 인기 검색어 Top10(연도별, 월별, 주별)
-     * @param year
-     * @param month
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getPopKeyword")
-    public Mono<List<List<Map<String, Object>>>> getPopKeyword(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getAnnualPopKeyword(year));
-        list.add(kstupManager.getMonthlyPopKeyword(year, month));
-        list.add(kstupManager.getWeeklyPopKeyword(year, month));
-
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    /**
-     * 서비스의 년도별, 월별, 주별 데이터를 모두 가져온다
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getAnnualData")
-    public Mono<List<List<Map<String, Object>>>> getEachServiceData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getAnnualData());
-        list.add(kstupManager.getMonthlyData(year));
-        list.add(kstupManager.getWeeklyData(year, month));
-
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        // 병렬 처리로 모든 Mono 완료
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    @ResponseBody
-    @GetMapping("/getMonthlyData")
-    public Mono<List<List<Map<String, Object>>>> getMonthlyData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getMonthlyData(year));
-        list.add(kstupManager.getWeeklyData(year, month));
-
-        // 모든 Flux를 Mono로 변환
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        // 병렬 처리로 모든 Mono 완료
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    @ResponseBody
-    @GetMapping("/getWeeklyData")
-    public Mono<List<List<Map<String, Object>>>> getWeeklyData(@RequestParam String year, @RequestParam String month) {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.getWeeklyData(year, month));
-
-        // 모든 Flux를 Mono로 변환
-        List<Mono<List<Map<String, Object>>>> monoList = list.stream()
-                .map(flux -> flux.collectList().defaultIfEmpty(new ArrayList<>()))
-                .toList();
-
-        // 병렬 처리로 모든 Mono 완료
-        return Mono.zip(monoList, results ->
-                Arrays.stream(results)
-                        .map(result -> (List<Map<String, Object>>) result)
-                        .toList()
-        );
-    }
-
-    /**
-     * K-Startup 사용자 활동 관련 건수 화면 데이터
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/lginCnt")
-    public Mono<List<Map<String, Object>>> lginCnt() {
-        List<Flux<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.lginCnt().flux());
-        list.add(kstupManager.mnpwCnt().flux());
-        list.add(kstupManager.getSearchStatus("day"));
-        list.add(kstupManager.getSearchStatus("week"));
-
-        // TODO 현재 순서 보장이 안되고 있음. 방법을 찾아보고 수정하기
-        return Flux.fromIterable(list)
-                //.flatMap(mono -> mono)    // 병렬 수행
-                .concatMap(mono -> mono)    // 직렬 수행
-                .collectList();
     }
 
     /**
@@ -299,13 +80,49 @@ public class KstartupApi {
 
     /**
      * K-Startup 기관유형별 사업공고 등록 건수 조회
-     * TODO 화면 따로 만들어야 함
      * @return
      */
     @ResponseBody
     @GetMapping("/instBizPbancRegCnt")
-    ResponseEntity<Flux<Map<String, Object>>> instBizPbancRegCnt() {
-        return ResponseEntity.ok(kstupManager.instBizPbancRegCnt());
+    Mono<Map<String, Object>> instBizPbancRegCnt() {
+        // 기관유형별 사업공고 리스트 -> 유형별 리스트 분류
+        List<KstupInstPbancRegStatistics> instPbancRegCntList = kstupManager.getBizPbancRegCntList();
+        Mono<Map<String, List<KstupInstPbancRegStatistics>>> groupedList = Mono.fromCallable(() -> instPbancRegCntList.stream()
+                .collect(Collectors.groupingBy(entity -> {
+                    String instNm = entity.getInstNm();
+                    return switch (instNm) {
+                        case "민간" -> "private";
+                        case "공공기관" -> "public";
+                        case "지자체"  -> "local";
+                        case "교육기관"  -> "edu";
+                        default     -> "etc";
+                    };
+                })));
+
+        // 일일 적재 데이터 리스트 조회
+        Mono<List<KstupCountStatistics>> dailyList = Mono.fromCallable(() -> kstupManager.getDailyCntList());
+
+        // 통합공고 등록 건수 (실시간)
+        Mono<Map<String, Object>> intgPbancRegCnt = kstupManager.intgPbancRegCnt();
+
+        // 사업공고 등록 기관 수 (실시간)
+        Mono<Map<String, Object>> bizPbancRegCnt = kstupManager.bizPbancRegInstCnt();
+
+        return Mono.zip(groupedList, dailyList, intgPbancRegCnt, bizPbancRegCnt)
+                .map(tuple -> {
+                    Map<String, List<KstupInstPbancRegStatistics>> instPbancRegCntMap = tuple.getT1();
+                    List<KstupCountStatistics> dailyCntList = tuple.getT2();
+                    Map<String, Object> intgPbancRegCntMap = tuple.getT3();
+                    Map<String, Object> bizPbancRegCntMap = tuple.getT4();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("instPbancRegCntMap", instPbancRegCntMap);
+                    resultMap.put("dailyCntList", dailyCntList);
+                    resultMap.put("intgPbancRegCnt", intgPbancRegCntMap);
+                    resultMap.put("bizPbancRegCnt", bizPbancRegCntMap);
+
+                    return resultMap;
+                });
     }
 
     /**
@@ -315,9 +132,39 @@ public class KstartupApi {
      */
     @ResponseBody
     @GetMapping("/getSearchStatus")
-    public Mono<List<Map<String, Object>>> getSearchStatus(@RequestParam String weekDaySe) {
-        return kstupManager.getSearchStatus(weekDaySe)
-                .collectList()
-                .defaultIfEmpty(new ArrayList<>());
+    public Mono<Map<String, Object>> getSearchStatus(@RequestParam String weekDaySe) {
+        return kstupManager.getSearchStatus(weekDaySe);
+    }
+
+    /**
+     * K-Startup 사용자 활동 관련 건수 화면 데이터
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getUserActStatistics")
+    public Mono<Map<String, Object>> getDailyCntList() {
+        Mono<Map<String, Object>> userCntMap = kstupManager.mnpwCnt();     // 회원 수
+        Mono<KstupCountStatistics> lginCntMap = Mono.fromCallable(() -> kstupManager.getLatestLoginCnt());     // (통계 DB 조회) 최근 로그인 수, 로그인 수(중복제거) 1건 조회
+        Mono<List<KstupCountStatistics>> dailyCntListMap = Mono.fromCallable(() -> kstupManager.getDailyCntList()); // 사용자 활동 일일 데이터 리스트
+        Mono<Map<String, Object>> dailyPopKeywordMap = kstupManager.getSearchStatus("day");    // 일일 인기검색어
+        Mono<Map<String, Object>> weeklyPopKeywordMap = kstupManager.getSearchStatus("week");  // 최근 7일 인기검색어
+
+        return Mono.zip(userCntMap, lginCntMap, dailyCntListMap, dailyPopKeywordMap, weeklyPopKeywordMap)
+                .map(tuple -> {
+                    Map<String, Object> userCnt = tuple.getT1();
+                    KstupCountStatistics lginCnt = tuple.getT2();
+                    List<KstupCountStatistics> dailyCntList = tuple.getT3();
+                    Map<String, Object> dailyPopKeyword = tuple.getT4();
+                    Map<String, Object> weeklyPopKeyword = tuple.getT5();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("userCnt", userCnt);
+                    resultMap.put("lginCnt", lginCnt);
+                    resultMap.put("dailyCntList", dailyCntList);
+                    resultMap.put("dailyPopKeyword", dailyPopKeyword);
+                    resultMap.put("weeklyPopKeyword", weeklyPopKeyword);
+
+                    return resultMap;
+                });
     }
 }

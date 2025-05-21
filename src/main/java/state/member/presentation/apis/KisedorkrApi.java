@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.KisedorkrManager;
+import state.member.domain.entity.CertCountStatistics;
+import state.member.domain.entity.KisedorkrCountStatistics;
 import state.member.presentation.request.TempRequestDto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 기관 홈페이지 API
@@ -124,6 +123,19 @@ public class KisedorkrApi {
     @ResponseBody
     @GetMapping("/visitCnt")
     public Mono<Map<String, Object>> visitCnt() {
-        return kisedorkrManager.visitCnt();
+        Mono<KisedorkrCountStatistics> dailyVisitCnt = Mono.fromCallable(() -> kisedorkrManager.getLatestVisitCnt());
+        Mono<List<KisedorkrCountStatistics>> visitCntList =  Mono.fromCallable(() -> kisedorkrManager.getVisitCntList());
+
+        return Mono.zip(dailyVisitCnt, visitCntList)
+                .map(tuple -> {
+                    KisedorkrCountStatistics external = tuple.getT1();
+                    List<KisedorkrCountStatistics> dbData = tuple.getT2();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("visitCnt", external);
+                    resultMap.put("visitCntList", dbData);
+
+                    return resultMap;
+                });
     }
 }

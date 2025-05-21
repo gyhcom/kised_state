@@ -29,24 +29,10 @@ public class StartbizBizStatsInfoApiProcessor {
     public Mono<Map<String, Object>> execute() {
         return getWebClient(externalUrlsConfig.getStartbiz())
                 .get()
-                .uri("bizStatsInfoApi.dp")
+                .uri("/bizStatsInfoApi.do")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .timeout(Duration.ofSeconds(30))
-                .map(responseBody -> {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    try {
-                        log.info("CHECK :::::::::::::::::::::: " + responseBody);
-                        String responseData = String.valueOf(responseBody.replace("\\\"", "\""));
-                        if(responseData.startsWith("\"") && responseData.endsWith("\"")) {
-                            responseData = responseData.substring(1, responseData.length() - 1);
-                        }
-                        log.info("CHECK :::::::::::::::::::::: " + responseData);
-                        return objectMapper.readValue(responseData, new TypeReference<Map<String, Object>>() {});
-                    } catch(JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
                 .onErrorResume(e -> {
                     log.error("법인설립 시스템 bizStatsInfoApi 데이터 호출 실패: " + e.getMessage());
                     return Mono.empty();

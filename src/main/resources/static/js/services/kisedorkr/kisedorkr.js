@@ -1,4 +1,4 @@
-let visitCntData;
+let visitCntListData;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out"
+        ease: "power3.out",
+        onComplete: () => {
+            document.querySelector('.date-picker').style.transform = 'none';
+        }
     });
 
     // 통계 카드 애니메이션
@@ -60,14 +63,14 @@ function chartInit() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
-
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(data.resultMessage !== 'success') {
-                setApiFailureIcon();
-            }
+            // if(!data) {
+            //     setApiFailureIcon();
+            // }
+
+            visitCntListData = data.visitCntList;
 
             setKisedorkrCnt(data);
             createDailyVisitCntChart();
@@ -81,79 +84,35 @@ function chartInit() {
 }
 
 function createDailyVisitCntChart() {
-    //annual 차트
     {
         const el = document.getElementById('dailyVisitCntChart');
         const data = {
-            categories: [
-                '1월',
-                '2월',
-                '3월',
-                '4월',
-                '5월',
-                '6월',
-                '7월',
-                '8월',
-                '9월',
-                '10월',
-                '11월',
-                '12월',
-            ],
+            categories: [],
             series: [
                 {
-                    name: '2021',
-                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 25.9, 27.2, 24.4, 13.9, 6.6, -0.6],
-                },
-                {
-                    name: '2022',
-                    data: [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.6, 3.7],
-                },
-                {
-                    name: '2023',
-                    data: [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2],
-                },
-                {
-                    name: '2024',
-                    data: [-10.3, -9.1, -4.1, 4.4, 12.2, 16.3, 18.5, 16.7, 10.9, 4.2, -2.0, -7.5],
-                },
-                {
-                    name: '2025',
-                    data: [-13.2, -13.7, -13.1, -10.3],
-                },
+                    name: '방문자 수',
+                    data: [],
+                }
             ],
         };
-        const theme = {
-            series: {
-                dataLabels: {
-                    fontFamily: 'monaco',
-                    fontSize: 10,
-                    fontWeight: 300,
-                    useSeriesColor: true,
-                    textBubble: {
-                        visible: true,
-                        paddingY: 3,
-                        paddingX: 6,
-                        arrow: {
-                            visible: true,
-                            width: 5,
-                            height: 5,
-                            direction: 'bottom',
-                        },
-                    },
-                },
-            },
-        };
+
+        for( var i = 0 ; i < visitCntListData.length ; i++ ) {
+            data.categories.push(visitCntListData[i].baseDt);
+            data.series[0].data.push(Number(visitCntListData[i].vstCnt))
+        }
+
+        const theme = getTheme();
 
         const options = {
             chart: { title: '일일 방문자수', width: 'auto', height: 550 },
             xAxis: {
-                title: 'Month',
+                title: 'day',
             },
             yAxis: {
                 title: 'Count',
             },
             tooltip: {
-                formatter: (value) => `${value}°C`,
+                formatter: (value) => `${value}명`,
             },
             legend: {
                 align: 'bottom',
@@ -167,7 +126,7 @@ function createDailyVisitCntChart() {
             theme,
         };
 
-        const chart = toastui.Chart.lineChart({ el, data, options });
+        toastui.Chart.columnChart({ el, data, options });
     }
 }
 
@@ -175,11 +134,21 @@ function getTheme() {
     return {
         series: {
             dataLabels: {
-                fontFamily: 'Arial',
+                fontFamily: 'monaco',
                 fontSize: 12,
                 fontWeight: 400,
-                color: '#dc3545',
-                textBubble: {visible: true, arrow: {visible: true}},
+                useSeriesColor: true,
+                textBubble: {
+                    visible: true,
+                    paddingY: 3,
+                    paddingX: 6,
+                    arrow: {
+                        visible: true,
+                        width: 5,
+                        height: 5,
+                        direction: 'bottom',
+                    },
+                },
             },
         },
     };
@@ -201,9 +170,14 @@ function setKisedorkrCnt(obj) {
         return;
     }
 
-    /* 일평균 방문자 수 */
+    let sumVisitCnt = 0;
+    for( var i = 0 ; i < obj.visitCntList.length ; i ++ ) {
+        sumVisitCnt += Number(obj.visitCntList[i].vstCnt);
+    }
+
+    /* 일일 방문자 수 */
     gsap.to("#dauValue", {
-        innerText: 3512,
+        innerText: obj.visitCnt.vstCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -212,9 +186,9 @@ function setKisedorkrCnt(obj) {
         }
     });
 
-    /* 월평균 방문자 수 */
+    /* 최근 30일 방문자 수 */
     gsap.to("#mauValue", {
-        innerText: 24621, // 실제 요소의 값에서 '24621' 값이 증가되는 것을 보여주기 때문에 요소의 값은 0이어야 한다
+        innerText: sumVisitCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -236,5 +210,5 @@ function setKisedorkrCnt(obj) {
         month = "0"+month;
     }
 
-    $('#dailyVisitCnt').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#dailyVisitCnt').text('(' + obj.visitCnt.baseDt + ' 기준)');
 }

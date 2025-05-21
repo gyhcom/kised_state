@@ -1,5 +1,6 @@
 let dailyKeywordData;
 let weeklyKeywordData;
+let dailyCntData;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function init() {
     $.ajax({
-        url: '/kstup/lginCnt',
+        url: '/kstup/getUserActStatistics',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -21,8 +22,9 @@ function init() {
                 setApiFailureIcon();
             }
 
-            dailyKeywordData[2];
-            weeklyKeywordData[3];
+            dailyKeywordData= data.dailyPopKeyword;
+            weeklyKeywordData= data.weeklyPopKeyword;
+            dailyCntData= data.dailyCntList;
 
             doAnimation(data);
             createUserActChart();
@@ -38,41 +40,39 @@ function init() {
 
 function createUserActChart() {
     {
-        const el = document.getElementById('annualChart');
+        const el = document.getElementById('membCntDailyChart');
         const data = {
-            categories: [
-                '2025-03-29',
-                '2025-03-30',
-                '2025-03-31',
-                '2025-04-01',
-                '2025-04-02',
-                '2025-04-03',
-                '2025-04-04',
-                '2025-04-05',
-                '2025-04-06',
-                '2025-04-07',
-                '2025-04-08',
-                '2025-04-09',
-            ],
+            categories: [],
             series: [
                 {
                     name: '회원 수',
-                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 25.9, 27.2, 24.4, 13.9, 6.6, -0.6],
+                    data: [],
                 },
                 {
                     name: '로그인 수',
-                    data: [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.6, 3.7],
+                    data: [],
                 },
                 {
                     name: '로그인 수(중복 제거)',
-                    data: [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2],
+                    data: [],
                 },
                 {
                     name: '방문자 수',
-                    data: [-10.3, -9.1, -4.1, 4.4, 12.2, 16.3, 18.5, 16.7, 10.9, 4.2, -2.0, -7.5],
+                    data: [],
                 }
             ],
         };
+
+        if( dailyCntData != null ) {
+            for( var i = 0 ; i < dailyCntData.length ; i++ ) {
+                data.categories.push(dailyCntData[i].baseDt);
+                data.series[0].data.push(Number(dailyCntData[i].mnpwCnt));
+                data.series[1].data.push(Number(dailyCntData[i].lginCnt));
+                data.series[2].data.push(Number(dailyCntData[i].lginDupCnt));
+                data.series[3].data.push(0); // 방문자 수 API는 아직 없기 때문에 0으로 세팅함
+            }
+        }
+
         const theme = {
             series: {
                 dataLabels: {
@@ -122,111 +122,6 @@ function createUserActChart() {
     }
 }
 
-function createMonthlyChart() {
-    // month 차트
-    {
-        const el = document.getElementById('loginCntMonthChart');
-        let data = {
-            categories: [],
-            series: [],
-        };
-
-        let monthly_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( monthlyLoginData != null && monthlyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < monthlyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(monthlyLoginData[i].month);
-                //임시용이기 때문에 만들어진 함수 재사용함. usage -> cnt로 바뀌어야 하는게 맞음
-                monthly_data.push(monthlyLoginData[i].usage);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : monthly_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: monthlyLoginData[0].year + '년 월별 로그인 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'year'}},
-            yAxis: {title: 'count'},
-            series: {
-                showDot: true, dataLabels: { visible: true, offsetY: -10 }, selectable: true
-            },
-            theme
-        };
-        //차트 색상 변경
-        options.theme.series.colors = ['#49c9ed'];
-
-        monthlyLoginChart = toastui.Chart.columnChart({ el, data, options });
-
-        monthlyLoginChart.on('selectSeries', function(e) {
-            const year = monthlyLoginData[0].year;
-            const month = e.column[0].data.category;
-            monthlyLoginChartClick(year, month);
-        })
-    }
-}
-
-function createMembDailyChart() {
-    {
-        const el = document.getElementById('membCntDailyChart');
-        let data = {
-            categories: [],
-            series: []
-        };
-
-        let daily_data = [];
-
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( dailyLoginData != null && dailyLoginData.length > 0 ) {
-            //categories 세팅
-            for( var i = 0 ; i < dailyLoginData.length ; i++ ) {
-                /**
-                 * categories(예시로는 페이지 별 사용률에서 '페이지')가 서비스마다 동일하게 가져올 수 있다면
-                 * 하나의 차트에 여러 서비스를 보여줄 수 있음
-                 */
-                data.categories.push(dailyLoginData[i].day);
-                daily_data.push(dailyLoginData[i].cnt);
-            }
-
-            data.series.push({
-                name : 'Count',
-                data : daily_data
-            })
-        }
-
-        const theme = getTheme();
-
-        const options = {
-            chart: {title: dailyLoginData[0].year + '년 ' + dailyLoginData[0].month + '월 일별 회원 수', width: 'auto', height: 350},
-            legend: {visible: false},
-            xAxis: {pointOnColumn: false, title: {text: 'day'}},
-            yAxis: {title: 'count'},
-            series: {
-                dataLabels: {
-                    visible: true,
-                },
-                selectable: true
-            },
-            theme
-        };
-        //차트 색상 변경
-        options.theme.series.colors = ['#49eddd'];
-
-        dailyLoginChart = toastui.Chart.columnChart({ el, data, options });
-    }
-}
-
 function createPopKeywordChart() {
     createDailyPopKeyword();
     createWeeklyPopKeyword();
@@ -246,7 +141,7 @@ function createWeeklyPopKeyword() {
             for( var i = 0 ; i < weeklyKeywordData.resultData.length ; i++) {
                 let obj = {};
                 obj.name = weeklyKeywordData.resultData[i].rank;
-                obj.data = 10;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함. 데이터 10건(Top10) * 10은 100이기 때문에 이렇게 세팅함
+                obj.data = (1 / weeklyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
                 data.series.push(obj);
             }
         }
@@ -286,7 +181,7 @@ function createDailyPopKeyword() {
             for( var i = 0 ; i < dailyKeywordData.resultData.length ; i++) {
                 let obj = {};
                 obj.name = dailyKeywordData.resultData[i].rank;
-                obj.data = 10;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함. 데이터 10건(Top10) * 10은 100이기 때문에 이렇게 세팅함
+                obj.data = (1 / dailyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
                 data.series.push(obj);
             }
         }
@@ -366,7 +261,7 @@ function datePickerInit() {
     rangeDatePickerInit()
 }
 
-function doAnimation() {
+function doAnimation(obj) {
     if(!obj) {
         console.error('K-STARTUP DATA IS NULL');
         return;
@@ -395,7 +290,10 @@ function doAnimation() {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out"
+        ease: "power3.out",
+        onComplete: () => {
+            document.querySelector('.date-picker').style.transform = 'none';
+        }
     });
 
     // 통계 카드 애니메이션
@@ -410,7 +308,7 @@ function doAnimation() {
 
     /* 회원수 */
     gsap.to("#currentMembCnt", {
-        innerText: 14621,
+        innerText: obj.userCnt.resultData.cnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -421,7 +319,7 @@ function doAnimation() {
 
     /* 로그인 수 */
     gsap.to("#loginCnt", {
-        innerText: 7856,
+        innerText: obj.lginCnt.lginCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -432,7 +330,7 @@ function doAnimation() {
 
     /* 로그인(중복제거) 수 */
     gsap.to("#loginOrigCnt", {
-        innerText: 4211,
+        innerText: obj.lginCnt.lginDuplCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -466,8 +364,8 @@ function doAnimation() {
     }
 
     $('#currMembYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#loginYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#loginOrigYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#loginYmd').text('(' + obj.lginCnt.baseDt + ' 기준)');
+    $('#loginOrigYmd').text('(' + obj.lginCnt.baseDt + ' 기준)');
     $('#visitYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
 }
 

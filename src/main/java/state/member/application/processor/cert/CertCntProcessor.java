@@ -32,7 +32,7 @@ public class CertCntProcessor {
 
         return getWebClient(externalUrlsConfig.getCert())
                 .get()
-                .uri("/apfm/stats/dlly/"+now.format(format))
+                .uri("/apfm/stats/dlly/"+ now.format(format))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .timeout(Duration.ofSeconds(30))
