@@ -14,4 +14,6 @@ public class ExternalUrlsConfig {
     private final String kisedorkr;
     private final String cert;
     private final String startbiz;
+    private final String fds;
+    private final String gslsPms;
 }
