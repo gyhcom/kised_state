@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.GslsEsbManager;
+import state.member.domain.entity.GslsPmsCountStatistics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/gslsEsb")
 @Controller
@@ -142,4 +140,28 @@ public class GslsEsbApi {
     public Flux<Map<String, Object>> getDtlBsnsInfo(@RequestParam String year, @RequestParam String month, @RequestParam String searchValue) {
         return gslsEsbManager.getDtlBsnsInfo(year, month, searchValue);
     }
+
+    // API 연동 이후
+
+//    @ResponseBody
+//    @GetMapping("/getAllGslsPmsStat")
+//    public Mono<Map<String, Object>> getAllGslsPmsStat() {
+//        // 국고보조금 PMS 최근 30일 통계 리스트 (차트 데이터)
+//        Mono<List<GslsPmsCountStatistics>> gslsPmsStatList = Mono.fromCallable(() -> gslsEsbManager.getDailyCntList());
+//
+//        // 국고보조금 PMS 최근 1일 통계 데이터 (카드 데이터)
+//        Mono<GslsPmsCountStatistics> latestStatCnt = Mono.fromCallable(() -> gslsEsbManager.getLatesCnt());
+//
+//        return Mono.zip(gslsPmsStatList, latestStatCnt)
+//                .map(tuple -> {
+//                    List<GslsPmsCountStatistics> statList = tuple.getT1();
+//                    GslsPmsCountStatistics lateStats = tuple.getT2();
+//
+//                    Map<String, Object> resultMap = new HashMap<>();
+//                    resultMap.put("statList", statList);
+//                    resultMap.put("latestStat", lateStats);
+//
+//                    return resultMap;
+//                });
+//    }
 }

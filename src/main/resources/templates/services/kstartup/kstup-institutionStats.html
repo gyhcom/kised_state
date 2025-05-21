@@ -6,24 +6,25 @@
     <title>Dashboard</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
     <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
-    <link rel="stylesheet" href="/css/toast-ui/toastui-chart.min.css">
     <script type="text/javascript" src="/js/toast-ui/toastui-chart.min.js"></script>
     <script src="/js/common/date-picker.js"></script>
-    <script src="/js/gsap/gsap.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/gsap/gsap.min.js"></script>
+    <script src="/js/gsap/ScrollTrigger.min.js"></script>
 </head>
 <body>
 <div class="root">
     <div class="d-flex justify-content-between align-items-center px-4 pt-5 pb-4">
         <div class="d-flex align-items-center">
-            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 공고등록 기관수</h1>
+            <h1 id="systemNm" class="fw-bold text-dark m-0" style="font-size: 1.8rem;">📊 K-Startup 공고등록 통계</h1>
             <span id="statusIcon" class="ms-3 d-inline-block rounded-circle" style="width: 12px; height: 12px; background-color: #28a745;"></span>
             <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
         </div>
 
-        <div class="d-flex align-items-center ms-auto me-4">
+        <div class="date-picker d-flex align-items-center ms-auto me-4">
             <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
                 <input id="startpicker-input" type="text" aria-label="Date">
                 <span class="tui-ico-date"></span>
@@ -41,56 +42,67 @@
 
     <!-- 통계 카드 (DAU, MAU 등) -->
     <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 p-4 card-group">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">연평균 통합공고 등록 기관수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">통합공고 등록 건수</h5>
                     </div>
-                    <h2 class="card-text stat-value fw-bold text-dark mt-2" id="dauValue">120,000</h2>
-                    <p class="stat-comparison text-success fs-6 fw-semibold mb-0">▲ +5% (전주 대비)</p>
+                    <h2 id="intgPbancRegCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="intgPbancRegCntYmd" class="stat-comparison text-success fs-6 fw-semibold mb-0">-</p>
                 </div>
             </div>
         </div>
 
         <!-- 일평균 방문자수 카드 -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
                 <div class="card-body py-4">
                     <div class="d-flex justify-content-center align-items-center">
                         <i class="bi bi-people-fill text-danger fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">월평균 통합공고 등록 기관수</h5>
+                        <h5 class="card-title stat-title fw-semibold text-dark">사업공고 등록 기관(주관기관) 수 조회</h5>
                     </div>
-                    <h2 class="card-text stat-value fw-bold text-dark mt-2" id="mauValue">300,000</h2>
-                    <p class="stat-comparison text-danger fs-6 fw-semibold mb-0">▼ -2% (전주 대비)</p>
+                    <h2 id="bizPbancRegInst" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="bizPbancRegInstYmd" class="stat-comparison text-danger fs-6 fw-semibold mb-0">-</p>
                 </div>
             </div>
         </div>
 
         <!-- 기간별 방문자수 카드 (추가됨) -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
-                <div class="card-body py-4">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
-                        <h5 class="card-title stat-title fw-semibold text-dark">기간별 통합공고 등록 기관수</h5>
-                    </div>
-                    <h2 class="card-text stat-value fw-bold text-dark mt-2" id="periodVisitValue">-</h2>
-                    <p class="stat-comparison text-primary fs-6 fw-semibold mb-0">▲ +3% (지난 기간 대비)</p>
-                </div>
-            </div>
-        </div>
+<!--        <div class="col-md-4">-->
+<!--            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">-->
+<!--                <div class="card-body py-4">-->
+<!--                    <div class="d-flex justify-content-center align-items-center">-->
+<!--                        <i class="bi bi-calendar-week text-info fs-3 me-2"></i>-->
+<!--                        <h5 class="card-title stat-title fw-semibold text-dark">기관유형별 사업공고 총 등록 수</h5>-->
+<!--                    </div>-->
+<!--                    <h2 id="instPbancRegCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>-->
+<!--                    <p id="instPbancRegCntYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
     <div id="contentDiv">
         <div class="container-fluid p-4">
-            <!-- Charts Section -->
-            <div class="row">
+            <!-- 공고등록 건수 차트 -->
+            <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <div id="annualChart" style="width: 100%"></div>
+                            <div id="pbancRegChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 기관유형별 사업공고 등록 건수 차트 -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="instBizPbancChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
@@ -102,6 +114,8 @@
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="/js/toast-ui/tui-date-picker.js"></script>
+<script src="/js/toast-ui/tui-pagination.js"></script>
+<script src="/js/toast-ui/tui-grid.js"></script>
 <script th:inline="javascript">
     function setApiFailureIcon() {
         $('#statusIcon').css('background-color', '#dc3545');

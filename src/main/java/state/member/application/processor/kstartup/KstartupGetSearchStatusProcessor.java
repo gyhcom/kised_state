@@ -22,18 +22,18 @@ public class KstartupGetSearchStatusProcessor {
     /**
      * K-Startup
      * 최근 7일 인기 검색어 목록
-     * @return
+     * @return  
      */
-    public Flux<Map<String, Object>> execute(String weekDaySe) {
+    public Mono<Map<String, Object>> execute(String weekDaySe) {
         return getWebClient(externalUrlsConfig.getKstup())
                 .get()
                 .uri("/getSearchStatus.do?weekDaySe="+weekDaySe)
                 .retrieve()
-                .bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .timeout(Duration.ofSeconds(30))
                 .onErrorResume(e -> { // 에러 발생 시 null 반환
                     log.error("K-Startup getSearchStatus 데이터 호출 실패: " + e.getMessage());
-                    return Flux.empty(); // null 반환
+                    return Mono.empty(); // null 반환
                 });
     }
 }

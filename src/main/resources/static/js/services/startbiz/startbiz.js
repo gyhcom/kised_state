@@ -1,8 +1,4 @@
-let annualLoginChart;
-let monthlyLoginChart;
-
-let incorpChart;
-let visitChart;
+let dailyCntListData;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
@@ -31,41 +27,19 @@ document.addEventListener("DOMContentLoaded", function () {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out"
-    });
-
-    // 통계 카드 애니메이션
-    gsap.from(".card-group", {
-        duration: 1,
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        delay: 1,
-        ease: "back.out(1.4)"
-    });
-
-    // 차트 카드 애니메이션
-    gsap.from("#contentDiv", {
-        duration: 1,
-        scale: 0.9,
-        opacity: 0,
-        delay: 1.5,
-        ease: "power2.out"
+        ease: "power3.out",
+        onComplete: () => {
+            document.querySelector('.date-picker').style.transform = 'none';
+        }
     });
 })
 
-function init(year, month) {
-    //최초 조회 시 현재 년도 가져오기
-    if(!year || year === '') year = new Date().getFullYear();
-    if(!month || month === '') month = new Date().getMonth() + 1;
-
+function init() {
     $.ajax({
-        url: '/kstup/bizStatsInfoApi',
+        url: '/startbiz/bizStatsInfoApi',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.dir(data);
-
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
@@ -73,7 +47,10 @@ function init(year, month) {
                 setApiFailureIcon();
             }
 
-            createVisitDailyChart(); // 일일 방문자 수 차트
+            dailyCntListData = data.dailyCntList;
+
+            setStatbizCnt(data);
+            createChart();
         },
         error: function(error) { // 에러 시 실행
             console.error('Error:', error);
@@ -83,13 +60,28 @@ function init(year, month) {
     });
 }
 
+function createChart() {
+    createVisitDailyChart(); // 일일 방문자 수 차트
+    createCorpFndnDailyChart(); // 일일 법인설립 건수 차트
+}
+
 function createVisitDailyChart() {
     {
         const el = document.getElementById('visitCntDailyChart');
         let data = {
             categories: [],
-            series: [],
+            series: [
+                {
+                    name: '방문자 수',
+                    data: []
+                }
+            ],
         };
+
+        for( var i = 0 ; i < dailyCntListData.length ; i++) {
+            data.categories.push(dailyCntListData[i].baseDt);
+            data.series[0].data.push(Number(dailyCntListData[i].vstCnt));
+        }
 
         const theme = getTheme();
 
@@ -105,22 +97,30 @@ function createVisitDailyChart() {
             theme
         };
 
+        //차트 색상 변경
+        options.theme.series.colors = ['#02de61'];
+
         toastui.Chart.columnChart({el, data, options});
     }
 }
 
-function createLoginDailyChart() {
+function createCorpFndnDailyChart() {
     {
-        const el = document.getElementById('visitCntDailyChart');
+        const el = document.getElementById('incorpCntDailyChart');
         let data = {
-            categories: ['2025-04-07'],
+            categories: [],
             series: [
                 {
                     name: '법인 설립 건수',
-                    data: [20]
+                    data: []
                 }
             ],
         };
+
+        for( var i = 0 ; i < dailyCntListData.length ; i++) {
+            data.categories.push(dailyCntListData[i].baseDt);
+            data.series[0].data.push(Number(dailyCntListData[i].corpFndnCnt));
+        }
 
         const theme = getTheme();
 
@@ -135,6 +135,9 @@ function createLoginDailyChart() {
             series: { showDot: true, dataLabels: { visible: true, offsetY: -10 }, selectable: true },
             theme
         };
+
+        //차트 색상 변경
+        options.theme.series.colors = ['#98fac2'];
 
         toastui.Chart.columnChart({el, data, options});
     }
@@ -176,9 +179,28 @@ function setStatbizCnt(obj) {
         return;
     }
 
-    /* 회원수 */
+    // 통계 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
+
+    /* 방문자 수 */
     gsap.to("#visitCnt", {
-        innerText: 14621,
+        innerText: obj.dailyCnt.stats.vstCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -187,9 +209,9 @@ function setStatbizCnt(obj) {
         }
     });
 
-    /* 로그인 수 */
+    /* 법인 설립 건수 */
     gsap.to("#incorpCnt", {
-        innerText: 7856,
+        innerText: obj.dailyCnt.stats.corpFndnCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -198,9 +220,9 @@ function setStatbizCnt(obj) {
         }
     });
 
-    /* 로그인(중복제거) 수 */
+    /* 업종별 법인 설립 건수 */
     gsap.to("#fIncorpCnt", {
-        innerText: 4211,
+        innerText: 0,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {

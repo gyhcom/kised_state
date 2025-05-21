@@ -26,3 +26,8 @@ services:
     url: 'http://localhost:8081/service1'
   service_2:
     url: 'http://localhost:8090/service2'
+  urls:
+    kstup: 'http://localhost:8090/service2'
+    kisedorkr: 'http://localhost:8090/service2'
+    startbiz: 'http://localhost:8090/service2'
+    cert: 'http://localhost:8090/service2'

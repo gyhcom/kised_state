@@ -1,6 +1,6 @@
 function rangeDatePickerInit() {
-    var today = new Date();
-    var picker = tui.DatePicker.createRangePicker({
+    let today = new Date();
+    let picker = tui.DatePicker.createRangePicker({
         startpicker: {
             date: new Date(today.getFullYear()-1, 0, 1),
             input: '#startpicker-input',
@@ -24,6 +24,9 @@ function rangeDatePickerInit() {
     // 기간별 데이터 정의 될 때까지 비활성화
     picker._endpicker.disable();
     picker._startpicker.disable();
+
+    // 다른 js에서 import 없이 date-picker 값을 사용하기 위함
+    return picker;
 }
 
 function singleDatePickerInit() {
@@ -36,4 +39,16 @@ function singleDatePickerInit() {
         },
         type: 'month',
     });
+}
+
+/*
+* month, date 형식 한자리 일 경우 앞자리에 "0" 추가
+* ex) 202536 -> 20250306
+*/
+function convertDateForm(date) {
+    if(date < 10) {
+        date = "0" + date;
+    }
+
+    return date;
 }

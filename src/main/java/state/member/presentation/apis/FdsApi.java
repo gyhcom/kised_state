@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.FdsManager;
+import state.member.domain.entity.FdsCntStats;
+import state.member.domain.entity.FdsDetCntByTypeStats;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/fds")
 @Controller
@@ -96,5 +95,24 @@ public class FdsApi {
     @GetMapping("/getTotDetMonCnt")
     public Flux<Map<String, Object>> getTotDetMonCnt(@RequestParam String year) {
         return fdsManager.getTotDetMonCnt(year);
+    }
+
+    @ResponseBody
+    @GetMapping("/getFdsStatsCnt")
+    public Mono<Map<String, Object>> getFdsStatsCnt() {
+        Mono<List<FdsCntStats>> cntStatsList = Mono.fromCallable(() -> fdsManager.getTotCntList());
+        Mono<List<FdsDetCntByTypeStats>> detCntByTypeList = Mono.fromCallable(() -> fdsManager.getDetCntByTypeList());
+
+        return Mono.zip(cntStatsList, detCntByTypeList)
+                .map(tuple -> {
+                    List<FdsCntStats> cntStats = tuple.getT1();
+                    List<FdsDetCntByTypeStats> detCntByType = tuple.getT2();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("cntStatsList", cntStats);
+                    resultMap.put("detCntByTypeList", detCntByType);
+
+                    return resultMap;
+                });
     }
 }

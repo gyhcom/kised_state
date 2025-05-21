@@ -39,7 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out"
+        ease: "power3.out",
+        onComplete: () => {
+            document.querySelector('.date-picker').style.transform = 'none';
+        }
     });
 
     // 차트 카드 애니메이션

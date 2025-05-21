@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.StartbizManager;
+import state.member.domain.entity.StartbizCountStatistics;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/startbiz")
@@ -28,6 +31,19 @@ public class StartbizApi {
     @ResponseBody
     @GetMapping("/bizStatsInfoApi")
     public Mono<Map<String, Object>> bizStatsInfoApi() {
-        return startbizManager.bizStatsInfoApi();
+        Mono<Map<String, Object>> dailyCntMap = startbizManager.bizStatsInfoApi();
+        Mono<List<StartbizCountStatistics>> dailyCntListMap = Mono.fromCallable(() -> startbizManager.getDailyCntList());
+
+        return Mono.zip(dailyCntMap, dailyCntListMap)
+                .map(tuple -> {
+                    Map<String, Object> dailyCnt = tuple.getT1();
+                    List<StartbizCountStatistics> dailyCntList = tuple.getT2();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("dailyCnt", dailyCnt);
+                    resultMap.put("dailyCntList", dailyCntList);
+
+                    return resultMap;
+                });
     }
 }
