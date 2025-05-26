@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDate;
+
 @Comment("국고보조금(PMS)")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,4 +34,7 @@ public class GslsPmsCountStatistics extends BaseEntity {
 
     @Column @Getter @Setter @Comment("상세내역사업정보 건수")
     private String ddtlbzCnt;
+
+    @Column @Getter @Setter @Comment("임시 날짜")
+    private LocalDate baseDt2;
 }

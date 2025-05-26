@@ -2,6 +2,7 @@ let pbancRegChartData;
 let instBizPbancChartData;
 let intgPbancRegCnt;
 let bizPbancRegCnt;
+let latestDataCnt;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
@@ -53,8 +54,9 @@ function init() {
 
             pbancRegChartData = data.dailyCntList;
             instBizPbancChartData = data.instPbancRegCntMap;
-            intgPbancRegCnt = data.intgPbancRegCnt;
-            bizPbancRegCnt = data.bizPbancRegCnt;
+            latestDataCnt = data.latestCnt;
+            // intgPbancRegCnt = data.intgPbancRegCnt;
+            // bizPbancRegCnt = data.bizPbancRegCnt;
 
             createPbancRegChart();
             createInstBizPbancChart();
@@ -86,7 +88,7 @@ function createPbancRegChart() {
 
         if( pbancRegChartData != null ) {
             for( var i = 0 ; i < pbancRegChartData.length ; i++ ) {
-                data.categories.push(pbancRegChartData[i].baseDt);
+                data.categories.push(pbancRegChartData[i].baseDt2);
                 data.series[0].data.push(Number(pbancRegChartData[i].bizPbancRegInstCnt));
                 data.series[1].data.push(Number(pbancRegChartData[i].intgPbancRegCnt));
             }
@@ -170,7 +172,7 @@ function createInstBizPbancChart() {
         if( instBizPbancChartData.private != null ) {
             // 민간, 공공기관, 지자체, 교육기관 모두 데이터 length가 같다는 가정
             for( var i = 0 ; i < instBizPbancChartData.private.length ; i++ ) {
-                data.categories.push(instBizPbancChartData.private[i].baseDt);
+                data.categories.push(instBizPbancChartData.private[i].baseDt2);
                 data.series[0].data.push(Number(instBizPbancChartData.private[i].bizPbancRegCnt));
                 data.series[1].data.push(Number(instBizPbancChartData.public[i].bizPbancRegCnt));
                 data.series[2].data.push(Number(instBizPbancChartData.local[i].bizPbancRegCnt));
@@ -244,7 +246,7 @@ function setInstRegCnt() {
 
     /* 통합공고 등록 건수 */
     gsap.to("#intgPbancRegCnt", {
-        innerText: intgPbancRegCnt.resultData.cnt,
+        innerText: latestDataCnt.intgPbancRegCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -255,7 +257,7 @@ function setInstRegCnt() {
 
     /* 사업공고 등록 기관(주관기관) 수 */
     gsap.to("#bizPbancRegInst", {
-        innerText: bizPbancRegCnt.resultData.cnt,
+        innerText: latestDataCnt.bizPbancRegInstCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -273,19 +275,6 @@ function setInstRegCnt() {
         ease: "power2.out"
     });
 
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth()+1)+"";
-    let day = date.getDate()+"";
-
-    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
-    if( day.length === 1 ) {
-        day = "0"+day;
-    }
-    if( month.length === 1 ) {
-        month = "0"+month;
-    }
-
-    $('#intgPbancRegCntYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#bizPbancRegInstYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#intgPbancRegCntYmd').text('(' + latestDataCnt.baseDt2 + ' 기준)');
+    $('#bizPbancRegInstYmd').text('(' + latestDataCnt.baseDt2 + ' 기준)');
 }

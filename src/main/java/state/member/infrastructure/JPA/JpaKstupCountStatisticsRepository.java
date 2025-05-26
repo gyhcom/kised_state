@@ -8,5 +8,5 @@ import java.util.List;
 public interface JpaKstupCountStatisticsRepository extends JpaRepository<KstupCountStatistics, Long> {
     List<KstupCountStatistics> findTop30ByOrderByBaseDtAsc();
 
-    KstupCountStatistics findTopByOrderByBaseDtDesc();
+    KstupCountStatistics findTopByOrderByBaseDt2Desc();
 }

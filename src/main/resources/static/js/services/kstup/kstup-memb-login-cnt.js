@@ -22,8 +22,8 @@ function init() {
                 setApiFailureIcon();
             }
 
-            dailyKeywordData= data.dailyPopKeyword;
-            weeklyKeywordData= data.weeklyPopKeyword;
+            // dailyKeywordData= data.dailyPopKeyword;
+            // weeklyKeywordData= data.weeklyPopKeyword;
             dailyCntData= data.dailyCntList;
 
             doAnimation(data);
@@ -65,7 +65,7 @@ function createUserActChart() {
 
         if( dailyCntData != null ) {
             for( var i = 0 ; i < dailyCntData.length ; i++ ) {
-                data.categories.push(dailyCntData[i].baseDt);
+                data.categories.push(dailyCntData[i].baseDt2);
                 data.series[0].data.push(Number(dailyCntData[i].mnpwCnt));
                 data.series[1].data.push(Number(dailyCntData[i].lginCnt));
                 data.series[2].data.push(Number(dailyCntData[i].lginDupCnt));
@@ -133,18 +133,59 @@ function createWeeklyPopKeyword() {
         let data = {
             // page -> 이 값들은 모두 동일할 필요가 있을 것 같음.(여러 시스템의 데이터를 하나의 차트에서 보여준다면)
             categories: ['최근 7일 인기검색어 Top10'],
-            series: [],
+            series: [
+                {
+                    name: '예비창업패키지',
+                    data: 10
+                },
+                {
+                    name: '청년창업지원금',
+                    data: 10
+                },
+                {
+                    name: '초기창업패키지',
+                    data: 10
+                },
+                {
+                    name: '입주',
+                    data: 10
+                },
+                {
+                    name: '예비창업',
+                    data: 10
+                },
+                {
+                    name: '창업중심대학',
+                    data: 10
+                },
+                {
+                    name: '사업계획서',
+                    data: 10
+                },
+                {
+                    name: '입주기업',
+                    data: 10
+                },
+                {
+                    name: '여성창업',
+                    data: 10
+                },
+                {
+                    name: '창업패키지',
+                    data: 10
+                }
+            ],
         };
 
-        // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( weeklyKeywordData != null && weeklyKeywordData.resultData.length > 0 ) {
-            for( var i = 0 ; i < weeklyKeywordData.resultData.length ; i++) {
-                let obj = {};
-                obj.name = weeklyKeywordData.resultData[i].rank;
-                obj.data = (1 / weeklyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
-                data.series.push(obj);
-            }
-        }
+        // // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
+        // if( weeklyKeywordData != null && weeklyKeywordData.resultData.length > 0 ) {
+        //     for( var i = 0 ; i < weeklyKeywordData.resultData.length ; i++) {
+        //         let obj = {};
+        //         obj.name = weeklyKeywordData.resultData[i].rank;
+        //         obj.data = (1 / weeklyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
+        //         data.series.push(obj);
+        //     }
+        // }
 
         const theme = getTheme();
 
@@ -173,18 +214,59 @@ function createDailyPopKeyword() {
         const el = document.getElementById('popKeywordDailyChart');
         let data = {
             categories: ['일일 인기검색어 Top10'],
-            series: [],
+            series: [
+                {
+                    name: '예비창업패키지',
+                    data: 10
+                },
+                {
+                    name: '초기창업패키지',
+                    data: 10
+                },
+                {
+                    name: '청년창업지원금',
+                    data: 10
+                },
+                {
+                    name: '창업중심대학',
+                    data: 10
+                },
+                {
+                    name: '예비창업',
+                    data: 10
+                },
+                {
+                    name: 'K-스타트업 그랜드 챌린지',
+                    data: 10
+                },
+                {
+                    name: '디딤돌',
+                    data: 10
+                },
+                {
+                    name: '입주',
+                    data: 10
+                },
+                {
+                    name: '생애최초 청년창업 지원사업',
+                    data: 10
+                },
+                {
+                    name: '혁신창업리그',
+                    data: 10
+                }
+            ],
         };
 
         // 각 서비스의 API 호출 성공 여부에 영향을 미치게 하지 않기 위함
-        if( dailyKeywordData != null && dailyKeywordData.resultData.length > 0 ) {
-            for( var i = 0 ; i < dailyKeywordData.resultData.length ; i++) {
-                let obj = {};
-                obj.name = dailyKeywordData.resultData[i].rank;
-                obj.data = (1 / dailyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
-                data.series.push(obj);
-            }
-        }
+        // if( dailyKeywordData != null && dailyKeywordData.resultData.length > 0 ) {
+        //     for( var i = 0 ; i < dailyKeywordData.resultData.length ; i++) {
+        //         let obj = {};
+        //         obj.name = dailyKeywordData.resultData[i].rank;
+        //         obj.data = (1 / dailyKeywordData.resultData.length) * 100;  // pie 차트는 '100'이라는 값이 최종적으로 제공되어야 함.
+        //         data.series.push(obj);
+        //     }
+        // }
 
         const theme = getTheme();
 
@@ -245,18 +327,6 @@ function getTheme() {
     };
 }
 
-function validateData(obj) {
-    if(!currentMemberData || currentMemberData.length <= 0) return false;
-    if(!annualMemberData || annualMemberData.length <= 0) return false;
-    if(!monthlyMemberData || monthlyMemberData.length <= 0) return false;
-
-    if(!annualLoginData || annualLoginData.length <= 0) return false;
-    if(!monthlyLoginData || monthlyLoginData.length <= 0) return false;
-    if(!dailyLoginData || dailyLoginData.length <= 0) return false;
-
-    return true;
-}
-
 function datePickerInit() {
     rangeDatePickerInit()
 }
@@ -306,9 +376,18 @@ function doAnimation(obj) {
         ease: "back.out(1.4)"
     });
 
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
+
     /* 회원수 */
     gsap.to("#currentMembCnt", {
-        innerText: obj.userCnt.resultData.cnt,
+        innerText: obj.lginCnt.mnpwCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -330,7 +409,7 @@ function doAnimation(obj) {
 
     /* 로그인(중복제거) 수 */
     gsap.to("#loginOrigCnt", {
-        innerText: obj.lginCnt.lginDuplCnt,
+        innerText: obj.lginCnt.lginDupCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -350,58 +429,8 @@ function doAnimation(obj) {
         }
     });
 
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth()+1)+"";
-    let day = date.getDate()+"";
-
-    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
-    if( day.length === 1 ) {
-        day = "0"+day;
-    }
-    if( month.length === 1 ) {
-        month = "0"+month;
-    }
-
-    $('#currMembYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#loginYmd').text('(' + obj.lginCnt.baseDt + ' 기준)');
-    $('#loginOrigYmd').text('(' + obj.lginCnt.baseDt + ' 기준)');
-    $('#visitYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#currMembYmd').text('(' + obj.lginCnt.baseDt2 + ' 기준)');
+    $('#loginYmd').text('(' + obj.lginCnt.baseDt2 + ' 기준)');
+    $('#loginOrigYmd').text('(' + obj.lginCnt.baseDt2 + ' 기준)');
+    $('#visitYmd').text('(' + obj.lginCnt.baseDt2 + ' 기준)');
 }
-
-
-// function annualMemberRateInit(obj) {
-//     $('#yearMembCnt').text(obj[0].cnt);
-//
-//     $('#yearMembTitle').text(obj[0].year+"년도 기준 회원수");
-//
-//     var calcedRate = calcMemberRate(obj[0].cnt);
-//
-//     //monthMembRate
-//     calcedRate >= 0 ? $('#yearMembRate').css('color', 'red') : $('#yearMembRate').css('color', 'blue')
-//
-//     $('#yearMembRate').text(calcedRate+"% (현재 대비)");
-// }
-//
-// function monthlyMemberRateInit(obj) {
-//     $('#monthMembCnt').text(obj[0].cnt);
-//
-//     $('#monthMembTitle').text(obj[0].year+"년 "+obj[0].month+"월 기준 회원수");
-//
-//     var calcedRate = calcMemberRate(obj[0].cnt);
-//
-//     calcedRate >= 0 ? $('#monthMembRate').css('color', 'red') : $('#monthMembRate').css('color', 'blue');
-//
-//     $('#monthMembRate').text(calcedRate+"% (현재 대비)");
-// }
-//
-// //회원수 현재 대비 증감률 계산
-// //{(변화한 값 – 처음 값) / 처음 값} x 100 = 변화율(%)
-// function calcMemberRate(cnt) {
-//     //console.log("cnt : " + cnt + " / current" + currentMemberData[0].cnt);
-//     var rate = ((parseInt(cnt) - parseInt(currentMemberData[0].cnt)) / parseInt(currentMemberData[0].cnt)) * 100;
-//     //소숫점 반올림
-//     rate = rate.toFixed(2);
-//
-//     return parseInt(cnt) >= parseInt(currentMemberData[0].cnt) ? "+" + rate : rate;
-// }

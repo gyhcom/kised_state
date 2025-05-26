@@ -8,5 +8,5 @@ import java.util.List;
 public interface JpaKisedorkrCountStatisticsRepository extends JpaRepository<KisedorkrCountStatistics, Long> {
     List<KisedorkrCountStatistics> findTop30ByOrderByBaseDtAsc();
 
-    KisedorkrCountStatistics findTopByOrderByBaseDtDesc();
+    KisedorkrCountStatistics findTopByOrderByBaseDt2Desc();
 }

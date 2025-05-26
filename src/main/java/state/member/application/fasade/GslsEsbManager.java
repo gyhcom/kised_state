@@ -10,6 +10,7 @@ import state.common.exception.ErrorCode;
 import state.member.application.processor.gslsEsb.*;
 import state.member.domain.entity.GslsPmsCountStatistics;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -106,9 +107,9 @@ public class GslsEsbManager {
     }
 
     public GslsPmsCountStatistics mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "국고보조금(PMS) 통계 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "국고보조금(PMS) 통계 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> resultMap = (Map<String, Object>) map.get("map");
 
@@ -118,6 +119,7 @@ public class GslsEsbManager {
                 .anlrveCnt(String.valueOf(resultMap.get("anlrveCnt")))
                 .fnlttCnt(String.valueOf(resultMap.get("fnlttCnt")))
                 .ddtlbzCnt(String.valueOf(resultMap.get("ddtlbzCnt")))
+                .baseDt2((LocalDate) resultMap.get("baseDt2"))
                 .build();
     }
 

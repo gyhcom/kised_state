@@ -36,9 +36,9 @@ public class CertManager {
     }
 
     public CertCountStatistics mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "창업기업확인 통계 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "창업기업확인 통계 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> statsMap = (Map<String, Object>) map.get("stats");
 

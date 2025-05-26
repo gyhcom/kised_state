@@ -8,4 +8,6 @@ public interface StartbizCountStatisticsRepository {
     void save(StartbizCountStatistics entity);
 
     List<StartbizCountStatistics> findTop30ByOrderByBaseDtAsc();
+
+    StartbizCountStatistics findTopByOrderByBaseDtDesc();
 }

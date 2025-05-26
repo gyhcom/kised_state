@@ -79,7 +79,7 @@ function createVisitDailyChart() {
         };
 
         for( var i = 0 ; i < dailyCntListData.length ; i++) {
-            data.categories.push(dailyCntListData[i].baseDt);
+            data.categories.push(dailyCntListData[i].baseDt2);
             data.series[0].data.push(Number(dailyCntListData[i].vstCnt));
         }
 
@@ -118,7 +118,7 @@ function createCorpFndnDailyChart() {
         };
 
         for( var i = 0 ; i < dailyCntListData.length ; i++) {
-            data.categories.push(dailyCntListData[i].baseDt);
+            data.categories.push(dailyCntListData[i].baseDt2);
             data.series[0].data.push(Number(dailyCntListData[i].corpFndnCnt));
         }
 
@@ -200,7 +200,7 @@ function setStatbizCnt(obj) {
 
     /* 방문자 수 */
     gsap.to("#visitCnt", {
-        innerText: obj.dailyCnt.stats.vstCnt,
+        innerText: obj.dailyCnt.vstCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -211,7 +211,7 @@ function setStatbizCnt(obj) {
 
     /* 법인 설립 건수 */
     gsap.to("#incorpCnt", {
-        innerText: obj.dailyCnt.stats.corpFndnCnt,
+        innerText: obj.dailyCnt.corpFndnCnt,
         duration: 3,
         snap: "innerText",
         onUpdate: function () {
@@ -231,20 +231,7 @@ function setStatbizCnt(obj) {
         }
     });
 
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth()+1)+"";
-    let day = date.getDate()+"";
-
-    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
-    if( day.length === 1 ) {
-        day = "0"+day;
-    }
-    if( month.length === 1 ) {
-        month = "0"+month;
-    }
-
-    $('#visitYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#incorpYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
-    $('#fIncorpYmd').text('(' + year + '-' + month + '-' + day + ' 기준)');
+    $('#visitYmd').text('(' + obj.dailyCnt.baseDt2 + ' 기준)');
+    $('#incorpYmd').text('(' + obj.dailyCnt.baseDt2 + ' 기준)');
+    //$('#fIncorpYmd').text('(' + obj.dailyCnt.baseDt + ' 기준)');
 }

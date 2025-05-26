@@ -143,25 +143,25 @@ public class GslsEsbApi {
 
     // API 연동 이후
 
-//    @ResponseBody
-//    @GetMapping("/getAllGslsPmsStat")
-//    public Mono<Map<String, Object>> getAllGslsPmsStat() {
-//        // 국고보조금 PMS 최근 30일 통계 리스트 (차트 데이터)
-//        Mono<List<GslsPmsCountStatistics>> gslsPmsStatList = Mono.fromCallable(() -> gslsEsbManager.getDailyCntList());
-//
-//        // 국고보조금 PMS 최근 1일 통계 데이터 (카드 데이터)
-//        Mono<GslsPmsCountStatistics> latestStatCnt = Mono.fromCallable(() -> gslsEsbManager.getLatesCnt());
-//
-//        return Mono.zip(gslsPmsStatList, latestStatCnt)
-//                .map(tuple -> {
-//                    List<GslsPmsCountStatistics> statList = tuple.getT1();
-//                    GslsPmsCountStatistics lateStats = tuple.getT2();
-//
-//                    Map<String, Object> resultMap = new HashMap<>();
-//                    resultMap.put("statList", statList);
-//                    resultMap.put("latestStat", lateStats);
-//
-//                    return resultMap;
-//                });
-//    }
+    @ResponseBody
+    @GetMapping("/getAllGslsPmsStat")
+    public Mono<Map<String, Object>> getAllGslsPmsStat() {
+        // 국고보조금 PMS 최근 30일 통계 리스트 (차트 데이터)
+        Mono<List<GslsPmsCountStatistics>> gslsPmsStatList = Mono.fromCallable(() -> gslsEsbManager.getDailyCntList());
+
+        // 국고보조금 PMS 최근 1일 통계 데이터 (카드 데이터)
+        Mono<GslsPmsCountStatistics> latestStatCnt = Mono.fromCallable(() -> gslsEsbManager.getLatesCnt());
+
+        return Mono.zip(gslsPmsStatList, latestStatCnt)
+                .map(tuple -> {
+                    List<GslsPmsCountStatistics> statList = tuple.getT1();
+                    GslsPmsCountStatistics lateStats = tuple.getT2();
+
+                    Map<String, Object> resultMap = new HashMap<>();
+                    resultMap.put("statList", statList);
+                    resultMap.put("latestStat", lateStats);
+
+                    return resultMap;
+                });
+    }
 }

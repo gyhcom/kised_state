@@ -9,10 +9,12 @@ import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
 import state.member.application.processor.startbiz.StartbizBizStatsInfoApiProcessor;
 import state.member.application.processor.startbiz.StartbizGetDailyCntListProcessor;
+import state.member.application.processor.startbiz.StartbizGetLatestStatsProcessor;
 import state.member.application.processor.startbiz.StartbizSaveDailyCntProcessor;
 import state.member.domain.entity.KisedorkrCountStatistics;
 import state.member.domain.entity.StartbizCountStatistics;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class StartbizManager {
     private final StartbizBizStatsInfoApiProcessor startbizBizStatsInfoApiProcessor;
     private final StartbizGetDailyCntListProcessor startbizGetDailyCntListProcessor;
     private final StartbizSaveDailyCntProcessor startbizSaveDailyCntProcessor;
+    private final StartbizGetLatestStatsProcessor startbizGetLatestStatsProcessor;
 
     public Mono<Map<String, Object>> bizStatsInfoApi() {
         return startbizBizStatsInfoApiProcessor.execute();
@@ -37,16 +40,21 @@ public class StartbizManager {
         startbizSaveDailyCntProcessor.execute(entity);
     }
 
+    public StartbizCountStatistics getLatestStats() {
+        return startbizGetLatestStatsProcessor.execute();
+    }
+
     public StartbizCountStatistics mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "법인설립시스템 통계 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "법인설립시스템 통계 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> resultDataMap = (Map<String, Object>) map.get("stats");
 
         return StartbizCountStatistics.builder()
                 .corpFndnCnt(String.valueOf(resultDataMap.get("corpFndnCnt")))
                 .vstCnt(String.valueOf(resultDataMap.get("vstCnt")))
+                .baseDt2((LocalDate) resultDataMap.get("baseDt2"))
                 .build();
     }
 

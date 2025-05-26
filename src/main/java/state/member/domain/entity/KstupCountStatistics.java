@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDate;
+
 @Comment("K-Startup 단 건 데이터")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,4 +37,7 @@ public class KstupCountStatistics extends BaseEntity {
 
     @Column @Getter @Setter @Comment("사업공고 등록 건수")
     private String bizPbancRegInstCnt;
+
+    @Column @Getter @Setter @Comment("임시 날짜")
+    private LocalDate baseDt2;
 }

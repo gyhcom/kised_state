@@ -12,6 +12,7 @@ import state.member.application.processor.kstartup.*;
 import state.member.domain.entity.KstupCountStatistics;
 import state.member.domain.entity.KstupInstPbancRegStatistics;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +96,9 @@ public class KstupManager {
 
     // K-startup 단건 데이터 mapToEntity
     public KstupCountStatistics mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "K-Startup 통계 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "K-Startup 통계 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> lginMap = (Map<String, Object>) map.get("lginCnt");
         Map<String, Object> intgPbancRegMap = (Map<String, Object>) map.get("intgPbancRegCnt");
@@ -110,6 +111,7 @@ public class KstupManager {
                 .intgPbancRegCnt(String.valueOf(intgPbancRegMap.get("cnt")))
                 .bizPbancRegInstCnt(String.valueOf(bizPbancRegInstMap.get("cnt")))
                 .mnpwCnt(String.valueOf(mnpwMap.get("cnt")))
+                .baseDt2((LocalDate) mnpwMap.get("baseDt2"))
                 .build();
     }
 
@@ -216,10 +218,10 @@ public class KstupManager {
 
     // K-Startup 기관유형별 사업공고 등록 건수 리스트 listToEntity -> 실제로 적재되는 resultData가 List이기 때문에 listToEntity
     public List<KstupInstPbancRegStatistics> listToEntity(Map<String, Object> map) {
-        if( !validateList(map) ) {
-            log.info("RESPONSE DATA ::: " + map.toString());
-            throw new ApiException(ErrorCode.NULL_POINT, "K-Startup 기관유형별 사업공고 등록 건수 API 응답 데이터를 확인해주세요.");
-        }
+//        if( !validateList(map) ) {
+//            log.info("RESPONSE DATA ::: " + map.toString());
+//            throw new ApiException(ErrorCode.NULL_POINT, "K-Startup 기관유형별 사업공고 등록 건수 API 응답 데이터를 확인해주세요.");
+//        }
 
         List<KstupInstPbancRegStatistics> resultList = new ArrayList<>();
 
@@ -228,6 +230,7 @@ public class KstupManager {
                 KstupInstPbancRegStatistics.builder()
                         .bizPbancRegCnt(String.valueOf(dataMap.get("cnt")))
                         .instNm(String.valueOf(dataMap.get("title")))
+                        .baseDt2((LocalDate) dataMap.get("baseDt2"))
                         .build()
             );
         }
