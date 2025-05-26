@@ -8,5 +8,5 @@ import java.util.List;
 public interface JpaGslsPmsCountStatisticsRepository extends JpaRepository<GslsPmsCountStatistics, Long> {
     List<GslsPmsCountStatistics> findTop30ByOrderByBaseDtAsc();
 
-    GslsPmsCountStatistics findTopByOrderByBaseDtDesc();
+    GslsPmsCountStatistics findTopByOrderByBaseDt2Desc();
 }

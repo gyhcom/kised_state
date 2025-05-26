@@ -97,7 +97,7 @@ function createDailyVisitCntChart() {
         };
 
         for( var i = 0 ; i < visitCntListData.length ; i++ ) {
-            data.categories.push(visitCntListData[i].baseDt);
+            data.categories.push(visitCntListData[i].baseDt2);
             data.series[0].data.push(Number(visitCntListData[i].vstCnt))
         }
 
@@ -197,18 +197,5 @@ function setKisedorkrCnt(obj) {
         }
     });
 
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth()+1)+"";
-    let day = date.getDate()+"";
-
-    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
-    if( day.length === 1 ) {
-        day = "0"+day;
-    }
-    if( month.length === 1 ) {
-        month = "0"+month;
-    }
-
-    $('#dailyVisitCnt').text('(' + obj.visitCnt.baseDt + ' 기준)');
+    $('#dailyVisitCnt').text('(' + obj.visitCnt.baseDt2 + ' 기준)');
 }

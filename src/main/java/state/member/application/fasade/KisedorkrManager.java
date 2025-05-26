@@ -13,6 +13,7 @@ import state.member.domain.entity.CertCountStatistics;
 import state.member.domain.entity.KisedorkrCountStatistics;
 import state.member.domain.repository.KisedorkrCountStatisticsRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -63,14 +64,15 @@ public class KisedorkrManager {
     }
 
     public KisedorkrCountStatistics mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "기관 홈페이지 통계 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "기관 홈페이지 통계 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> resultDataMap = (Map<String, Object>) map.get("resultData");
 
         return KisedorkrCountStatistics.builder()
                 .vstCnt(String.valueOf(resultDataMap.get("cnt")))
+                .baseDt2((LocalDate) resultDataMap.get("baseDt2"))
                 .build();
     }
 

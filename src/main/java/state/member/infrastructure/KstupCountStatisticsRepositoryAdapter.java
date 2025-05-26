@@ -25,6 +25,6 @@ public class KstupCountStatisticsRepositoryAdapter implements KstupCountStatisti
 
     @Override
     public KstupCountStatistics findTopByOrderByBaseDtDesc() {
-        return jpaKstupCountStatisticsRepository.findTopByOrderByBaseDtDesc();
+        return jpaKstupCountStatisticsRepository.findTopByOrderByBaseDt2Desc();
     }
 }

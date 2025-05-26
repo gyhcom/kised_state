@@ -22,4 +22,9 @@ public class StartbizCountStatisticsRepositoryAdapter implements StartbizCountSt
     public List<StartbizCountStatistics> findTop30ByOrderByBaseDtAsc() {
         return jpaStartbizCountStatisticsRepository.findTop30ByOrderByBaseDtAsc();
     }
+
+    @Override
+    public StartbizCountStatistics findTopByOrderByBaseDtDesc() {
+        return jpaStartbizCountStatisticsRepository.findTopByOrderByBaseDt2Desc();
+    }
 }

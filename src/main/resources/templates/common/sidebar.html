@@ -11,14 +11,14 @@
     </a>
 
     <!-- TODO SUPER 계정만 보이도록 수정하기 -->
-    <a class="nav-link" onclick="loadPage('/batchHis')">
-        <i class="fa-solid fa-list text-info"></i>
-        <span class="nav-text">배치 실행 결과조회</span>
-    </a>
+<!--    <a class="nav-link" onclick="loadPage('/batchHis')">-->
+<!--        <i class="fa-solid fa-list text-info"></i>-->
+<!--        <span class="nav-text">배치 실행 결과조회</span>-->
+<!--    </a>-->
 
     <!-- 🔸 행정 서비스 -->
     <div class="rTitle">
-        <span class="nav-section-title">📝 서비스</span>
+        <span class="nav-section-title">📝 서비스(API 연동)</span>
     </div>
 
     <a class="nav-link active" onclick="loadPage('/kisedorkr')">
@@ -43,25 +43,38 @@
         <span class="nav-text">온라인법인설립</span>
     </a>
 
-    <a class="nav-link" onclick="loadPage('/cert')">
-        <i class="fa-solid fa-id-badge text-secondary"></i>
-        <span class="nav-text">창업기업확인</span>
-    </a>
-
-
     <a class="nav-link" onclick="loadPage('/fds')">
         <i class="fa-solid fa-eye text-danger"></i>
         <span class="nav-text">이상거래탐지</span>
     </a>
 
-    <a class="p-menu nav-link" onclick="toggleSubmenu('gukgoMenu', this)">
+    <a class="nav-link" onclick="loadPage('/gslsEsb/pms')">
         <i class="fa-solid fa-sack-dollar text-success"></i>
-        <span class="nav-text">국고보조금</span>
+        <span class="nav-text">국고보조금(PMS)</span>
     </a>
-    <div id="gukgoMenu" class="submenu">
-        <a onclick="loadPage('/gslsEsb/pms')">PMS 현황</a>
-        <a onclick="loadPage('/gslsEsb/mis')">MIS 현황</a>
+
+    <div class="rTitle">
+        <span class="nav-section-title">📝 서비스(API 비연동)</span>
     </div>
+
+    <a class="nav-link" onclick="loadPage('/cert')">
+        <i class="fa-solid fa-id-badge text-secondary"></i>
+        <span class="nav-text">창업기업확인</span>
+    </a>
+
+    <a class="nav-link" onclick="loadPage('/gslsEsb/mis')">
+        <i class="fa-solid fa-sack-dollar text-success"></i>
+        <span class="nav-text">국고보조금(MIS)</span>
+    </a>
+
+<!--    <a class="p-menu nav-link" onclick="toggleSubmenu('gukgoMenu', this)">-->
+<!--        <i class="fa-solid fa-sack-dollar text-success"></i>-->
+<!--        <span class="nav-text">국고보조금</span>-->
+<!--    </a>-->
+<!--    <div id="gukgoMenu" class="submenu">-->
+<!--        <a onclick="loadPage('/gslsEsb/pms')">PMS 현황</a>-->
+<!--        <a onclick="loadPage('/gslsEsb/mis')">MIS 현황</a>-->
+<!--    </div>-->
 
     <!-- 🔸 데이터 분석 -->
     <div class="rTitle">

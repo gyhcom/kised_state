@@ -20,7 +20,7 @@ public class GslsPmsCountStatisticsRepositoryAdapter implements GslsPmsCountStat
 
     @Override
     public GslsPmsCountStatistics findTopByOrderByBaseDtDesc() {
-        return jpaGslsPmsCountStatisticsRepository.findTopByOrderByBaseDtDesc();
+        return jpaGslsPmsCountStatisticsRepository.findTopByOrderByBaseDt2Desc();
     }
 
     @Override

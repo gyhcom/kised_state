@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface JpaStartbizCountStatisticsRepository extends JpaRepository<StartbizCountStatistics, Long> {
     List<StartbizCountStatistics> findTop30ByOrderByBaseDtAsc();
+
+    StartbizCountStatistics findTopByOrderByBaseDt2Desc();
 }

@@ -40,118 +40,86 @@
         </div>
     </div>
 
+    <div class="container-fluid row row-cols-1 row-cols-sm-2 row-cols-md-4 p-4 card-group">
+        <!-- 정보공시내역 건수 카드 -->
+        <div class="col-md-2">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
+                        <h5 class="card-title stat-title fw-semibold text-dark">정보공시내역 건수</h5>
+                    </div>
+                    <h2 id="ifpbntCnt" class="card-text stat-value fw-bold text-dark mt-2" >0</h2>
+                    <p id="ifpbntCntYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 세입세출내역 건수 카드 -->
+        <div class="col-md-2">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-people-fill text-danger fs-3 me-2"></i>
+                        <h5 class="card-title stat-title fw-semibold text-dark">세압세출내역 건수</h5>
+                    </div>
+                    <h2 id="anlrveCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="anlrveCntYmd" class="stat-comparison text-danger fs-6 fw-semibold mb-0">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 재무제표결산 내역 건수 카드-->
+        <div class="col-md-2">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-calendar-week text-info fs-3 me-2"></i>
+                        <h5 class="card-title stat-title fw-semibold text-dark">재무제표결산 내역 건수</h5>
+                    </div>
+                    <h2 id="fnlttCnt" class="card-text stat-value fw-bold text-dark mt-2">0</h2>
+                    <p id="fnlttCntYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 수급자집행정보 건수 카드-->
+        <div class="col-md-2">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
+                        <h5 class="card-title stat-title fw-semibold text-dark">수급자집행정보 건수</h5>
+                    </div>
+                    <h2 id="excutCnt" class="card-text stat-value fw-bold text-dark mt-2" >0</h2>
+                    <p id="excutCntYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상세내역사업정보 건수 카드 -->
+        <div class="col-md-2">
+            <div class="card border-0 shadow-lg rounded-4 text-center bg-light stat-card">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="bi bi-bar-chart-fill text-primary fs-3 me-2"></i>
+                        <h5 class="card-title stat-title fw-semibold text-dark">상세내역사업정보 건수</h5>
+                    </div>
+                    <h2 id="ddtlbzCnt" class="card-text stat-value fw-bold text-dark mt-2" >0</h2>
+                    <p id="ddtlbzCntYmd" class="stat-comparison text-primary fs-6 fw-semibold mb-0">-</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="contentDiv">
         <div class="container-fluid p-4">
             <!-- Charts Section -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="d-flex align-items-center border-bottom pb-2" style="padding-left: 20px;">
-                        <h3 id="subTitle1" class="fw-bold text-dark m-0" style="font-size: 2rem;">정보공시 내역</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <div id="infoPubNotiAnnChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="infoPubNotiMonChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="d-flex align-items-center border-bottom pb-2" style="padding-left: 20px;">
-                        <h3 id="subTitle2" class="fw-bold text-dark m-0" style="font-size: 2rem;">세입세출 내역</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="rveExptrAnnChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="rveExptrMonChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="d-flex align-items-center border-bottom pb-2" style="padding-left: 20px;">
-                        <h3 id="subTitle3" class="fw-bold text-dark m-0" style="font-size: 2rem;">재무제표 결산서 내역</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="fnlsttAnnChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="fnlsttMonChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="d-flex align-items-center border-bottom pb-2" style="padding-left: 20px;">
-                        <h3 id="subTitle4" class="fw-bold text-dark m-0" style="font-size: 2rem;">수급자 집행정보</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="excutAnnChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="excutMonChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="d-flex align-items-center border-bottom pb-2" style="padding-left: 20px;">
-                        <h3 id="subTitle5" class="fw-bold text-dark m-0" style="font-size: 2rem;">상세내역 사업정보</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="dtlBsnsInfoAnnChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="dtlBsnsInfoMonChart" style="width: 100%"></div>
+                            <div id="gslsAllStatChart" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>

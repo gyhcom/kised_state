@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDate;
+
 @Comment("법인설립시스템")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +22,7 @@ public class StartbizCountStatistics extends BaseEntity {
 
     @Column @Getter @Setter @Comment("방문자 수")
     private String vstCnt;
+
+    @Column @Getter @Setter @Comment("임시 날짜")
+    private LocalDate baseDt2;
 }

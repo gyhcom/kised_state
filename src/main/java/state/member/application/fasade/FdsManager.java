@@ -11,6 +11,7 @@ import state.member.application.processor.fds.*;
 import state.member.domain.entity.FdsCntStats;
 import state.member.domain.entity.FdsDetCntByTypeStats;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,14 +89,15 @@ public class FdsManager {
     }
 
     public FdsCntStats mapToEntity(Map<String, Object> map) {
-        if( !validateMap(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "사업비점검 총 이상거래 탐지 건수 데이터를 확인해주세요.");
-        }
+//        if( !validateMap(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "사업비점검 총 이상거래 탐지 건수 데이터를 확인해주세요.");
+//        }
 
         Map<String, Object> resultDataMap = (Map<String, Object>) map.get("resultData");
 
         return FdsCntStats.builder()
-                .detTotCnt(String.valueOf(resultDataMap.get("cnt")))
+                .detTotCnt(String.valueOf(resultDataMap.get("CNT")))
+                .baseDt2((LocalDate) resultDataMap.get("baseDt2"))
                 .build();
     }
 
@@ -127,9 +129,9 @@ public class FdsManager {
     }
 
     public List<FdsDetCntByTypeStats> listToEntity(Map<String, Object> map) {
-        if( !validateList(map) ) {
-            throw new ApiException(ErrorCode.NULL_POINT, "사업비점검 유형별 탐지 건수 데이터를 확인해주세요.");
-        }
+//        if( !validateList(map) ) {
+//            throw new ApiException(ErrorCode.NULL_POINT, "사업비점검 유형별 탐지 건수 데이터를 확인해주세요.");
+//        }
 
         List<FdsDetCntByTypeStats> resultList = new ArrayList<>();
 
@@ -140,6 +142,7 @@ public class FdsManager {
                             .detTpCd( String.valueOf(dataMap.get("DET_TP_CD")) )
                             .detTpNm( String.valueOf(dataMap.get("DET_TP_NM")) )
                             .cnt( String.valueOf(dataMap.get("CNT")) )
+                            .baseDt2((LocalDate) dataMap.get("baseDt2"))
                             .build()
             );
         }

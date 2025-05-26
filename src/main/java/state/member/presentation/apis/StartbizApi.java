@@ -31,12 +31,14 @@ public class StartbizApi {
     @ResponseBody
     @GetMapping("/bizStatsInfoApi")
     public Mono<Map<String, Object>> bizStatsInfoApi() {
-        Mono<Map<String, Object>> dailyCntMap = startbizManager.bizStatsInfoApi();
+        //Mono<Map<String, Object>> dailyCntMap = startbizManager.bizStatsInfoApi();
+
+        Mono<StartbizCountStatistics> dailyCntMap = Mono.fromCallable(() -> startbizManager.getLatestStats());
         Mono<List<StartbizCountStatistics>> dailyCntListMap = Mono.fromCallable(() -> startbizManager.getDailyCntList());
 
         return Mono.zip(dailyCntMap, dailyCntListMap)
                 .map(tuple -> {
-                    Map<String, Object> dailyCnt = tuple.getT1();
+                    StartbizCountStatistics dailyCnt = tuple.getT1();
                     List<StartbizCountStatistics> dailyCntList = tuple.getT2();
 
                     Map<String, Object> resultMap = new HashMap<>();

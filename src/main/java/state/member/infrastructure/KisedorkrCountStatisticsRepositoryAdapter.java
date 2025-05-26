@@ -25,6 +25,6 @@ public class KisedorkrCountStatisticsRepositoryAdapter implements KisedorkrCount
 
     @Override
     public KisedorkrCountStatistics findTopByOrderByBaseDtDesc() {
-        return jpaKisedorkrCountStatisticsRepository.findTopByOrderByBaseDtDesc();
+        return jpaKisedorkrCountStatisticsRepository.findTopByOrderByBaseDt2Desc();
     }
 }

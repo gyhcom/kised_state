@@ -102,24 +102,30 @@ public class KstartupApi {
         // 일일 적재 데이터 리스트 조회
         Mono<List<KstupCountStatistics>> dailyList = Mono.fromCallable(() -> kstupManager.getDailyCntList());
 
+        // 최근 통계 데이터 조회
+        Mono<KstupCountStatistics> latestCnt = Mono.fromCallable(() -> kstupManager.getLatestLoginCnt());
+
         // 통합공고 등록 건수 (실시간)
-        Mono<Map<String, Object>> intgPbancRegCnt = kstupManager.intgPbancRegCnt();
+        //Mono<Map<String, Object>> intgPbancRegCnt = kstupManager.intgPbancRegCnt();
 
         // 사업공고 등록 기관 수 (실시간)
-        Mono<Map<String, Object>> bizPbancRegCnt = kstupManager.bizPbancRegInstCnt();
+        //Mono<Map<String, Object>> bizPbancRegCnt = kstupManager.bizPbancRegInstCnt();
 
-        return Mono.zip(groupedList, dailyList, intgPbancRegCnt, bizPbancRegCnt)
+        //return Mono.zip(groupedList, dailyList, intgPbancRegCnt, bizPbancRegCnt)
+        return Mono.zip(groupedList, dailyList, latestCnt)
                 .map(tuple -> {
                     Map<String, List<KstupInstPbancRegStatistics>> instPbancRegCntMap = tuple.getT1();
                     List<KstupCountStatistics> dailyCntList = tuple.getT2();
-                    Map<String, Object> intgPbancRegCntMap = tuple.getT3();
-                    Map<String, Object> bizPbancRegCntMap = tuple.getT4();
+                    KstupCountStatistics latestCntMap = tuple.getT3();;
+//                    Map<String, Object> intgPbancRegCntMap = tuple.getT3();
+//                    Map<String, Object> bizPbancRegCntMap = tuple.getT4();
 
                     Map<String, Object> resultMap = new HashMap<>();
                     resultMap.put("instPbancRegCntMap", instPbancRegCntMap);
                     resultMap.put("dailyCntList", dailyCntList);
-                    resultMap.put("intgPbancRegCnt", intgPbancRegCntMap);
-                    resultMap.put("bizPbancRegCnt", bizPbancRegCntMap);
+                    resultMap.put("latestCnt", latestCntMap);
+//                    resultMap.put("intgPbancRegCnt", intgPbancRegCntMap);
+//                    resultMap.put("bizPbancRegCnt", bizPbancRegCntMap);
 
                     return resultMap;
                 });
@@ -143,26 +149,28 @@ public class KstartupApi {
     @ResponseBody
     @GetMapping("/getUserActStatistics")
     public Mono<Map<String, Object>> getDailyCntList() {
-        Mono<Map<String, Object>> userCntMap = kstupManager.mnpwCnt();     // 회원 수
+        //Mono<Map<String, Object>> userCntMap = kstupManager.mnpwCnt();     // 회원 수
         Mono<KstupCountStatistics> lginCntMap = Mono.fromCallable(() -> kstupManager.getLatestLoginCnt());     // (통계 DB 조회) 최근 로그인 수, 로그인 수(중복제거) 1건 조회
         Mono<List<KstupCountStatistics>> dailyCntListMap = Mono.fromCallable(() -> kstupManager.getDailyCntList()); // 사용자 활동 일일 데이터 리스트
-        Mono<Map<String, Object>> dailyPopKeywordMap = kstupManager.getSearchStatus("day");    // 일일 인기검색어
-        Mono<Map<String, Object>> weeklyPopKeywordMap = kstupManager.getSearchStatus("week");  // 최근 7일 인기검색어
+//        Mono<Map<String, Object>> dailyPopKeywordMap = kstupManager.getSearchStatus("day");    // 일일 인기검색어
+//        Mono<Map<String, Object>> weeklyPopKeywordMap = kstupManager.getSearchStatus("week");  // 최근 7일 인기검색어
 
-        return Mono.zip(userCntMap, lginCntMap, dailyCntListMap, dailyPopKeywordMap, weeklyPopKeywordMap)
+        //return Mono.zip(userCntMap, lginCntMap, dailyCntListMap, dailyPopKeywordMap, weeklyPopKeywordMap)
+        //return Mono.zip(lginCntMap, dailyCntListMap, dailyPopKeywordMap, weeklyPopKeywordMap)
+        return Mono.zip(lginCntMap, dailyCntListMap)
                 .map(tuple -> {
-                    Map<String, Object> userCnt = tuple.getT1();
-                    KstupCountStatistics lginCnt = tuple.getT2();
-                    List<KstupCountStatistics> dailyCntList = tuple.getT3();
-                    Map<String, Object> dailyPopKeyword = tuple.getT4();
-                    Map<String, Object> weeklyPopKeyword = tuple.getT5();
+                    //Map<String, Object> userCnt = tuple.getT1();
+                    KstupCountStatistics lginCnt = tuple.getT1();
+                    List<KstupCountStatistics> dailyCntList = tuple.getT2();
+//                    Map<String, Object> dailyPopKeyword = tuple.getT3();
+//                    Map<String, Object> weeklyPopKeyword = tuple.getT4();
 
                     Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("userCnt", userCnt);
+                    //resultMap.put("userCnt", userCnt);
                     resultMap.put("lginCnt", lginCnt);
                     resultMap.put("dailyCntList", dailyCntList);
-                    resultMap.put("dailyPopKeyword", dailyPopKeyword);
-                    resultMap.put("weeklyPopKeyword", weeklyPopKeyword);
+//                    resultMap.put("dailyPopKeyword", dailyPopKeyword);
+//                    resultMap.put("weeklyPopKeyword", weeklyPopKeyword);
 
                     return resultMap;
                 });
