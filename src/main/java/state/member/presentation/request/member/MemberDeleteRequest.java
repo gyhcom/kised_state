@@ -1,11 +1,13 @@
 package state.member.presentation.request.member;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import state.member.application.command.member.MemberDeleteCommand;
 
 @Setter
 @Getter
+@Builder
 public class MemberDeleteRequest {
     private int seq;
     private String userId;

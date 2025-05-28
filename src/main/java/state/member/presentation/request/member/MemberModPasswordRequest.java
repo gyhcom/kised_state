@@ -1,12 +1,14 @@
 package state.member.presentation.request.member;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import state.member.application.command.member.MemberModPasswordCommand;
 
 @Getter
 @Setter
+@Builder
 public class MemberModPasswordRequest {
     @NotBlank(message = "현재 비밀번호를 입력해주세요.")
     String currentPassword;
