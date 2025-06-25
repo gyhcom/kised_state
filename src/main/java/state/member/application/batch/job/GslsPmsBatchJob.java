@@ -18,6 +18,9 @@ public class GslsPmsBatchJob {
     @Qualifier("gslsPmsAllStatDailyJob")
     private final Job gslsPmsAllStatDailyJob;
 
+    @Qualifier("gslsPmsAllStatsByDateJob")
+    private final Job gslsPmsAllStatsByDateJob;
+
     //@Scheduled(cron = "*/10 * * * * ?") // 10초 마다
     public void runGslsPmsAllStatDailyJob() {
         JobParameters jobParameters = new JobParametersBuilder()
@@ -28,6 +31,19 @@ public class GslsPmsBatchJob {
             jobLauncher.run(gslsPmsAllStatDailyJob, jobParameters);
         } catch (Exception e) {
             log.error("국고보조금(PMS) runGslsPmsAllStatDailyJob 배치 실행 중 예외 발생 : {}", e.getMessage());
+        }
+    }
+
+    //@Scheduled(cron = "*/10 * * * * ?") // 10초 마다
+    public void runGslsPmsAllStatsByDateJob() {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("runGslsPmsAllStatsByDateJobTime", System.currentTimeMillis())
+                .toJobParameters();
+
+        try {
+            jobLauncher.run(gslsPmsAllStatsByDateJob, jobParameters);
+        } catch (Exception e) {
+            log.error("국고보조금(PMS) runGslsPmsAllStatsByDateJob 배치 실행 중 예외 발생 : {}", e.getMessage());
         }
     }
 }

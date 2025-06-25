@@ -7,6 +7,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
+import state.member.application.command.CommResponseCommand;
 import state.member.application.processor.gslsEsb.*;
 import state.member.domain.entity.GslsPmsCountStatistics;
 
@@ -26,62 +27,24 @@ public class GslsEsbManager {
     private final GslsPmsGetDailyCntProcessor gslsPmsGetDailyCntProcessor;
     private final GslsPmsGetLatesCntProcessor gslsPmsGetLatesCntProcessor;
     private final GslsPmsSaveDailyCntProcessor gslsPmsSaveDailyCntProcessor;
-    private final GslsPmsAllStatCntProcessor gslsPmsAllStatCntProcessor;
+    private final GslsPmsApiGetAllStatCntProcessor gslsPmsApiGetAllStatCntProcessor;
 
-    public Flux<Map<String, Object>> getInfoPubNotiAnnCnt() {
-        return gslsEsbGetInfoPubNotiProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getInfoPubNotiMonCnt(String year) {
-        return gslsEsbGetInfoPubNotiProcessor.monthlyExecute(year);
-    }
+    private final GslsPmsApiGetStatsByDateProcessor gslsPmsApiGetStatsByDateProcessor;
 
     public Flux<Map<String, Object>> getInfoPubNoti(String year, String month, String searchValue) {
         return gslsEsbGetInfoPubNotiProcessor.dtlInfoExecute(year, month, searchValue);
-    }
-
-    public Flux<Map<String, Object>> getRveExptrAnnCnt() {
-        return gslsEsbGetRveExptrProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getRveExptrMonCnt(String year) {
-        return gslsEsbGetRveExptrProcessor.monthlyExecute(year);
     }
 
     public Flux<Map<String, Object>> getRveExptr(String year, String month, String searchValue) {
         return gslsEsbGetRveExptrProcessor.dtlInfoExecute(year, month, searchValue);
     }
 
-    public Flux<Map<String, Object>> getFnlsttAnnCnt() {
-        return gslsEsbGetFnlsttProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getFnlsttMonCnt(String year) {
-        return gslsEsbGetFnlsttProcessor.monthlyExecute(year);
-    }
-
     public Flux<Map<String, Object>> getFnlstt(String year, String month, String searchValue) {
         return gslsEsbGetFnlsttProcessor.dtlInfoExecute(year, month, searchValue);
     }
 
-    public Flux<Map<String, Object>> getExcutAnnCnt() {
-        return gslsEsbGetExcutKstupProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getExcutMonCnt(String year) {
-        return gslsEsbGetExcutKstupProcessor.monthlyExecute(year);
-    }
-
     public Flux<Map<String, Object>> getExcutKstup(String year, String month, String searchValue) {
         return gslsEsbGetExcutKstupProcessor.dtlInfoExecute(year, month, searchValue);
-    }
-
-    public Flux<Map<String, Object>> getDtlBsnsInfoAnnCnt() {
-        return gslsEsbGetDtlBsnsInfoProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getDtlBsnsInfoMonCnt(String year) {
-        return gslsEsbGetDtlBsnsInfoProcessor.monthlyExecute(year);
     }
 
     public Flux<Map<String, Object>> getDtlBsnsInfo(String year, String month, String searchValue) {
@@ -102,7 +65,11 @@ public class GslsEsbManager {
     }
 
     public Mono<Map<String, Object>> getAllStatCnt() {
-        return gslsPmsAllStatCntProcessor.execute();
+        return gslsPmsApiGetAllStatCntProcessor.execute();
+    }
+
+    public Mono<CommResponseCommand> getGslsPmsAllStatsCnt() {
+        return gslsPmsApiGetStatsByDateProcessor.execute();
     }
 
     public GslsPmsCountStatistics mapToEntity(Map<String, Object> map) {

@@ -1,8 +1,12 @@
 let visitCntListData;
+let visitMonthlyData;
+let visitYearlyData;
+let picker;
 
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
     chartInit();
+    createModalGrid(); /* detailModal.js */
 
     // 로고/타이틀
     gsap.from("#systemNm", {
@@ -22,15 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
         ease: "power2.out"
     });
 
-    // 날짜 선택 영역 & 버튼
-    gsap.from(".date-picker", {
+    // 기간별 통계 조회 버튼
+    gsap.from(".stats-btn", {
         duration: 1,
         y: -50,
         opacity: 0,
-        ease: "power3.out",
-        onComplete: () => {
-            document.querySelector('.date-picker').style.transform = 'none';
-        }
+        ease: "power3.out"
     });
 
     // 통계 카드 애니메이션
@@ -54,21 +55,18 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function chartInit() {
-    //최초 조회 시 현재 년도 가져오기
-    let year = new Date().getFullYear();
-    let month = new Date().getMonth() + 1;
-
     $.ajax({
         url: '/kisedorkr/visitCnt',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            console.dir(data);
             setApiSuccessIcon();
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            // if(!data) {
-            //     setApiFailureIcon();
-            // }
+            if(!data) {
+                setApiFailureIcon();
+            }
 
             visitCntListData = data.visitCntList;
 
@@ -154,14 +152,8 @@ function getTheme() {
     };
 }
 
-function validateData() {
-    if(!annualData || annualData.length <= 0) return false;
-
-    return true;
-}
-
 function datePickerInit() {
-    rangeDatePickerInit()
+    picker = rangeDatePickerInit()
 }
 
 function setKisedorkrCnt(obj) {
@@ -196,19 +188,6 @@ function setKisedorkrCnt(obj) {
                 Math.floor(this.targets()[0].innerText).toLocaleString();
         }
     });
-
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth()+1)+"";
-    let day = date.getDate()+"";
-
-    // 날짜가 한 자리수 일 경우 "01", "02"... 로 표현하기 위함
-    if( day.length === 1 ) {
-        day = "0"+day;
-    }
-    if( month.length === 1 ) {
-        month = "0"+month;
-    }
 
     $('#dailyVisitCnt').text('(' + obj.visitCnt.baseDt + ' 기준)');
 }

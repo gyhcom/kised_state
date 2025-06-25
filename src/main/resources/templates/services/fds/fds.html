@@ -7,6 +7,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="/css/common/common.css">
+    <link rel="stylesheet" href="/css/common/all.min.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-date-picker.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-grid.css">
     <link rel="stylesheet" href="/css/toast-ui/tui-pagination.css">
@@ -25,21 +26,52 @@
             <span id="statusText" class="ms-2 text-success fw-semibold">성공</span>
         </div>
 
-        <div class="date-picker d-flex align-items-center ms-auto me-4">
-            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                <input id="startpicker-input" type="text" aria-label="Date">
-                <span class="tui-ico-date"></span>
-                <div id="startpicker-container" style="margin-left: -1px;"></div>
-            </div>
-            <span> ~ </span>
-            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                <input id="endpicker-input" type="text" aria-label="Date">
-                <span class="tui-ico-date"></span>
-                <div id="endpicker-container" style="margin-left: -1px;"></div>
-            </div>
-            <span class="fw-bold text-dark">👈 추후 제공될 기능</span>
-<!--            <button class="btn btn-primary" onclick="searchPopKeyword()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>-->
+        <div class="stats-btn d-flex align-items-center ms-auto me-4">
+            <button class="btn open-modal-btn" systemNm="fds">🔍기간별 통계 조회</button>
         </div>
+    </div>
+
+    <div id="contentDiv">
+        <button id="prevBtn" class="arrow left">
+            <i class="fa-solid fa-arrow-left text-success"></i>
+        </button>
+
+        <div class="container-fluid p-4 chart-wrapper">
+            <!-- Charts Section -->
+            <div class="row chart-slide">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="totDetCntChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row chart-slide">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="totDetCntMonthlyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row chart-slide">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="totDetCntYearlyChart" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="nextBtn" class="arrow right">
+            <i class="fa-solid fa-arrow-right text-success"></i>
+        </button>
     </div>
 
     <div class="grid-section">
@@ -49,67 +81,10 @@
             </button>
         </div>
 
-        <div id="grid" class="container-fluid p-4 h-auto"></div>
+        <div id="fdsGrid" class="container-fluid p-4 h-auto"></div>
     </div>
 
-
-    <div id="contentDiv">
-        <div class="container-fluid p-4">
-            <!-- Charts Section -->
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="preDetCntAnnualChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="preDetCntMonthlyChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="preDetProfCntAnnualChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="preDetProfCntMonthlyChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="totalDetCntAnnualChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div id="totalDetCntMonthlyChart" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:replace="common/detailModal :: detailModal"></div>
 </div>
 
 <!-- Bootstrap JS -->
@@ -133,6 +108,8 @@
 
 </script>
 <script src="/js/toast-ui/tui-grid.js"></script>
+<script src="/js/common/detailModal.js"></script>
+<script src="/js/common/chart-slide.js"></script>
 <script src="/js/services/fds/fds.js"></script>
 </body>
 </html>

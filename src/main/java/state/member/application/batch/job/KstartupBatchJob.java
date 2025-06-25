@@ -1,12 +1,14 @@
 package state.member.application.batch.job;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KstartupBatchJob {
@@ -26,7 +28,7 @@ public class KstartupBatchJob {
         try {
             jobLauncher.run(kstupDailyCntJob, jobParameters);
         } catch (Exception e) {
-            e.getMessage();
+            log.error("K-Startup kstupDailyCntJob 배치 실행 중 예외 발생 : {}", e.getMessage());
         }
     }
 
@@ -36,6 +38,11 @@ public class KstartupBatchJob {
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
 
-        JobExecution e = jobLauncher.run(kstupDailyListJob, jobParameters);
+        try {
+            jobLauncher.run(kstupDailyListJob, jobParameters);
+        } catch(Exception e) {
+            log.error("K-Startup kstupDailyListJob 배치 실행 중 예외 발생 : {}", e.getMessage());
+        }
+
     }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
@@ -21,12 +20,12 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class KstupManager {
-    private final KstartupLginCntProcessor kstartupLginCntProcessor;
-    private final KstartupBizPbancRegInstCntProcessor kstartupBizPbancRegInstCntProcessor;
-    private final KstartupGetSearchStatusProcessor kstartupGetSearchStatusProcessor;
-    private final KstartupInstBizPbancRegCntProcessor kstartupInstBizPbancRegCntProcessor;
-    private final KstartupIntgPbancRegCntProcessor kstartupIntgPbancRegCntProcessor;
-    private final KstartupMnpwCntProcessor kstartupMnpwCntProcessor;
+    private final KstartupApiGetLginCntProcessor kstartupApiGetLginCntProcessor;
+    private final KstartupApiGetBizPbancRegInstCntProcessor kstartupApiGetBizPbancRegInstCntProcessor;
+    private final KstartupApiGetSearchStatusProcessor kstartupApiGetSearchStatusProcessor;
+    private final KstartupApiGetInstBizPbancRegCntProcessor kstartupApiGetInstBizPbancRegCntProcessor;
+    private final KstartupApiGetIntgPbancRegCntProcessor kstartupApiGetIntgPbancRegCntProcessor;
+    private final KstartupApiGetMnpwCntProcessor kstartupApiGetMnpwCntProcessor;
 
     private final KstartupSaveDailyCntProcessor kstartupSaveDailyCntProcessor;
     private final KstartupGetDailyCntListProcessor kstartupGetDailyCntListProcessor;
@@ -40,32 +39,32 @@ public class KstupManager {
      */
     // 로그인 수 조회
     public Mono<Map<String, Object>> lginCnt() {
-        return kstartupLginCntProcessor.execute();
+        return kstartupApiGetLginCntProcessor.execute();
     }
 
     // 통합공고 등록 건수 조회
     public Mono<Map<String, Object>> intgPbancRegCnt() {
-        return kstartupIntgPbancRegCntProcessor.execute();
+        return kstartupApiGetIntgPbancRegCntProcessor.execute();
     }
 
     // 사업공고 등록 기관(주관기관) 수 조회
     public Mono<Map<String, Object>> bizPbancRegInstCnt() {
-        return kstartupBizPbancRegInstCntProcessor.execute();
+        return kstartupApiGetBizPbancRegInstCntProcessor.execute();
     }
 
     // 기관유형별 사업공고 등록 건수 조회
     public Mono<Map<String, Object>> instBizPbancRegCnt() {
-        return kstartupInstBizPbancRegCntProcessor.execute();
+        return kstartupApiGetInstBizPbancRegCntProcessor.execute();
     }
 
     // 최근 7일 인기 검색어 목록
     public Mono<Map<String, Object>> getSearchStatus(String weekDaySe) {
-        return kstartupGetSearchStatusProcessor.execute(weekDaySe);
+        return kstartupApiGetSearchStatusProcessor.execute(weekDaySe);
     }
 
     // 회원 수 조회
     public Mono<Map<String, Object>> mnpwCnt() {
-        return kstartupMnpwCntProcessor.execute();
+        return kstartupApiGetMnpwCntProcessor.execute();
     }
 
     // (일일 배치) 단건 데이터 적재

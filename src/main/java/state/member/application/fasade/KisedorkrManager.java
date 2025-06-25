@@ -3,15 +3,11 @@ package state.member.application.fasade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
 import state.member.application.processor.kisedorkr.*;
-import state.member.application.processor.kstartup.KstartupBizPbancRegInstCntProcessor;
-import state.member.domain.entity.CertCountStatistics;
 import state.member.domain.entity.KisedorkrCountStatistics;
-import state.member.domain.repository.KisedorkrCountStatisticsRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -20,31 +16,14 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class KisedorkrManager {
-    private final KisedorkrDurationProcessor kisedorkrDurationProcessor;
-    private final KisedorkrVisitCntProcessor kisedorkrVisitCntProcessor;
+    private final KisedorkrApiGetVisitCntProcessor kisedorkrApiGetVisitCntProcessor;
     private final KisedorkrSaveVisitCntProcessor kisedorkrSaveVisitCntProcessor;
     private final KisedorkrGetVisitCntListProcessor kisedorkrGetVisitCntListProcessor;
     private final KisedorkrGetLatestVisitCntProcessor kisedorkrGetLatestVisitCntProcessor;
 
-    public Flux<Map<String, Object>> getAnnulData() {
-        return kisedorkrDurationProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getMonthlyData(String year) {
-        return kisedorkrDurationProcessor.monthlyExecute(year);
-    }
-
-    public Flux<Map<String, Object>> getWeeklyData(String year, String month) {
-        return kisedorkrDurationProcessor.weeklyExecute(year, month);
-    }
-
-    public Flux<Map<String, Object>> getGridData() {
-        return kisedorkrDurationProcessor.getGridData();
-    }
-
     // (기관 홈페이지 API) 로그인 수 조회
     public Mono<Map<String, Object>> visitCnt() {
-        return kisedorkrVisitCntProcessor.execute();
+        return kisedorkrApiGetVisitCntProcessor.execute();
     }
 
     // (일일 배치) 기관 홈페이지 방문자 수 저장

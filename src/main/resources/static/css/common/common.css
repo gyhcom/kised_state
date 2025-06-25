@@ -82,7 +82,80 @@ footer a:hover {
     transition: all 0.2s ease-in-out;
 }
 
-/* 기간별 데이터 정의될 때까지 -> disabled 처럼 보이기 위함 */
-.tui-datepicker-input.tui-has-focus, #startpicker-input, #endpicker-input, #datepicker-input {
-    background-color: #888888;
+/* 차트 슬라이드화 */
+.chart-wrapper {
+    position:relative;
+    width: 90%;
+    height: auto;
+    overflow: hidden;
 }
+
+.chart-slide, .chart-slide2 {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-slide.active, .chart-slide2.active {
+    display: block;
+    position: relative;
+}
+
+/* 화살표 버튼 스타일 */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 3px solid #198754;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s, transform 0.3s;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+}
+.arrow:hover {
+    background: #e0e0e0;
+}
+
+.arrow.left {
+    left: 40px;
+}
+
+.arrow.right {
+    right: 40px;
+}
+
+/* 모달 css */
+.open-modal-btn, .custom-modal-title, .btn-search {
+    background-color: #e3f2fd;
+    color: #004080;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.open-modal-btn, .btn-search {
+    border: 1px solid #004080
+}
+
+#select-statTypes {
+    height: 36px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    align-items: center;
+}
+
+/* 기간별 데이터 정의될 때까지 -> disabled 처럼 보이기 위함 */
+/*.tui-datepicker-input.tui-has-focus, #startpicker-input, #endpicker-input, #datepicker-input {*/
+/*    background-color: #888888;*/
+/*}*/

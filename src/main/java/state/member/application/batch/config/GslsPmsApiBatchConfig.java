@@ -14,7 +14,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
+import state.member.application.command.CommResponseCommand;
 import state.member.application.fasade.GslsEsbManager;
+import state.member.application.fasade.TabCommStatsManager;
+import state.member.application.util.ResponseUtil;
 
 import java.util.Map;
 
@@ -23,6 +26,7 @@ import java.util.Map;
 @Configuration
 public class GslsPmsApiBatchConfig {
     private final GslsEsbManager gslsEsbManager;
+    private final TabCommStatsManager commManager;
 
     // ===================== 국고보조금(PMS) 일일 단건 데이터 적재 시작 ====================
     @Bean
@@ -57,4 +61,37 @@ public class GslsPmsApiBatchConfig {
         });
     }
     // ===================== 국고보조금(PMS) 일일 단건 데이터 적재 적재 종료 ====================
+
+    // ===================== 국고보조금(PMS) 연, 월, 일 데이터 적재 적재 시작 ====================
+    @Bean
+    public Job gslsPmsAllStatsByDateJob(JobRepository jobRepository, Step gslsPmsAllStatsByDateStep) {
+        return new JobBuilder("gslsPmsAllStatsByDateJob", jobRepository)
+                .start(gslsPmsAllStatsByDateStep)
+                .build();
+    }
+
+    @Bean
+    public Step gslsPmsAllStatsByDateStep(JobRepository jobRepository, Tasklet gslsPmsAllStatsByDateTasklet, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("gslsPmsAllStatsByDateStep", jobRepository)
+                .tasklet(gslsPmsAllStatsByDateTasklet, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Tasklet gslsPmsAllStatsByDateTasklet() {
+        return ((contribution, chunkContext) -> {
+
+            CommResponseCommand comm = gslsEsbManager.getGslsPmsAllStatsCnt().block();
+
+            if( comm == null || comm.isEmpty() ) {
+                throw new ApiException(ErrorCode.NULL_POINT, "국고보조금(PMS) getGslsPmsAllStatsCnt IS ERROR");
+            }
+
+            // 문제 없다면 적재 프로세스 진행
+            commManager.saveAllStats(ResponseUtil.listToEntityNewForm(comm));
+
+            return RepeatStatus.FINISHED;
+        });
+    }
+    // ===================== 국고보조금(PMS) 연, 월, 일 데이터 적재 적재 종료 ====================
 }

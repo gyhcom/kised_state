@@ -21,8 +21,11 @@ public class FdsBatchJob {
     @Qualifier("fdsDetCntByTypeDailyJob")
     private final Job fdsDetCntByTypeDailyJob;
 
+    @Qualifier("fdsTotDetCntByDateJob")
+    private final Job fdsTotDetCntByDateJob;
+
     //@Scheduled(cron = "*/10 * * * * ?") // 10초 마다
-    public void runFdsTotCndDailyJob() {
+    public void runFdsTotCntDailyJob() {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("fdsTotDetCntDailyJobTime", System.currentTimeMillis())
                 .toJobParameters();
@@ -42,6 +45,19 @@ public class FdsBatchJob {
 
         try {
             jobLauncher.run(fdsDetCntByTypeDailyJob, jobParameters);
+        } catch (Exception e) {
+            log.error("사업비점검 runFdsDetCntByTypeDailyJob 배치 실행 중 예외 발생 : {}", e.getMessage());
+        }
+    }
+
+    //@Scheduled(cron = "*/10 * * * * ?") // 10초 마다
+    public void runFdsTotDetCntByDateJob() {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("runFdsTotDetCntByDateJobTime", System.currentTimeMillis())
+                .toJobParameters();
+
+        try {
+            jobLauncher.run(fdsTotDetCntByDateJob, jobParameters);
         } catch (Exception e) {
             log.error("사업비점검 runFdsDetCntByTypeDailyJob 배치 실행 중 예외 발생 : {}", e.getMessage());
         }
