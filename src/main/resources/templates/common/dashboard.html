@@ -79,6 +79,11 @@
     function loadPage(url) {
         document.getElementById("dynamicFrame").src = url;
     }
+
+    function initDummyData(url) {
+        if(!confirm("더미 데이터를 적재하시겠습니까?")) return;
+        document.getElementById("dynamicFrame").src = url;
+    }
 </script>
 <!-- Bootstrap JS -->
 <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>

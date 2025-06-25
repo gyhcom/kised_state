@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import state.common.config.ExternalUrlsConfig;
+import state.common.urls.ExternalUrlsConfig;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

@@ -3,10 +3,10 @@ package state.member.application.fasade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
+import state.member.application.command.CommResponseCommand;
 import state.member.application.processor.fds.*;
 import state.member.domain.entity.FdsCntStats;
 import state.member.domain.entity.FdsDetCntByTypeStats;
@@ -19,56 +19,21 @@ import java.util.Map;
 @Transactional
 @Service
 public class FdsManager {
-    private final FdsDetInfoProcessor fdsDetInfoProcessor;
-    private final FdsDetCntProcessor fdsDetCntProcessor;
-    private final FdsDetProfCntProcessor fdsDetProfCntProcessor;
-    private final FdsTotDetCntProcessor fdsTotDetCntProcessor;
-
-    // API 연동 이후 사용
     private final FdsGetDetCntByTypeListProcessor fdsGetDetCntListProcessor;
     private final FdsGetTotDetCntListProcessor fdsGetTotDetCntListProcessor;
     private final FdsSaveTotDetCntProcessor fdsSaveTotDetCntProcessor;
     private final FdsSaveDetCntByTypeProcessor fdsSaveDetCntByTypeProcessor;
-    private final FdsGetTotCntProcessor fdsGetTotCntProcessor;
-    private final FdsGetDetCntByTypeProcessor fdsGetDetCntByTypeProcessor;
-
-    public Flux<Map<String, Object>> getDetInfo(String year, String month) {
-        return fdsDetInfoProcessor.execute(year, month);
-    }
-
-    public Flux<Map<String, Object>> getDetAnnCnt() {
-        return fdsDetCntProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getDetMonCnt(String year) {
-        return fdsDetCntProcessor.monthlyExecute(year);
-    }
-
-    public Flux<Map<String, Object>> getDetProfAnnCnt() {
-        return fdsDetProfCntProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getDetProfMonCnt(String year) {
-        return fdsDetProfCntProcessor.monthlyExecute(year);
-    }
-
-    public Flux<Map<String, Object>> getTotDetAnnCnt() {
-        return fdsTotDetCntProcessor.annualExecute();
-    }
-
-    public Flux<Map<String, Object>> getTotDetMonCnt(String year) {
-        return fdsTotDetCntProcessor.monthlyExecute(year);
-    }
-
-    // API 연동 이후
+    private final FdsApiGetTotCntProcessor fdsApiGetTotCntProcessor;
+    private final FdsApiGetDetCntByTypeProcessor fdsApiGetDetCntByTypeProcessor;
+    private final FdsApiGetTotDetCntProcessor fdsApiGetTotDetCntProcessor;
 
     // 외부 서버 API 호출 (총 이상거래 탐지 건수 API 호출)
     public Mono<Map<String, Object>> getTotDetCnt() {
-        return fdsGetTotCntProcessor.execute();
+        return fdsApiGetTotCntProcessor.execute();
     }
 
     public Mono<Map<String, Object>> getDetCntByType() {
-        return fdsGetDetCntByTypeProcessor.execute();
+        return fdsApiGetDetCntByTypeProcessor.execute();
     }
 
     public List<FdsCntStats> getTotCntList() {
@@ -77,6 +42,10 @@ public class FdsManager {
 
     public List<FdsDetCntByTypeStats> getDetCntByTypeList() {
         return fdsGetDetCntListProcessor.execute();
+    }
+
+    public Mono<CommResponseCommand> getTotDetCntByDate() {
+        return fdsApiGetTotDetCntProcessor.execute();
     }
 
     public void saveTotCnt(FdsCntStats entity) {

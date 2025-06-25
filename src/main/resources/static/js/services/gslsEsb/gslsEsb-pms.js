@@ -1,28 +1,13 @@
-let infoPubNotiAnnChart;
-let infoPubNotiMonChart;
-let rveExptrAnnChart;
-let rveExptrMonChart;
-let fnlsttAnnChart;
-let fnlsttMonChart;
-let excutAnnChart;
-let excutMonChart;
-let dtlBsnsInfoAnnChart;
-let dtlBsnsInfoMonChart;
-
-let infoPubNotiAnnData;
-let infoPubNotiMonData;
-let rveExptrAnnData;
-let rveExptrMonData;
-let fnlsttAnnData;
-let fnlsttMonData;
-let excutAnnData;
-let excutMonData;
-let dtlBsnsInfoAnnData;
-let dtlBsnsInfoMonData;
-
+let ifpbntDailyData;    /* 정보공시내역 최근 30일 통계 데이터 */
+let anlrveDailyData;    /* 세입세출내역 최근 30일 통계 데이터 */
+let fnlttDailyData;     /* 재무제표결산서 최근 30일 통계 데이터 */
+let gslsPmsExcutMonthlyData;    /* 수급자집행정보 최근 6개월 월별 데이터 */
+let gslsPmsDdtlbzYearlyData;    /* 상세내역사업정보 최근 3년 연도별 데이터 */
+let picker;
 document.addEventListener("DOMContentLoaded", function () {
     datePickerInit();
-    chartInit();
+    init();
+    createModalGrid(); /* detailModal.js */
 
     // 로고/타이틀
     gsap.from("#systemNm", {
@@ -42,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ease: "power2.out"
     });
 
-    // 날짜 선택 영역 & 버튼
-    gsap.from(".date-picker", {
+    // 기간별 통계 조회 버튼
+    gsap.from(".stats-btn", {
         duration: 1,
         y: -50,
         opacity: 0,
@@ -52,70 +37,31 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector('.date-picker').style.transform = 'none';
         }
     });
-
-    // 차트 카드 애니메이션
-    gsap.from("#contentDiv", {
-        duration: 1,
-        scale: 0.9,
-        opacity: 0,
-        delay: 1.5,
-        ease: "power2.out"
-    });
 });
 
-function chartInit() {
-    //최초 조회 시 현재 년도 가져오기
-    let year = new Date().getFullYear();
-
+function init() {
     $.ajax({
-        url: '/gslsEsb/getAllGslsEsbCnt?year='+year,
+        url: '/gslsEsb/getAllGslsPmsStat',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            /**
-             * [0] : 연도별 정보공시내역 건수
-             * [1] : 월별 정보공시내역 건수
-             * [2] : 연도별 세입세출내역 건수
-             * [3] : 월별 세입세출내역 건수
-             * [4] : 연도별 재무제표결산 내역 건수
-             * [5] : 월별 재무제표결산 내역 건수
-             * [6] : 연도별 수급자집행정보 건수
-             * [7] : 월별 수급자집행정보 건수
-             * [8] : 연도별 상세내역사업정보 건수
-             * [9] : 월별 상세내역사업정보 건수
-             */
-            infoPubNotiAnnData = data[0];
-            infoPubNotiMonData = data[1];
-            rveExptrAnnData = data[2];
-            rveExptrMonData = data[3];
-            fnlsttAnnData = data[4];
-            fnlsttMonData = data[5];
-            excutAnnData = data[6];
-            excutMonData = data[7];
-            dtlBsnsInfoAnnData = data[8];
-            dtlBsnsInfoMonData = data[9];
-
-            setApiSuccessIcon();
+            console.dir(data);
 
             //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!validateData()) {
+            if(!data) {
                 setApiFailureIcon();
             }
 
-            createInfoPubNotiAnnChart();
-            createInfoPubNotiMonChart();
+            ifpbntDailyData = data.ifpbntCntDaily;
+            anlrveDailyData = data.anlrveCntDaily;
+            fnlttDailyData = data.fnlttCntDaily;
+            gslsPmsExcutMonthlyData = data.excutCntMonthly;
+            gslsPmsDdtlbzYearlyData = data.ddtlbzCntYearly;
 
-            createRveExptrAnnChart();
-            createRveExptrMonChart();
-
-            createFnlsttAnnChart();
-            createFnlsttMonChart();
-
-            createExcutAnnChart();
-            createExcutMonChart();
-
-            createDtlBsnsInfoAnnChart();
-            createDtlBsnsInfoMonChart();
+            doAnimation();
+            createGslsAllStatChart();
+            createExcutMonthlyChart();
+            createDdtlbzYearlyChart();
         },
         error: function(error) {
             console.error('Error:', error);
@@ -125,431 +71,163 @@ function chartInit() {
 }
 
 // 연도별 정보공시내역 건수
-function createInfoPubNotiAnnChart() {
-    const el = document.getElementById('infoPubNotiAnnChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
+function createGslsAllStatChart() {
+    {
+        const el = document.getElementById('gslsAllStatChart');
+        const data = {
+            categories: [],
+            series: [
+                {
+                    name: '정보공시내역 건수',
+                    data: [],
+                },
+                {
+                    name: '세입세출내역 건수',
+                    data: [],
+                },
+                {
+                    name: '재무제표결산 내역 건수',
+                    data: [],
+                }
+            ],
+        };
 
-    let annual_data = [];
-
-    if( infoPubNotiAnnData != null && infoPubNotiAnnData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < infoPubNotiAnnData.length ; i++ ) {
-            data.categories.push(infoPubNotiAnnData[i].year);
-            annual_data.push(infoPubNotiAnnData[i].cnt);
+        // 정보공시내역 세팅
+        if(ifpbntDailyData != null && ifpbntDailyData.length > 0) {
+            for( var i = 0 ; i < ifpbntDailyData.length ; i++) {
+                // TODO baseDt는 정보공시내역, 세입세출내역, 재무제표결산서 데이터 리스트의 length가 모두 동일하다고 가정하고 세팅. 더 좋은 방법 모색하기
+                data.categories.push(ifpbntDailyData[i].baseDt);
+                data.series[0].data.push(Number(ifpbntDailyData[i].cnt))
+            }
         }
 
-        data.series.push({
-            name : 'Count',
-            data : annual_data
-        })
+        // 세입세출내역 세팅
+        if(anlrveDailyData != null && anlrveDailyData.length > 0) {
+            for( var i = 0 ; i < anlrveDailyData.length ; i++) {
+                data.series[0].data.push(Number(anlrveDailyData[i].cnt))
+            }
+        }
+
+        // 재무제표결산서 세팅
+        if(fnlttDailyData != null && fnlttDailyData.length > 0) {
+            for( var i = 0 ; i < fnlttDailyData.length ; i++) {
+                data.series[0].data.push(Number(fnlttDailyData[i].cnt))
+            }
+        }
+
+        const theme = getTheme();
+
+        const options = {
+            chart: { title: '국고보조금(PMS) 통계 차트', width: 'auto', height: 350 },
+            xAxis: {
+                title: 'day',
+            },
+            yAxis: {
+                title: 'Count',
+            },
+            tooltip: {
+                formatter: (value) => `${value}건`,
+            },
+            legend: {
+                align: 'bottom',
+            },
+            series: {
+                dataLabels: {
+                    visible: true,
+                    offsetY: -10
+                },
+            },
+            theme,
+        };
+
+        toastui.Chart.lineChart({ el, data, options });
     }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: '연도별 정보공시내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'year'}},
-        yAxis: {title: 'count'},
-        series: { showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true },
-        theme
-    };
-
-    infoPubNotiAnnChart = toastui.Chart.columnChart({el, data, options});
-
-    infoPubNotiAnnChart.on('selectSeries', function(e) {
-        let year = e.column[0].data.category;
-        clickInfoPubNotiAnnChart(year);
-    })
 }
 
 // 월별 정보공시내역 건수
-function createInfoPubNotiMonChart() {
-    const el = document.getElementById('infoPubNotiMonChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
+function createExcutMonthlyChart() {
+    {
+        const el = document.getElementById('gslsExcutChart');
+        let data = {
+            categories: [],
+            series: [
+                {
+                    name: '수급자집행정보 건수',
+                    data: []
+                }
+            ],
+        };
 
-    let monthly_data = [];
-
-    if( infoPubNotiMonData != null && infoPubNotiMonData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < infoPubNotiMonData.length ; i++ ) {
-            data.categories.push(infoPubNotiMonData[i].month);
-            monthly_data.push(infoPubNotiMonData[i].cnt);
+        for( var i = 0 ; i < gslsPmsExcutMonthlyData.length ; i++) {
+            data.categories.push(gslsPmsExcutMonthlyData[i].baseDt.substring(0, 7)); /* YYYY-MM까지 표현 */
+            data.series[0].data.push(Number(gslsPmsExcutMonthlyData[i].cnt));
         }
 
-        data.series.push({
-            name : 'Count',
-            data : monthly_data
-        })
+        const theme = getTheme();
+
+        const options = {
+            chart: { title: '최근 6개월 수급자집행정보 통계', width: 'auto', height: 270 },
+            legend: {visible: false},
+            xAxis: {pointOnColumn:false, title: {text: 'month'}},
+            yAxis: {title: 'count'},
+            tooltip: {
+                formatter: (value) => `${value}건`,
+            },
+            series: {
+                dataLabels: {
+                    visible: true,
+                },
+                selectable: true
+            },
+            theme,
+        };
+
+        toastui.Chart.columnChart({ el, data, options });
     }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: infoPubNotiMonData[0].year+'년 월별 정보공시내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'month'}},
-        yAxis: {title: 'count'},
-        series: {
-            showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true
-        },
-        theme
-    };
-    //차트 색상 변경
-    options.theme.series.colors = ['#49c9ed'];
-
-    infoPubNotiMonChart = toastui.Chart.columnChart({ el, data, options });
 }
 
 // 연도별 세입세출내역 건수
-function createRveExptrAnnChart() {
-    const el = document.getElementById('rveExptrAnnChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
+function createDdtlbzYearlyChart() {
+    {
+        const el = document.getElementById('gslsDdtlbzChart');
+        let data = {
+            categories: [],
+            series: [
+                {
+                    name: '상세내역사업정보 건수',
+                    data: []
+                }
+            ],
+        };
 
-    let annual_data = [];
-
-    if( rveExptrAnnData != null && rveExptrAnnData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < rveExptrAnnData.length ; i++ ) {
-            data.categories.push(rveExptrAnnData[i].year);
-            annual_data.push(rveExptrAnnData[i].cnt);
+        for( var i = 0 ; i < gslsPmsDdtlbzYearlyData.length ; i++) {
+            data.categories.push(gslsPmsDdtlbzYearlyData[i].baseDt.substring(0, 4)); /* YYYY 까지 표현 */
+            data.series[0].data.push(Number(gslsPmsDdtlbzYearlyData[i].cnt));
         }
 
-        data.series.push({
-            name : 'Count',
-            data : annual_data
-        })
+        const theme = getTheme();
+
+        const options = {
+            chart: { title: '최근 3년 상세정보내역사업 통계', width: 'auto', height: 270 },
+            legend: {visible: false},
+            xAxis: {pointOnColumn:false, title: {text: 'year'}},
+            yAxis: {title: 'count'},
+            tooltip: {
+                formatter: (value) => `${value}건`,
+            },
+            series: {
+                dataLabels: {
+                    visible: true,
+                },
+                selectable: true
+            },
+            theme,
+        };
+
+        toastui.Chart.columnChart({ el, data, options });
     }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: '연도별 세입세출내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'year'}},
-        yAxis: {title: 'count'},
-        series: { showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true },
-        theme
-    };
-
-    //차트 색상 변경
-    options.theme.series.colors = ['#2bb385'];
-
-    rveExptrAnnChart = toastui.Chart.columnChart({el, data, options});
-
-    rveExptrAnnChart.on('selectSeries', function(e) {
-        let year = e.column[0].data.category;
-        clickRveExptrAnnChart(year)
-    })
 }
 
-// 월별 세입세출내역 건수
-function createRveExptrMonChart() {
-    const el = document.getElementById('rveExptrMonChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let monthly_data = [];
-
-    if( rveExptrMonData != null && rveExptrMonData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < rveExptrMonData.length ; i++ ) {
-            data.categories.push(rveExptrMonData[i].month);
-            monthly_data.push(rveExptrMonData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : monthly_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: rveExptrMonData[0].year+'년 월별 세입세출내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'month'}},
-        yAxis: {title: 'count'},
-        series: {
-            showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true
-        },
-        theme
-    };
-    //차트 색상 변경
-    options.theme.series.colors = ['#50e6b3'];
-
-    rveExptrMonChart = toastui.Chart.columnChart({ el, data, options });
-}
-
-// 연도별 재무제표결산 내역 건수
-function createFnlsttAnnChart() {
-    const el = document.getElementById('fnlsttAnnChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let annual_data = [];
-
-    if( fnlsttAnnData != null && fnlsttAnnData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < fnlsttAnnData.length ; i++ ) {
-            data.categories.push(fnlsttAnnData[i].year);
-            annual_data.push(fnlsttAnnData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : annual_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: '연도별 재무제표결산 내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'year'}},
-        yAxis: {title: 'count'},
-        series: { showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true },
-        theme
-    };
-
-    //차트 색상 변경
-    options.theme.series.colors = ['#d68e29'];
-
-    fnlsttAnnChart = toastui.Chart.columnChart({el, data, options});
-
-    fnlsttAnnChart.on('selectSeries', function(e) {
-        let year = e.column[0].data.category;
-        clickFnlsttAnnChart(year);
-    })
-}
-
-//월별 재무제표결산 내역 건수
-function createFnlsttMonChart() {
-    const el = document.getElementById('fnlsttMonChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let monthly_data = [];
-
-    if( fnlsttMonData != null && fnlsttMonData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < fnlsttMonData.length ; i++ ) {
-            data.categories.push(fnlsttMonData[i].month);
-            monthly_data.push(fnlsttMonData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : monthly_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: fnlsttMonData[0].year+'년 월별 재무제표결산 내역 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'month'}},
-        yAxis: {title: 'count'},
-        series: {
-            showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true
-        },
-        theme
-    };
-    //차트 색상 변경
-    options.theme.series.colors = ['#ebb66c'];
-
-    fnlsttMonChart = toastui.Chart.columnChart({ el, data, options });
-}
-
-// 연도별 수급자집행정보 건수
-function createExcutAnnChart() {
-    const el = document.getElementById('excutAnnChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let annual_data = [];
-
-    if( excutAnnData != null && excutAnnData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < excutAnnData.length ; i++ ) {
-            data.categories.push(excutAnnData[i].year);
-            annual_data.push(excutAnnData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : annual_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: '연도별 수급자 집행정보 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'year'}},
-        yAxis: {title: 'count'},
-        series: { showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true },
-        theme
-    };
-
-    //차트 색상 변경
-    options.theme.series.colors = ['#ed5a55'];
-
-    excutAnnChart = toastui.Chart.columnChart({el, data, options});
-
-    excutAnnChart.on('selectSeries', function(e) {
-        let year = e.column[0].data.category;
-        clickExcutAnnChart(year);
-    })
-}
-
-//월별 수급자집행정보 건수
-function createExcutMonChart() {
-    const el = document.getElementById('excutMonChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let monthly_data = [];
-
-    if( excutMonData != null && excutMonData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < excutMonData.length ; i++ ) {
-            data.categories.push(excutMonData[i].month);
-            monthly_data.push(excutMonData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : monthly_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: excutMonData[0].year+'년 월별 수급자 집행정보 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'month'}},
-        yAxis: {title: 'count'},
-        series: {
-            showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true
-        },
-        theme
-    };
-    //차트 색상 변경
-    options.theme.series.colors = ['#f29794'];
-
-    excutMonChart = toastui.Chart.columnChart({ el, data, options });
-}
-
-// 연도별 상세내역 사업정보 건수
-function createDtlBsnsInfoAnnChart() {
-    const el = document.getElementById('dtlBsnsInfoAnnChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let annual_data = [];
-
-    if( dtlBsnsInfoAnnData != null && dtlBsnsInfoAnnData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < dtlBsnsInfoAnnData.length ; i++ ) {
-            data.categories.push(dtlBsnsInfoAnnData[i].year);
-            annual_data.push(dtlBsnsInfoAnnData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : annual_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: '연도별 상세내역사업정보 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'year'}},
-        yAxis: {title: 'count'},
-        series: { showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true },
-        theme
-    };
-
-    //차트 색상 변경
-    options.theme.series.colors = ['#de3bed'];
-
-    dtlBsnsInfoAnnChart = toastui.Chart.columnChart({el, data, options});
-
-    dtlBsnsInfoAnnChart.on('selectSeries', function(e) {
-        let year = e.column[0].data.category;
-        clickDtlBsnsInfoAnnChart(year);
-    })
-}
-
-//월별 상세내역 사업정보 건수
-function createDtlBsnsInfoMonChart() {
-    const el = document.getElementById('dtlBsnsInfoMonChart');
-    let data = {
-        categories: [],
-        series: [],
-    };
-
-    let monthly_data = [];
-
-    if( dtlBsnsInfoMonData != null && dtlBsnsInfoMonData.length > 0 ) {
-        //categories 세팅
-        for( var i = 0 ; i < dtlBsnsInfoMonData.length ; i++ ) {
-            data.categories.push(dtlBsnsInfoMonData[i].month);
-            monthly_data.push(dtlBsnsInfoMonData[i].cnt);
-        }
-
-        data.series.push({
-            name : 'Count',
-            data : monthly_data
-        })
-    }
-
-    const theme = getTheme();
-
-    const options = {
-        chart: {title: dtlBsnsInfoMonData[0].year+'년 월별 상세내역사업정보 건수', width: 'auto', height: 350},
-        legend: {visible: false},
-        xAxis: {pointOnColumn: false, title: {text: 'month'}},
-        yAxis: {title: 'count'},
-        series: {
-            showDot: true, dataLabels: { visible: true, offsetY: -5 }, selectable: true
-        },
-        theme
-    };
-    //차트 색상 변경
-    options.theme.series.colors = ['#e890f0'];
-
-    dtlBsnsInfoMonChart = toastui.Chart.columnChart({ el, data, options });
-}
 function getTheme() {
     return {
         series: {
@@ -564,150 +242,82 @@ function getTheme() {
     };
 }
 
-function validateData() {
-    if(!infoPubNotiAnnData || infoPubNotiAnnData.length <= 0) return false;
-    if(!infoPubNotiMonData || infoPubNotiMonData.length <= 0) return false;
-
-    if(!rveExptrAnnData || rveExptrAnnData.length <= 0) return false;
-    if(!rveExptrMonData || rveExptrMonData.length <= 0) return false;
-
-    if(!fnlsttAnnData || fnlsttAnnData.length <= 0) return false;
-    if(!fnlsttMonData || fnlsttMonData.length <= 0) return false;
-
-    if(!excutAnnData || excutAnnData.length <= 0) return false;
-    if(!excutMonData || excutMonData.length <= 0) return false;
-
-    if(!dtlBsnsInfoAnnData || dtlBsnsInfoAnnData.length <= 0) return false;
-    if(!dtlBsnsInfoMonData || dtlBsnsInfoMonData.length <= 0) return false;
-
-    return true;
-}
-
-function clickInfoPubNotiAnnChart(year) {
-    $.ajax({
-        url: '/gslsEsb/getInfoPubNotiMonCnt?year='+year,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            infoPubNotiMonData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            infoPubNotiMonChart.destroy();
-            createInfoPubNotiMonChart();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function clickRveExptrAnnChart(year) {
-    $.ajax({
-        url: '/gslsEsb/getRveExptrMonCnt?year='+year,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            rveExptrMonData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            rveExptrMonChart.destroy();
-            createRveExptrMonChart();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function clickFnlsttAnnChart(year) {
-    $.ajax({
-        url: '/gslsEsb/getFnlsttMonCnt?year='+year,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            fnlsttMonData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            fnlsttMonChart.destroy();
-            createFnlsttMonChart();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function clickExcutAnnChart(year) {
-    $.ajax({
-        url: '/gslsEsb/getExcutMonCnt?year='+year,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            excutMonData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            excutMonChart.destroy();
-            createExcutMonChart();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
-function clickDtlBsnsInfoAnnChart(year) {
-    $.ajax({
-        url: '/gslsEsb/getDtlBsnsInfoMonCnt?year='+year,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            dtlBsnsInfoMonData = data;
-
-            setApiSuccessIcon();
-
-            //데이터가 존재하지 않을 시 API 호출 상태 ICON 업데이트
-            if(!data || data.length <= 0) {
-                setApiFailureIcon();
-            }
-
-            dtlBsnsInfoMonChart.destroy();
-            createDtlBsnsInfoMonChart();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            setApiFailureIcon();
-        }
-    });
-}
-
 function datePickerInit() {
-    rangeDatePickerInit();
+    picker = rangeDatePickerInit();
+}
+
+function doAnimation() {
+    // 차트 카드 애니메이션
+    gsap.from(".card-group", {
+        duration: 1,
+        y: 50,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 1,
+        ease: "back.out(1.4)"
+    });
+
+    // 차트 카드 애니메이션
+    gsap.from("#contentDiv", {
+        duration: 1,
+        scale: 0.9,
+        opacity: 0,
+        delay: 1.5,
+        ease: "power2.out"
+    });
+
+    // 최근 30일 정보공시내역 건수 sum
+    let ifpbntSum = 0;
+    for( var i = 0 ; i < ifpbntDailyData.length ; i++ ) {
+        ifpbntSum += Number(ifpbntDailyData[i].cnt);
+    }
+
+    /* 최근 30일 정보공시내역 건수 */
+    gsap.to("#ifpbntCnt", {
+        innerText: ifpbntSum,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function() {
+            document.querySelector("#ifpbntCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    })
+
+    // 최근 30일 세입세출내역 건수 sum
+    let anlrveSum = 0;
+    for( var i = 0 ; i < fnlttDailyData.length ; i++ ) {
+        anlrveSum += Number(anlrveDailyData[i].cnt);
+    }
+
+    /* 최근 30일 세입세출내역 건수 */
+    gsap.to("#anlrveCnt", {
+        innerText: anlrveSum,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function() {
+            document.querySelector("#anlrveCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    })
+
+    // 최근 30일 재무제표결산 내역 건수 sum
+    let fnlttSum = 0;
+    for( var i = 0 ; i < fnlttDailyData.length ; i++ ) {
+        fnlttSum += Number(fnlttDailyData[i].cnt);
+    }
+
+    /* 최근 30일 재무제표결산 내역 건수 */
+    gsap.to("#fnlttCnt", {
+        innerText: fnlttSum,
+        duration: 3,
+        snap: "innerText",
+        onUpdate: function() {
+            document.querySelector("#fnlttCnt").innerText =
+                Math.floor(this.targets()[0].innerText).toLocaleString();
+        }
+    })
+
+    $("#ifpbntCntYmd").text("(" + ifpbntDailyData[0].baseDt + " ~ " + ifpbntDailyData[ifpbntDailyData.length-1].baseDt + " 합산 기준)");
+    $("#anlrveCntYmd").text("(" + anlrveDailyData[0].baseDt + " ~ " + anlrveDailyData[anlrveDailyData.length-1].baseDt + " 합산 기준)");
+    $("#fnlttCntYmd").text("(" + fnlttDailyData[0].baseDt + " ~ " + fnlttDailyData[fnlttDailyData.length-1].baseDt + " 합산 기준)");
 }

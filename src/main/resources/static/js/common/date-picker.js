@@ -2,7 +2,7 @@ function rangeDatePickerInit() {
     let today = new Date();
     let picker = tui.DatePicker.createRangePicker({
         startpicker: {
-            date: new Date(today.getFullYear()-1, 0, 1),
+            date: new Date(today.getFullYear(), 0, 1),
             input: '#startpicker-input',
             container: '#startpicker-container'
         },
@@ -20,10 +20,6 @@ function rangeDatePickerInit() {
 
     picker.on('change:end', () => {
     })
-
-    // 기간별 데이터 정의 될 때까지 비활성화
-    picker._endpicker.disable();
-    picker._startpicker.disable();
 
     // 다른 js에서 import 없이 date-picker 값을 사용하기 위함
     return picker;

@@ -1,6 +1,7 @@
 package state.member.presentation.apis;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,31 +10,22 @@ import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import state.member.application.fasade.KstupManager;
+import state.member.application.fasade.TabCommStatsManager;
 import state.member.domain.entity.KisedorkrCountStatistics;
 import state.member.domain.entity.KstupCountStatistics;
 import state.member.domain.entity.KstupInstPbancRegStatistics;
+import state.member.domain.entity.TabCommStats;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/kstup")
 @Controller
 public class KstartupApi {
     private final KstupManager kstupManager;
-
-    public KstartupApi(KstupManager kstupManager) {
-        this.kstupManager = kstupManager;
-    }
-
-    /**
-     * 인기 검색어 화면 이동
-     * @return
-     */
-    @GetMapping("/popKeyword")
-    public String kstupPopKeywordView() {
-        return "services/kstartup/kstup-keyword";
-    }
+    private final TabCommStatsManager commManager;
 
     /**
      * 회원 & 로그인수 화면
@@ -45,37 +37,12 @@ public class KstartupApi {
     }
 
     /**
-     * 공고등록 기관수 화면
+     * 공고등록 통계 화면
      * @return
      */
     @GetMapping("/institutionStats")
     public String institutionStatsView() {
         return "services/kstartup/kstup-institutionStats";
-    }
-
-    /**
-     * 기관별 공고등록 건수
-     * @return
-     */
-    @GetMapping("/institutionRegCnt")
-    public String institutionRegCntView() {
-        return "services/kstartup/kstup-institutionRegCnt";
-    }
-
-    /**
-     * K-Startup 통합공고 등록 건수 조회
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/intgPbancRegCnt")
-    public Mono<List<Map<String, Object>>> intgPbancRegCnt() {
-        List<Mono<Map<String, Object>>> list = new ArrayList<>();
-        list.add(kstupManager.intgPbancRegCnt());
-        list.add(kstupManager.bizPbancRegInstCnt());
-
-        return Flux.fromIterable(list)
-                .concatMap(mono ->  mono)
-                .collectList();
     }
 
     /**
@@ -123,17 +90,6 @@ public class KstartupApi {
 
                     return resultMap;
                 });
-    }
-
-    /**
-     * K-Startup 최근 7일 인기 검색어 목록
-     * @param weekDaySe -> day : 1일, week : 7일 조회
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/getSearchStatus")
-    public Mono<Map<String, Object>> getSearchStatus(@RequestParam String weekDaySe) {
-        return kstupManager.getSearchStatus(weekDaySe);
     }
 
     /**

@@ -1,0 +1,49 @@
+<div th:fragment="detailModal">
+    <div class="modal fade" id="myModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header custom-modal-title">
+                    <h5 class="modal-title">📈 기간별 통계</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center ms-auto me-4">
+                        <div class="date-picker d-flex align-items-center ms-auto me-4">
+                            <!-- 통계 구분 Select box -->
+                            <select id="select-statTypes" class="form-select form-select-sm" style="width: 220px !important;">
+                                <option value="" disabled selected>
+                                    통계 구분을 선택해주세요.
+                                </option>
+                            </select>
+                            <!-- 통계 구분 Select box -->
+
+                            <!-- date-picker -->
+                            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                                <input id="startpicker-input" type="text" aria-label="Date">
+                                <span class="tui-ico-date"></span>
+                                <div id="startpicker-container" style="margin-left: -1px;"></div>
+                            </div>
+                            <span> ~ </span>
+                            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                                <input id="endpicker-input" type="text" aria-label="Date">
+                                <span class="tui-ico-date"></span>
+                                <div id="endpicker-container" style="margin-left: -1px;"></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="getDetailStatsList()" style="background-color: #4d4d4d; border-color: #4d4d4d;">🔍조회</button>
+                        </div>
+                        <!-- date-picker -->
+                    </div>
+
+                    <!-- grid -->
+                    <div class="grid-section d-flex align-items-center ms-auto ps-4 pt-4">
+                        <div id="grid" class="container-fluid p-4 h-auto"></div>
+                    </div>
+                    <!-- grid -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

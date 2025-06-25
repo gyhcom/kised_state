@@ -111,7 +111,7 @@ public class StateSecurityConfig {
         // 사용자 생성 (비밀번호를 암호화하여 저장)
         return new InMemoryUserDetailsManager(
                 org.springframework.security.core.userdetails.User
-                        .withUsername("test")
+                        .withUsername("admin")
                         .password(encoder.encode("1234")) // 암호화된 비밀번호
                         .roles("ADMIN")
                         .build()

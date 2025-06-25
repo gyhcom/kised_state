@@ -14,7 +14,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
+import state.member.application.command.CommResponseCommand;
 import state.member.application.fasade.StartbizManager;
+import state.member.application.fasade.TabCommStatsManager;
+import state.member.application.util.ResponseUtil;
 
 import java.util.Map;
 
@@ -23,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StartbizApiBatchConfig {
     private final StartbizManager startbizManager;
+    private final TabCommStatsManager commManager;
 
     // ==================== 법인설립시스템 일일 단건 데이터 적재 시작 ============================
     @Bean
@@ -53,4 +57,34 @@ public class StartbizApiBatchConfig {
         });
     }
     // ==================== 법인설립시스템 일일 단건 데이터 적재 종료 ============================
+
+    // ==================== 법인설립시스템 연, 월, 일 데이터 적재 시작 ============================
+    @Bean
+    public Job startbizStatsByDateJob(JobRepository jobRepository, Step startbizStatsByDateStep) {
+        return new JobBuilder("startbizStatsByDateJob", jobRepository)
+                .start(startbizStatsByDateStep)     //로그인 수
+                .build();
+    }
+    @Bean
+    public Step startbizStatsByDateStep(JobRepository jobRepository, Tasklet startbizStatsByDateTasklet, PlatformTransactionManager platformTransactionManager) {
+        return new StepBuilder("startbizStatsByDateStep", jobRepository)
+                .tasklet(startbizStatsByDateTasklet, platformTransactionManager)
+                .build();
+    }
+    @Bean
+    public Tasklet startbizStatsByDateTasklet (){
+        return ((contribution, chunkContext) -> {
+            CommResponseCommand comm = startbizManager.getStartbizStatsCnt().block();
+
+            if( comm == null || comm.isEmpty() ) {
+                throw new ApiException(ErrorCode.NULL_POINT, "법인설립시스템 getStartbizStatsCnt IS ERROR");
+            }
+
+            // 문제 없다면 저장 로직 실행
+            commManager.saveAllStats(ResponseUtil.listToEntityNewForm(comm));
+
+            return RepeatStatus.FINISHED;
+        });
+    }
+    // ==================== 법인설립시스템 연, 월, 일 데이터 적재 종료 ============================
 }

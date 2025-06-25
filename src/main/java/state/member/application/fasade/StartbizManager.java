@@ -7,10 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 import state.admin.memberManage.application.common.exception.ApiException;
 import state.common.exception.ErrorCode;
-import state.member.application.processor.startbiz.StartbizBizStatsInfoApiProcessor;
+import state.member.application.command.CommResponseCommand;
+import state.member.application.processor.startbiz.StartbizApiGetStatByDateProcessor;
+import state.member.application.processor.startbiz.StartbizApiGetBizStatsInfoProcessor;
 import state.member.application.processor.startbiz.StartbizGetDailyCntListProcessor;
 import state.member.application.processor.startbiz.StartbizSaveDailyCntProcessor;
-import state.member.domain.entity.KisedorkrCountStatistics;
 import state.member.domain.entity.StartbizCountStatistics;
 
 import java.util.List;
@@ -21,16 +22,21 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class StartbizManager {
-    private final StartbizBizStatsInfoApiProcessor startbizBizStatsInfoApiProcessor;
+    private final StartbizApiGetBizStatsInfoProcessor startbizApiGetBizStatsInfoProcessor;
     private final StartbizGetDailyCntListProcessor startbizGetDailyCntListProcessor;
     private final StartbizSaveDailyCntProcessor startbizSaveDailyCntProcessor;
+    private final StartbizApiGetStatByDateProcessor startbizApiGetStatByDateProcessor;
 
     public Mono<Map<String, Object>> bizStatsInfoApi() {
-        return startbizBizStatsInfoApiProcessor.execute();
+        return startbizApiGetBizStatsInfoProcessor.execute();
     }
 
     public List<StartbizCountStatistics> getDailyCntList() {
         return startbizGetDailyCntListProcessor.execute();
+    }
+
+    public Mono<CommResponseCommand> getStartbizStatsCnt() {
+        return startbizApiGetStatByDateProcessor.execute();
     }
 
     public void saveDailyCnt(StartbizCountStatistics entity) {
